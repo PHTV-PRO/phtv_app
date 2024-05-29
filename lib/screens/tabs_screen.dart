@@ -1,0 +1,153 @@
+import 'package:enefty_icons/enefty_icons.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:phtv_app/screens/companies_screen.dart';
+import 'package:phtv_app/screens/jobs_screen.dart';
+import 'package:phtv_app/screens/profile_screen.dart';
+import 'package:phtv_app/screens/tools_screen.dart';
+
+class TabsScreen extends ConsumerStatefulWidget {
+  const TabsScreen({super.key});
+
+  @override
+  ConsumerState<TabsScreen> createState() {
+    return _TabsScreenState();
+  }
+}
+
+class _TabsScreenState extends ConsumerState<TabsScreen> {
+  int _selectPageIndex = 0;
+  var storage = const FlutterSecureStorage();
+  bool isLoggedIn = false;
+  int totalNoti = 0;
+  int totalRealtime = 0;
+  int totalGeneral = 0;
+  int totalBuysale = 0;
+
+  void _selectPage(int index) async {
+    var loggedUser = await storage.read(key: "user");
+    setState(() {
+      _selectPageIndex = index;
+    });
+  }
+
+  loginState() async {
+    // isLoggedIn = await AppUtils.checkLoginState();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loginState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    loginState();
+    Widget activePage = const JobsScreen();
+
+    switch (_selectPageIndex) {
+      case 0:
+        activePage = const JobsScreen();
+        break;
+      case 1:
+        activePage = const CompaniesScreen();
+        break;
+      case 2:
+        activePage = const ToolsScreen();
+        break;
+      case 3:
+        activePage = const ProfileScreen();
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.red,
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(EneftyIcons.briefcase_bold, color: Colors.white,),
+            SizedBox(width: 6),
+            Text('PHTV PRO', style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold
+            ),),
+          ],
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () async {
+                showDialog(context: context, builder: (BuildContext dialogContext){
+                  return const Text('notifcation');
+                });
+            },
+            icon: Icon(
+              FluentIcons.alert_20_regular,
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  offset: const Offset(0.0, 1.0),
+                  blurRadius: 10.0,
+                  color: Colors.grey.withOpacity(0.5),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: const Color.fromARGB(255, 241, 242, 243),
+      body: activePage,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(20),
+            topLeft: Radius.circular(20),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 20,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          clipBehavior: Clip.antiAlias,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          child: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            onTap: _selectPage,
+            currentIndex: _selectPageIndex,
+            fixedColor: Colors.redAccent,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(EneftyIcons.briefcase_outline),
+                  label: 'Jobs',
+                  activeIcon: Icon(EneftyIcons.briefcase_bold)),
+              BottomNavigationBarItem(
+                  icon: Icon(EneftyIcons.home_2_outline),
+                  label: 'Companies',
+                  activeIcon: Icon(EneftyIcons.home_2_bold)),
+              BottomNavigationBarItem(
+                  icon: Icon(EneftyIcons.element_3_outline),
+                  label: 'Tools',
+                  activeIcon: Icon(EneftyIcons.element_3_bold)),
+              BottomNavigationBarItem(
+                icon: Icon(EneftyIcons.user_outline),
+                activeIcon: Icon(EneftyIcons.user_bold),
+                label: 'Account',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
