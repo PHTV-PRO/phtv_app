@@ -2,6 +2,7 @@ import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:phtv_app/widgets/ads_carousel.dart';
 import 'package:phtv_app/widgets/hot_jobs.dart';
+import 'package:phtv_app/widgets/partners_carousel.dart';
 
 class JobsScreen extends StatelessWidget{
   const JobsScreen({super.key});
@@ -43,12 +44,14 @@ class JobsScreen extends StatelessWidget{
               },
             ),
           ),
+
+          const PartnersCarousel(),
       
           //Advertisment
-          AdsCarousel(),
+          const AdsCarousel(),
       
           //Hot for you
-          HotJobs(),
+          const HotJobs(),
         ],
       ),
     );

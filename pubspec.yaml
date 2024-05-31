@@ -40,6 +40,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   enefty_icons: ^1.0.7
   fluentui_system_icons: ^1.1.239
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:
