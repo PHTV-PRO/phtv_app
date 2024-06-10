@@ -37,10 +37,10 @@ dependencies:
   cupertino_icons: ^1.0.6
   google_fonts: ^6.2.1
   flutter_riverpod: ^2.5.1
-  flutter_secure_storage: ^9.2.2
   enefty_icons: ^1.0.7
   fluentui_system_icons: ^1.1.239
   carousel_slider: ^4.2.1
+  flutter_secure_storage: ^9.2.2
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +65,16 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
+  assets:
+    - assets/images/loginbg.svg
+    - assets/images/promo.jpg
+    - assets/images/icon.png
+    - assets/images/splashscreen.svg
+    - assets/images/darksplashscreen.svg
+    - assets/images/google.png
+    - assets/images/facebook.png
+    - assets/images/zalo.png
+    - assets/images/facebook_icon.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

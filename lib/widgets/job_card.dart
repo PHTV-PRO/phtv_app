@@ -1,10 +1,12 @@
 
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:phtv_app/screens/jobs_detail_screen.dart';
+
+var storage = const FlutterSecureStorage();
 
 class JobCard extends ConsumerWidget{
   const JobCard({
@@ -16,9 +18,8 @@ class JobCard extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context,ref) {
-    var storage = const FlutterSecureStorage();
     return Container(
-      margin: const EdgeInsets.only(right: 18,bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -50,14 +51,13 @@ class JobCard extends ConsumerWidget{
       ),
       child: InkWell(
         onTap: () async {
-          showDialog(context: context, builder: (BuildContext dialogContext){
-            return const Text('job card');
-          });
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (ctx) => const JobsDetailScreen()));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
-            width: 280.0,
+            width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -132,7 +132,7 @@ class JobCard extends ConsumerWidget{
                       padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey,
+                        color: Colors.grey.withOpacity(0.5),
                       ),
                       child: const Text(
                         'Hello World!',
@@ -146,7 +146,7 @@ class JobCard extends ConsumerWidget{
                       padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey,
+                        color: Colors.grey.withOpacity(0.5),
                       ),
                       child: const Text(
                         'Hello World!',

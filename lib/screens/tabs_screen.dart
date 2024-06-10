@@ -8,6 +8,8 @@ import 'package:phtv_app/screens/jobs_screen.dart';
 import 'package:phtv_app/screens/profile_screen.dart';
 import 'package:phtv_app/screens/tools_screen.dart';
 
+var storage = const FlutterSecureStorage();
+
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});
 
@@ -19,7 +21,6 @@ class TabsScreen extends ConsumerStatefulWidget {
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectPageIndex = 0;
-  var storage = const FlutterSecureStorage();
   bool isLoggedIn = false;
   int totalNoti = 0;
   int totalRealtime = 0;

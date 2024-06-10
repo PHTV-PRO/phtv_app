@@ -1,7 +1,7 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:phtv_app/widgets/ads_carousel.dart';
-import 'package:phtv_app/widgets/hot_jobs.dart';
+import 'package:phtv_app/widgets/hot_jobs/hot_jobs.dart';
 
 class CompaniesScreen extends StatelessWidget{
   const CompaniesScreen({super.key});

@@ -1,8 +1,11 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:phtv_app/widgets/ads_carousel.dart';
-import 'package:phtv_app/widgets/hot_jobs.dart';
-import 'package:phtv_app/widgets/partners_carousel.dart';
+import 'package:phtv_app/widgets/hot_jobs/hot_jobs.dart';
+import 'package:phtv_app/widgets/latest_jobs/latest_jobs.dart';
+import 'package:phtv_app/widgets/partner_jobs/partners_carousel.dart';
+import 'package:phtv_app/widgets/saved_jobs/saved_jobs.dart';
+import 'package:phtv_app/widgets/viewed_jobs/viewed_jobs.dart';
 
 class JobsScreen extends StatelessWidget{
   const JobsScreen({super.key});
@@ -46,12 +49,21 @@ class JobsScreen extends StatelessWidget{
           ),
 
           const PartnersCarousel(),
-      
-          //Advertisment
-          const AdsCarousel(),
-      
+
           //Hot for you
           const HotJobs(),
+
+          //Latest jobs
+          const LatestJobs(),
+
+          //Advertisment
+          const AdsCarousel(),
+
+          //Viewed jobs
+          const ViewedJobs(),
+
+          //Saved jobs
+          const SavedJobs(),
         ],
       ),
     );
