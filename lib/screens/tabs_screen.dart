@@ -22,10 +22,6 @@ class TabsScreen extends ConsumerStatefulWidget {
 class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectPageIndex = 0;
   bool isLoggedIn = false;
-  int totalNoti = 0;
-  int totalRealtime = 0;
-  int totalGeneral = 0;
-  int totalBuysale = 0;
 
   void _selectPage(int index) async {
     var loggedUser = await storage.read(key: "user");
@@ -64,7 +60,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: _selectPageIndex != 3 ? AppBar(
         backgroundColor: Colors.red,
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -98,10 +94,11 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
             ),
           ),
         ],
-      ),
+      ) : null,
       backgroundColor: const Color.fromARGB(255, 241, 242, 243),
       body: activePage,
       bottomNavigationBar: Container(
+        height: 70,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
             topRight: Radius.circular(20),
