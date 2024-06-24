@@ -4,17 +4,17 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:phtv_app/screens/jobs_detail_screen.dart';
+import 'package:phtv_app/screens/jobs/jobs_detail_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
-class CompanyCard extends ConsumerWidget{
-  const CompanyCard({
+class JobCard extends ConsumerWidget{
+  const JobCard({
     super.key,
-    required this.company,
+    required this.article,
   });
 
-  final dynamic company;
+  final dynamic article;
 
   @override
   Widget build(BuildContext context,ref) {
@@ -23,7 +23,24 @@ class CompanyCard extends ConsumerWidget{
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(style: BorderStyle.solid, color: Colors.grey),
+        border: const Border(
+          left: BorderSide( //                   <--- left side
+            color: Colors.redAccent,
+            width: 6.0,
+          ),
+          top: BorderSide( //                    <--- top side
+            color: Colors.redAccent,
+            width: 1.0,
+          ),
+          right: BorderSide( //                    <--- top side
+            color: Colors.redAccent,
+            width: 1.0,
+          ),
+          bottom: BorderSide( //                    <--- top side
+            color: Colors.redAccent,
+            width: 1.0,
+          ),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.4),

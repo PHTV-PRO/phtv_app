@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phtv_app/widgets/company_card.dart';
-import 'package:phtv_app/widgets/job_card.dart';
+import 'package:phtv_app/screens/companies/company_card.dart';
+import 'package:phtv_app/screens/jobs/job_card.dart';
 import 'package:phtv_app/widgets/popular_companies/popular_com_card.dart';
 
 class CompaniesList extends StatefulWidget {

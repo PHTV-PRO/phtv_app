@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phtv_app/widgets/job_card.dart';
+import 'package:phtv_app/screens/jobs/job_card.dart';
 
 class ViewedJobs extends ConsumerWidget {
   const ViewedJobs({super.key});

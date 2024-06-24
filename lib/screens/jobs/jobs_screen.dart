@@ -1,5 +1,7 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:phtv_app/screens/search/search_screen.dart';
+import 'package:phtv_app/screens/tools_screen.dart';
 import 'package:phtv_app/widgets/ads_carousel.dart';
 import 'package:phtv_app/widgets/hot_jobs/hot_jobs.dart';
 import 'package:phtv_app/widgets/latest_jobs/latest_jobs.dart';
@@ -17,35 +19,31 @@ class JobsScreen extends StatelessWidget{
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextFormField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40.0),
+            child: InkWell(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => const SearchScreen()));
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.white
                 ),
-                filled: true,
-                hintStyle: TextStyle(color: Colors.grey[800]),
-                hintText: "Type keyword to search",
-                fillColor: Colors.white70,
-                suffixIcon: IconButton(
-                    icon: Icon(
-                      EneftyIcons.search_normal_2_outline,
-                      size: 18,
-                      color: Colors.grey[800],
-                    ),
-                    onPressed: (){}),
-                contentPadding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding: const EdgeInsets.all(12.0),
+                child: Row(
+                  children: [
+                    const Text("Type keyword to search"),
+                  const Spacer(),
+                  Icon(
+                            EneftyIcons.search_normal_2_outline,
+                            size: 18,
+                            color: Colors.grey[800],
+                          )
+                  ],
+                ),
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter keyword';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                print('ahihi');
-              },
-            ),
+            )
           ),
 
           const PartnersCarousel(),

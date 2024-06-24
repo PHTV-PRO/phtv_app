@@ -4,17 +4,18 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:phtv_app/screens/jobs_detail_screen.dart';
+import 'package:phtv_app/screens/companies/company_detail_screen.dart';
+import 'package:phtv_app/screens/jobs/jobs_detail_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
-class JobCard extends ConsumerWidget{
-  const JobCard({
+class CompanyCard extends ConsumerWidget{
+  const CompanyCard({
     super.key,
-    required this.article,
+    required this.company,
   });
 
-  final dynamic article;
+  final dynamic company;
 
   @override
   Widget build(BuildContext context,ref) {
@@ -23,24 +24,7 @@ class JobCard extends ConsumerWidget{
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: const Border(
-          left: BorderSide( //                   <--- left side
-            color: Colors.redAccent,
-            width: 6.0,
-          ),
-          top: BorderSide( //                    <--- top side
-            color: Colors.redAccent,
-            width: 1.0,
-          ),
-          right: BorderSide( //                    <--- top side
-            color: Colors.redAccent,
-            width: 1.0,
-          ),
-          bottom: BorderSide( //                    <--- top side
-            color: Colors.redAccent,
-            width: 1.0,
-          ),
-        ),
+        border: Border.all(style: BorderStyle.solid, color: Colors.grey),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.4),
@@ -52,7 +36,7 @@ class JobCard extends ConsumerWidget{
       child: InkWell(
         onTap: () async {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => const JobsDetailScreen()));
+              builder: (ctx) => const CompaniesDetailScreen()));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

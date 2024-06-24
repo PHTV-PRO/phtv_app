@@ -1,10 +1,9 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:flutter_toggle_tab/helper.dart';
-import 'package:phtv_app/screens/login_form.dart';
-import 'package:phtv_app/screens/register_form.dart';
+import 'package:phtv_app/screens/auth/login_form.dart';
+import 'package:phtv_app/screens/auth/register_form.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, required this.tabIndex});

@@ -1,7 +1,10 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:phtv_app/screens/companies/company_detail_screen.dart';
+import 'package:phtv_app/widgets/body_text.dart';
 import 'package:phtv_app/widgets/bullet_list.dart';
+import 'package:phtv_app/widgets/header_text.dart';
 import 'package:phtv_app/widgets/recommend_jobs/recommend_jobs.dart';
 
 class JobsDetailScreen extends StatelessWidget {
@@ -263,24 +266,4 @@ class JobsDetailScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget BodyText(String text) {
-  return Text(
-    text,
-    style: TextStyle(
-      color: Colors.black.withOpacity(0.6),
-    ),
-  );
-}
-
-Widget HeaderText(String text) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 15, bottom: 8),
-    child: Text(
-        text,
-        style: const TextStyle(
-            fontWeight: FontWeight.bold),
-    ),
-  );
 }

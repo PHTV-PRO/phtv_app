@@ -3,9 +3,10 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:phtv_app/screens/companies_screen.dart';
-import 'package:phtv_app/screens/jobs_screen.dart';
-import 'package:phtv_app/screens/profile_screen.dart';
+import 'package:phtv_app/screens/companies/companies_screen.dart';
+import 'package:phtv_app/screens/jobs/jobs_screen.dart';
+import 'package:phtv_app/screens/profile/profile_screen.dart';
+import 'package:phtv_app/screens/search/search_screen.dart';
 import 'package:phtv_app/screens/tools_screen.dart';
 
 var storage = const FlutterSecureStorage();
@@ -62,7 +63,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     return Scaffold(
       appBar: _selectPageIndex != 3 ? AppBar(
         backgroundColor: Colors.red,
-        title: const Row(
+        title: _selectPageIndex != 1 ? const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(EneftyIcons.briefcase_bold, color: Colors.white,),
@@ -72,6 +73,31 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
               fontWeight: FontWeight.bold
             ),),
           ],
+        ) : InkWell(
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (ctx) => const SearchScreen()));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white
+            ),
+            height: 42,
+            padding: const EdgeInsets.symmetric(horizontal: 14.0),
+            child: Row(
+              children: [
+                const Text("Type keyword to search", style: TextStyle(fontSize: 14),),
+                const Spacer(),
+                Icon(
+                  EneftyIcons.search_normal_2_outline,
+                  size: 18,
+                  color: Colors.grey[800],
+                )
+              ],
+            ),
+          ),
         ),
         centerTitle: true,
         actions: [
