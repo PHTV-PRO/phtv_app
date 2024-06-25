@@ -1,11 +1,9 @@
-
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/screens/companies/company_detail_screen.dart';
-import 'package:phtv_app/screens/jobs/jobs_detail_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
@@ -19,6 +17,9 @@ class CompanyCard extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context,ref) {
+    String companyName = company['name'] ?? 'company name';
+    String address = company['name'] ?? 'address';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -58,9 +59,9 @@ class CompanyCard extends ConsumerWidget{
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Cong ty TNHH Yura Corporation Bac Ninh - chi nhanh Ha Noi',
+                        companyName,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -76,21 +77,17 @@ class CompanyCard extends ConsumerWidget{
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  '[Senior/Lead] Mobile Security Researcher',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  style: TextStyle(
-                    color: Colors.red,
-                      fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Row(
+                Row(
                   children: [
-                    Icon(EneftyIcons.location_outline, size: 18),
-                    SizedBox(width: 4),
-                    Text('Quận Tân Bình'),
+                    const Icon(EneftyIcons.location_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(address,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 4),
@@ -112,7 +109,7 @@ class CompanyCard extends ConsumerWidget{
                 Row(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 8, right: 8),
+                      margin: const EdgeInsets.only(top: 8, right: 8),
                       padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
@@ -126,7 +123,7 @@ class CompanyCard extends ConsumerWidget{
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, right: 8),
+                      margin: const EdgeInsets.only(top: 8, right: 8),
                       padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),

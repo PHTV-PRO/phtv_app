@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phtv_app/screens/jobs/job_card.dart';
 
-class LatestJobs extends ConsumerWidget {
-  const LatestJobs({super.key});
+class HotJobs extends ConsumerWidget {
+  const HotJobs({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -12,36 +12,45 @@ class LatestJobs extends ConsumerWidget {
         Container(
           color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Latest jobs',
+                    Text(
+                      'Hot for you',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
-                    ),),
+                      ),
+                    ),
                     Spacer(),
                     Text(
                       'View more',
                       style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.blueAccent
+                        fontSize: 14,
+                        color: Colors.blueAccent
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                ListView.builder(
-                        physics: const ClampingScrollPhysics(),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        itemCount: 5,
-                        itemBuilder: (BuildContext context, int index) => JobCard(article: 1)
-                    ),
+                SizedBox(
+                    height: 220,
+                    child: ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 2,
+                      itemBuilder: (BuildContext context, int index) =>
+                          Container(
+                        width: 340,
+                        margin: const EdgeInsets.only(right: 14),
+                        child: JobCard(),
+                      ),
+                    )),
               ],
             ),
           ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phtv_app/screens/jobs/job_card.dart';
 
-class ViewedJobs extends ConsumerWidget {
-  const ViewedJobs({super.key});
+class SavedJobs extends ConsumerWidget {
+  const SavedJobs({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -19,7 +19,7 @@ class ViewedJobs extends ConsumerWidget {
                 const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Your viewed jobs',
+                    Text('Your saved jobs',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -46,7 +46,7 @@ class ViewedJobs extends ConsumerWidget {
                               Container(
                                 width: 340,
                                 margin: const EdgeInsets.only(right: 14),
-                                child: JobCard(article: 1),
+                                child: JobCard(jobInfo: 1),
                               ),
                       )
                   ),

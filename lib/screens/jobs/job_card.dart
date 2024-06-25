@@ -8,16 +8,23 @@ import 'package:phtv_app/screens/jobs/jobs_detail_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
-class JobCard extends ConsumerWidget{
+class JobCard extends StatelessWidget{
   const JobCard({
     super.key,
-    required this.article,
+    this.jobInfo,
   });
 
-  final dynamic article;
+  final dynamic jobInfo;
 
   @override
-  Widget build(BuildContext context,ref) {
+  Widget build(BuildContext context) {
+    String companyName = jobInfo['company']['name'] ?? 'company name';
+    String jobTitle = jobInfo['title'] ?? 'job title';
+    String logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
+    String province = jobInfo['location']['cityProvince'] ?? 'Ho Chi Minh';
+    String salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
+    String createdDate = jobInfo['start_date'] ?? '2024';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
@@ -68,15 +75,15 @@ class JobCard extends ConsumerWidget{
                       child: SizedBox.fromSize(
                         size: const Size(40, 40),
                         child: Image.network(
-                          'https://i.pravatar.cc/40',
+                          logoImage,
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                     const SizedBox(width: 6),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'Cong ty TNHH Yura Corporation Bac Ninh - chi nhanh Ha Noi',
+                        companyName,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
@@ -92,37 +99,37 @@ class JobCard extends ConsumerWidget{
                   ],
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  '[Senior/Lead] Mobile Security Researcher',
+                Text(
+                  jobTitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.red,
                       fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                const Row(
+                Row(
                   children: [
-                    Icon(EneftyIcons.location_outline, size: 18),
-                    SizedBox(width: 4),
-                    Text('Quận Tân Bình'),
+                    const Icon(EneftyIcons.location_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Text(province),
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Row(
+                Row(
                   children: [
-                    Icon(EneftyIcons.dollar_circle_outline, size: 18),
-                    SizedBox(width: 4),
-                    Text('Negotiable'),
+                    const Icon(EneftyIcons.dollar_circle_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Text(salary),
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Row(
+                Row(
                   children: [
-                    Icon(EneftyIcons.clock_2_outline, size: 18),
-                    SizedBox(width: 4),
-                    Text('6 hours ago'),
+                    const Icon(EneftyIcons.clock_2_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Text(createdDate),
                   ],
                 ),
                 Row(

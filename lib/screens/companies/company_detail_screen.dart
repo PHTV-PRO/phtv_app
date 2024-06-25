@@ -1,14 +1,9 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:phtv_app/common_widgets/body_text.dart';
+import 'package:phtv_app/common_widgets/header_text.dart';
 import 'package:phtv_app/screens/jobs/job_card.dart';
-import 'package:phtv_app/widgets/body_text.dart';
-import 'package:phtv_app/widgets/bullet_list.dart';
-import 'package:phtv_app/widgets/header_text.dart';
-import 'package:phtv_app/widgets/hot_jobs/hot_jobs.dart';
-import 'package:phtv_app/widgets/recommend_jobs/recommend_jobs.dart';
 
 class CompaniesDetailScreen extends StatefulWidget {
   const CompaniesDetailScreen({super.key});
@@ -415,8 +410,8 @@ Container openingTab() {
       margin: const EdgeInsets.only(top: 12),
       child: Column(
         children: [
-          JobCard(article: 1),
-          JobCard(article: 1)
+          JobCard(jobInfo: 1),
+          JobCard(jobInfo: 1)
         ],
       )
   );

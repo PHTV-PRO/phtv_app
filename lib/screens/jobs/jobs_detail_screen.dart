@@ -1,11 +1,10 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:phtv_app/screens/companies/company_detail_screen.dart';
-import 'package:phtv_app/widgets/body_text.dart';
-import 'package:phtv_app/widgets/bullet_list.dart';
-import 'package:phtv_app/widgets/header_text.dart';
-import 'package:phtv_app/widgets/recommend_jobs/recommend_jobs.dart';
+import 'package:phtv_app/common_widgets/body_text.dart';
+import 'package:phtv_app/common_widgets/bullet_list.dart';
+import 'package:phtv_app/common_widgets/header_text.dart';
+import 'package:phtv_app/features/recommend_jobs/recommend_jobs.dart';
 
 class JobsDetailScreen extends StatelessWidget {
   const JobsDetailScreen({super.key});

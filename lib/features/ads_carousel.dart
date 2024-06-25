@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phtv_app/widgets/adv_card.dart';
-import 'package:phtv_app/screens/jobs/job_card.dart';
+import 'package:phtv_app/features/adv_card.dart';
 
 class AdsCarousel extends ConsumerWidget {
   const AdsCarousel({super.key});

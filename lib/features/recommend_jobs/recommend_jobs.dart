@@ -25,7 +25,7 @@ class RecommendJobs extends ConsumerWidget {
                             Container(
                               width: 320,
                               margin: const EdgeInsets.only(right: 14),
-                              child: JobCard(article: 1),
+                              child: JobCard(jobInfo: 1),
                             ),
                     )
                 ),

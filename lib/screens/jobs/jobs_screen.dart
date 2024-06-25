@@ -1,16 +1,27 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:phtv_app/apis/job_apis.dart';
+import 'package:phtv_app/features/ads_carousel.dart';
+import 'package:phtv_app/features/hot_jobs/hot_jobs.dart';
+import 'package:phtv_app/features/latest_jobs/latest_jobs.dart';
+import 'package:phtv_app/features/partner_jobs/partners_carousel.dart';
+import 'package:phtv_app/features/saved_jobs/saved_jobs.dart';
+import 'package:phtv_app/features/viewed_jobs/viewed_jobs.dart';
 import 'package:phtv_app/screens/search/search_screen.dart';
-import 'package:phtv_app/screens/tools_screen.dart';
-import 'package:phtv_app/widgets/ads_carousel.dart';
-import 'package:phtv_app/widgets/hot_jobs/hot_jobs.dart';
-import 'package:phtv_app/widgets/latest_jobs/latest_jobs.dart';
-import 'package:phtv_app/widgets/partner_jobs/partners_carousel.dart';
-import 'package:phtv_app/widgets/saved_jobs/saved_jobs.dart';
-import 'package:phtv_app/widgets/viewed_jobs/viewed_jobs.dart';
 
-class JobsScreen extends StatelessWidget{
+class JobsScreen extends StatefulWidget{
   const JobsScreen({super.key});
+
+  @override
+  State<JobsScreen> createState() => _JobsScreenState();
+}
+
+class _JobsScreenState extends State<JobsScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

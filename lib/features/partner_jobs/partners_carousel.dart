@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phtv_app/widgets/partner_jobs/partner_card.dart';
+import 'package:phtv_app/features/partner_jobs/partner_card.dart';
 
 class PartnersCarousel extends StatefulWidget {
   const PartnersCarousel({super.key});

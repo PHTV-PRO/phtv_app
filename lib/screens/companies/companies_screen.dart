@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phtv_app/widgets/popular_companies/companies_list.dart';
-import 'package:phtv_app/widgets/popular_companies/spotlight_com_carousel.dart';
+import 'package:phtv_app/features/popular_companies/companies_list.dart';
+import 'package:phtv_app/features/popular_companies/spotlight_com_carousel.dart';
 
 class CompaniesScreen extends StatelessWidget{
   const CompaniesScreen({super.key});

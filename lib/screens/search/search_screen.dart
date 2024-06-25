@@ -1,12 +1,11 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:phtv_app/widgets/ads_carousel.dart';
-import 'package:phtv_app/widgets/hot_jobs/hot_jobs.dart';
-import 'package:phtv_app/widgets/latest_jobs/latest_jobs.dart';
-import 'package:phtv_app/widgets/partner_jobs/partners_carousel.dart';
-import 'package:phtv_app/widgets/saved_jobs/saved_jobs.dart';
-import 'package:phtv_app/widgets/top_keywords/top_keywords.dart';
-import 'package:phtv_app/widgets/viewed_jobs/viewed_jobs.dart';
+import 'package:phtv_app/features/ads_carousel.dart';
+import 'package:phtv_app/features/hot_jobs/hot_jobs.dart';
+import 'package:phtv_app/features/latest_jobs/latest_jobs.dart';
+import 'package:phtv_app/features/saved_jobs/saved_jobs.dart';
+import 'package:phtv_app/features/top_keywords/top_keywords.dart';
+import 'package:phtv_app/features/viewed_jobs/viewed_jobs.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
