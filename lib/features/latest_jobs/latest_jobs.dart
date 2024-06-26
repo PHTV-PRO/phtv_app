@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phtv_app/apis/job_apis.dart';
-import 'package:phtv_app/screens/jobs/job_card.dart';
+import 'package:phtv_app/features/job_card.dart';
 
 class LatestJobs extends StatefulWidget {
   const LatestJobs({super.key});
@@ -20,7 +20,8 @@ class _LatestJobsState extends State<LatestJobs> {
   }
 
   getJobs() async {
-    jobList = await JobApi.getLatestJobs.sendRequest();
+    var data = await JobApi.getLatestJobs.sendRequest();
+    jobList = data.map((e) => e).toList();
     setState(() {
       isLoading = false;
     });

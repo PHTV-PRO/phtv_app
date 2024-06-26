@@ -2,9 +2,10 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:phtv_app/screens/jobs/jobs_detail_screen.dart';
+import 'package:phtv_app/utils/date_utils.dart';
 
 var storage = const FlutterSecureStorage();
 
@@ -23,7 +24,7 @@ class JobCard extends StatelessWidget{
     String logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
     String province = jobInfo['location']['cityProvince'] ?? 'Ho Chi Minh';
     String salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
-    String createdDate = jobInfo['start_date'] ?? '2024';
+    String createdDate = AppDateUtils.daysBetween(jobInfo['start_date'] ?? DateFormat("dd-MM-yy").format(DateTime.now()));
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phtv_app/screens/jobs/job_card.dart';
+import 'package:phtv_app/features/job_card.dart';
 
 class HotJobs extends ConsumerWidget {
   const HotJobs({super.key});

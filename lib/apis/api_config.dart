@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:one_context/one_context.dart';
 
 var storage = const FlutterSecureStorage();
 
@@ -13,7 +16,7 @@ const String baseUrl = String.fromEnvironment(
   defaultValue: 'http://10.0.2.2:8080/api/',
 );
 
-typedef RequestBody = Map<String, dynamic>;
+typedef RequestBody = Map<String, String>;
 typedef ResponseBody = Map<String, dynamic>;
 typedef ApiHeaderType = Map<String, String>;
 
@@ -76,10 +79,15 @@ class RequestHandler {
           headers: headers, body: json.encode(body));
 
       if (response.statusCode == 200) {
-        final List result = json.decode(utf8.decode(response.bodyBytes))['data'];
-        return result.map((e) => e).toList();
+        final dynamic result = json.decode(utf8.decode(response.bodyBytes))['data'];
+        return result;
       } else {
-        print(json.decode(utf8.decode(response.bodyBytes))['message']);
+        OneContext().showDialog(
+            builder: (_) => AlertDialog(
+              title: const Text("Alert"),
+              content: Text(json.decode(utf8.decode(response.bodyBytes))['message']),
+            )
+        );
         throw Exception(response.reasonPhrase);
       }
     } catch (e) {

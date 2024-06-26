@@ -1,6 +1,10 @@
+import 'dart:convert' show json, utf8;
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/screens/auth/login_screen.dart';
+
+const storage = FlutterSecureStorage();
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -10,116 +14,160 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var userInfo = {};
+  bool isLoading = true;
+  bool isLoggedIn = false;
+
   onGoBack(dynamic value) {
     // loginState();
     // setState(() {});
   }
 
   @override
+  void initState() {
+    super.initState();
+    loginState();
+  }
+
+  loginState() async {
+    if (await storage.read(key: "user") != null) {
+      var user = await storage.read(key: 'user');
+      setState(() {
+        userInfo = json.decode(user!);
+        isLoggedIn = true;
+        isLoading = false;
+      });
+    }
+  }
+
+  Future deleteAuthAll() async {
+    await storage.deleteAll();
+    setState(() {
+      isLoggedIn = false;
+    });
+    // Navigator.of(context).pop();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 241, 242, 243),
-      appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          title: const Text('My Account'),
-          surfaceTintColor: Colors.white,
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 35,
-                  child: TextButton(
-                      child: const Text('Sign up'), onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (ctx) => const LoginScreen(
-                          tabIndex: 0,
-                        )));
-                  }),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                  ),
-                  child: SizedBox(
-                    height: 35,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        foregroundColor: Colors.white
+    String userName = userInfo['name'] ?? 'ANONYMOUS';
+    String userEmail = userInfo['email'] ?? 'email';
+
+    return isLoading
+        ? const Scaffold(
+            backgroundColor: Color.fromARGB(255, 241, 242, 243),
+            body: Center(child: CircularProgressIndicator()))
+        : Scaffold(
+            backgroundColor: const Color.fromARGB(255, 241, 242, 243),
+            appBar: AppBar(
+                backgroundColor: Colors.transparent,
+                title: const Text('My Account'),
+                surfaceTintColor: Colors.white,
+                actions: isLoggedIn ? null : [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 35,
+                        child: TextButton(
+                            child: const Text('Sign up'),
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (ctx) => const LoginScreen(
+                                        tabIndex: 0,
+                                      )));
+                            }),
                       ),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                            builder: (ctx) => const LoginScreen(
-                              tabIndex: 1,
-                            )))
-                            .then(onGoBack);
-                      },
-                      child: const Text('Sign in'),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                        ),
+                        child: SizedBox(
+                          height: 35,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(
+                                      builder: (ctx) => const LoginScreen(
+                                            tabIndex: 1,
+                                          )))
+                                  .then(onGoBack);
+                            },
+                            child: const Text('Sign in'),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ]),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                const Card(
-                  elevation: 0,
-                  color: Colors.white,
-                  margin: EdgeInsets.only(top: 60, left: 10, right: 10),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 70),
-                          SizedBox(
-                            width: double.infinity,
-                            child: Text(
-                              'ANONYMOUS',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 22, fontWeight: FontWeight.bold),
+                ]),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Stack(
+                    children: [
+                      Card(
+                        elevation: 0,
+                        color: Colors.white,
+                        margin: const EdgeInsets.only(top: 60, left: 10, right: 10),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 70),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    userName,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    userEmail,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 12),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 15),
-                  child: CircleAvatar(
-                    radius: 52,
-                    backgroundColor: Colors.grey.withOpacity(0.5),
-                    child: const CircleAvatar(
-                      radius: 48,
-                      backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        backgroundImage:
-                            NetworkImage('https://i.pravatar.cc/100'),
-                        radius: 44,
+                      Container(
+                        width: double.infinity,
+                        margin: const EdgeInsets.only(top: 15),
+                        child: CircleAvatar(
+                          radius: 52,
+                          backgroundColor: Colors.grey.withOpacity(0.5),
+                          child: const CircleAvatar(
+                            radius: 48,
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage('https://i.pravatar.cc/100'),
+                              radius: 44,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  myAction(),
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
-            myAction(),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget myAction() {
@@ -250,8 +298,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             alignment: Alignment.centerLeft,
                             foregroundColor: Colors.black54,
                           ),
-                          icon: Image.asset('assets/images/facebook_icon.png',
-                              height: 22, color: Colors.black54,),
+                          icon: Image.asset(
+                            'assets/images/facebook_icon.png',
+                            height: 22,
+                            color: Colors.black54,
+                          ),
                           label: const Text('PHTV Fanpage'),
                           onPressed: () async {},
                         ),
@@ -295,7 +346,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextButton.styleFrom(
             foregroundColor: Colors.red,
           ),
-          onPressed: () {},
+          onPressed: () {
+            deleteAuthAll();
+          },
           child: const Text('Sign out'),
         ),
         const SizedBox(height: 20),
