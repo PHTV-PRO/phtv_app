@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phtv_app/common_widgets/request_login_box.dart';
 import 'package:phtv_app/features/job_card.dart';
 
-class HotJobs extends ConsumerWidget {
+class HotJobs extends StatefulWidget {
   const HotJobs({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  State<HotJobs> createState() => _HotJobsState();
+}
+
+class _HotJobsState extends State<HotJobs> {
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loginState();
+  }
+
+  loginState() async {
+    if (await storage.read(key: "user") != null) {
+      setState(() {
+        isLoggedIn = true;
+      });
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -16,20 +37,20 @@ class HotJobs extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Hot for you',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
-                      'View more',
-                      style: TextStyle(
+                      isLoggedIn == true ? 'View more' : '',
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.blueAccent
                       ),
@@ -38,8 +59,8 @@ class HotJobs extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
-                    height: 220,
-                    child: ListView.builder(
+                    height: isLoggedIn == true ? 220 : 110,
+                    child: isLoggedIn == true ? ListView.builder(
                       physics: const ClampingScrollPhysics(),
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
@@ -48,9 +69,10 @@ class HotJobs extends ConsumerWidget {
                           Container(
                         width: 340,
                         margin: const EdgeInsets.only(right: 14),
-                        child: JobCard(),
+                        child: const JobCard(),
                       ),
-                    )),
+                    ) : const RequestLoginBox()
+                ),
               ],
             ),
           ),

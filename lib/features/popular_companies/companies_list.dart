@@ -11,7 +11,7 @@ class CompaniesList extends StatefulWidget {
 
 class _CompaniesListState extends State<CompaniesList> {
   var _dropDownValue = '';
-  var companyList;
+  var companyList = [];
   bool isLoading = true;
 
   @override
@@ -65,10 +65,10 @@ class _CompaniesListState extends State<CompaniesList> {
                             width: 140,
                             height: 40,
                             child: DropdownButtonFormField(
-                                hint: Text('Location'),
+                                hint: const Text('Location'),
                                 decoration: InputDecoration(
                                   contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 14),
+                                      const EdgeInsets.symmetric(horizontal: 14),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
                                   ),
@@ -84,8 +84,7 @@ class _CompaniesListState extends State<CompaniesList> {
                                   },
                                 ).toList(),
                                 onChanged: (val) {
-                                  setState(
-                                    () {
+                                  setState(() {
                                       _dropDownValue = val!;
                                     },
                                   );
@@ -96,10 +95,10 @@ class _CompaniesListState extends State<CompaniesList> {
                             width: 140,
                             height: 40,
                             child: DropdownButtonFormField(
-                                hint: Text('Location'),
+                                hint: const Text('Location'),
                                 decoration: InputDecoration(
                                   contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 14),
+                                      const EdgeInsets.symmetric(horizontal: 14),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
                                   ),

@@ -10,7 +10,7 @@ class LatestJobs extends StatefulWidget {
 }
 
 class _LatestJobsState extends State<LatestJobs> {
-  var jobList;
+  var jobList = [];
   bool isLoading = true;
 
   @override
@@ -65,7 +65,8 @@ class _LatestJobsState extends State<LatestJobs> {
                           scrollDirection: Axis.vertical,
                           itemCount: jobList.length,
                           itemBuilder: (BuildContext context, int index) =>
-                              JobCard(jobInfo: jobList[index])),
+                              JobCard(jobInfo: jobList[index])
+                      ),
                     ],
                   ),
                 ),

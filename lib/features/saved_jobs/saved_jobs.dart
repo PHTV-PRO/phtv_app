@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phtv_app/common_widgets/request_login_box.dart';
 import 'package:phtv_app/features/job_card.dart';
 
-class SavedJobs extends ConsumerWidget {
+class SavedJobs extends StatefulWidget {
   const SavedJobs({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  State<SavedJobs> createState() => _SavedJobsState();
+}
+
+class _SavedJobsState extends State<SavedJobs> {
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loginState();
+  }
+
+  loginState() async {
+    if (await storage.read(key: "user") != null) {
+      setState(() {
+        isLoggedIn = true;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -16,18 +38,18 @@ class SavedJobs extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Your saved jobs',
+                    const Text('Your saved jobs',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                     ),),
-                    Spacer(),
+                    const Spacer(),
                     Text(
-                      'View more',
-                      style: TextStyle(
+                      isLoggedIn == true ? 'View more' : '',
+                      style: const TextStyle(
                           fontSize: 14,
                           color: Colors.blueAccent
                       ),
@@ -36,8 +58,8 @@ class SavedJobs extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
-                  height: 220,
-                  child: ListView.builder(
+                  height: isLoggedIn == true ? 220 : 110,
+                  child: isLoggedIn == true ? ListView.builder(
                           physics: const ClampingScrollPhysics(),
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -46,9 +68,9 @@ class SavedJobs extends ConsumerWidget {
                               Container(
                                 width: 340,
                                 margin: const EdgeInsets.only(right: 14),
-                                child: JobCard(jobInfo: 1),
+                                child: const JobCard(jobInfo: 1),
                               ),
-                      )
+                      ) : const RequestLoginBox()
                   ),
               ],
             ),

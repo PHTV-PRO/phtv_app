@@ -17,6 +17,7 @@ class CompanyCard extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context,ref) {
+    int companyId = company['id'] ?? 0;
     String companyName = company['name'] ?? 'company name';
     String address = company['name'] ?? 'address';
 
@@ -36,8 +37,9 @@ class CompanyCard extends ConsumerWidget{
       ),
       child: InkWell(
         onTap: () async {
+          if (companyId <= 0) return;
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => const CompaniesDetailScreen()));
+              builder: (ctx) => CompaniesDetailScreen(companyId: companyId)));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

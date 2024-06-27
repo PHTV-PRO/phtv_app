@@ -15,7 +15,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   var userInfo = {};
-  bool isLoading = true;
+  // bool isLoading = true;
   bool isLoggedIn = false;
 
   onGoBack(dynamic value) {
@@ -35,7 +35,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         userInfo = json.decode(user!);
         isLoggedIn = true;
-        isLoading = false;
       });
     }
   }
@@ -51,13 +50,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     String userName = userInfo['name'] ?? 'ANONYMOUS';
-    String userEmail = userInfo['email'] ?? 'email';
+    String userEmail = userInfo['email'] ?? '';
 
-    return isLoading
-        ? const Scaffold(
-            backgroundColor: Color.fromARGB(255, 241, 242, 243),
-            body: Center(child: CircularProgressIndicator()))
-        : Scaffold(
+    return Scaffold(
             backgroundColor: const Color.fromARGB(255, 241, 242, 243),
             appBar: AppBar(
                 backgroundColor: Colors.transparent,

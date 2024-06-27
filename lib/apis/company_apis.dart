@@ -8,4 +8,5 @@ class CompanyApi extends ApiConfig {
         super.isAuth = false});
 
   static final getAllCompanies = CompanyApi(path: '', method: RequestMethod.get);
+  static final getCompanyDetail = CompanyApi(path: '', method: RequestMethod.get);
 }

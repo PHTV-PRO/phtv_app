@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BulletList extends StatelessWidget {
   final List<String> strings;
 
-  BulletList(this.strings);
+  const BulletList(this.strings, {super.key});
 
   @override
   Widget build(BuildContext context) {

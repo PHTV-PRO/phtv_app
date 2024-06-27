@@ -1,32 +1,30 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:phtv_app/apis/company_apis.dart';
 import 'package:phtv_app/common_widgets/body_text.dart';
 import 'package:phtv_app/common_widgets/header_text.dart';
 import 'package:phtv_app/features/job_card.dart';
 
 class CompaniesDetailScreen extends StatefulWidget {
-  const CompaniesDetailScreen({super.key});
+  const CompaniesDetailScreen({super.key, required this.companyId});
+  final int companyId;
 
   @override
   State<CompaniesDetailScreen> createState() => _CompaniesDetailScreenState();
 }
 
-class _CompaniesDetailScreenState extends State<CompaniesDetailScreen>
-    with SingleTickerProviderStateMixin {
+class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  var companyDetail = {};
+  bool isLoading = true;
 
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     super.initState();
+    getCompanyDetail(widget.companyId);
   }
 
   _handleTabSelection() {
@@ -35,8 +33,18 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen>
     }
   }
 
+  getCompanyDetail(int id) async {
+    companyDetail = await CompanyApi.getCompanyDetail.sendRequest(urlParam: '/${id.toString()}');
+    print(companyDetail.toString());
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    String companyTitle = companyDetail['name'] ?? 'COMPANY NAME';
+    String about = companyDetail['introduction'] ?? 'ABOUT';
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -76,11 +84,11 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen>
                       Container(
                         width: double.infinity,
                         color: Colors.white,
-                        padding: const EdgeInsets.only(top: 80, bottom: 10),
+                        padding: const EdgeInsets.only(top: 80, bottom: 10, left: 20, right: 20),
                         child: Column(
                           children: [
                             Text(
-                              'Home Credit Vietnam'.toUpperCase(),
+                              companyTitle.toUpperCase(),
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 fontSize: 16,
@@ -268,7 +276,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen>
                         ),
                         Center(
                           child: [
-                            aboutTab(),
+                            aboutTab(about),
                             openingTab()
                           ][_tabController.index],
                         ),
@@ -387,21 +395,10 @@ Container myTab(String text, int count) {
   );
 }
 
-Container aboutTab() {
+Container aboutTab(String about) {
   return Container(
     margin: const EdgeInsets.only(top: 10),
-    child: Column(
-      children: [
-        BodyText(
-            'Program Development, unit test, bug fix based on the design documents from Korea Headquarter '
-                '(Korea H.Q: System design and Operation, Vietnam Development Center: Development & bug fix, '
-                'Design implementation step by step).'),
-        BodyText(
-            'Program Development, unit test, bug fix based on the design documents from Korea Headquarter '
-                '(Korea H.Q: System design and Operation, Vietnam Development Center: Development & bug fix, '
-                'Design implementation step by step).'),
-      ],
-    )
+    child: BodyText(about)
   );
 }
 

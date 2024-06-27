@@ -22,7 +22,7 @@ class JobCard extends StatelessWidget{
     String companyName = jobInfo['company']['name'] ?? 'company name';
     String jobTitle = jobInfo['title'] ?? 'job title';
     String logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
-    String province = jobInfo['location']['cityProvince'] ?? 'Ho Chi Minh';
+    String province = jobInfo['location']['cityProvince']['name'] ?? 'Ho Chi Minh';;
     String salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
     String createdDate = AppDateUtils.daysBetween(jobInfo['start_date'] ?? DateFormat("dd-MM-yy").format(DateTime.now()));
 
