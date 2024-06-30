@@ -1,7 +1,7 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:phtv_app/apis/company_apis.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/body_text.dart';
 import 'package:phtv_app/common_widgets/header_text.dart';
 import 'package:phtv_app/features/job_card.dart';
@@ -35,7 +35,6 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
 
   getCompanyDetail(int id) async {
     companyDetail = await CompanyApi.getCompanyDetail.sendRequest(urlParam: '/${id.toString()}');
-    print(companyDetail.toString());
     setState(() {
       isLoading = false;
     });

@@ -12,6 +12,10 @@ class PartnerCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+    String companyName = item['name'] ?? '';
+    String comanyImage = item['background_image'] ?? 'https://i.pravatar.cc/160';
+    String companyIntro = item['introduction'] ?? '';
+
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
@@ -29,7 +33,7 @@ class PartnerCard extends ConsumerWidget {
                   child: Stack(
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
-                  Image.network(item, fit: BoxFit.cover),
+                  Image.network(comanyImage, width: double.infinity, height: 205, fit: BoxFit.cover),
                   Container(
                     margin: const EdgeInsets.all(10.0),
                     child: ClipRRect(
@@ -45,18 +49,21 @@ class PartnerCard extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Sungrove Tech Vietnam',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: true,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
+                  SizedBox(
+                    height: 40,
+                    child: Text(
+                      companyName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const Text(
-                    'Sungrove Inc. is a leading Japanese IT company with a solid presence in Tokyo, Osaka, Nagoya, and Fukuoka - covering almost of technology',
+                  Text(
+                    companyIntro,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: true,

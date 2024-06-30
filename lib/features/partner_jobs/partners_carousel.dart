@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/partner_jobs/partner_card.dart';
 
 class PartnersCarousel extends StatefulWidget {
@@ -12,6 +13,21 @@ class PartnersCarousel extends StatefulWidget {
 class _PartnersCarouselState extends State<PartnersCarousel> {
   int _current = 0;
   final CarouselController _controller = CarouselController();
+  var companyList = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getSpotlightCompanies();
+  }
+
+  getSpotlightCompanies() async {
+    companyList = await CompanyApi.getSpotlightCompany.sendRequest();
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +47,7 @@ class _PartnersCarouselState extends State<PartnersCarousel> {
           child: Column(children: [
             const SizedBox(height: 12),
             CarouselSlider(
-              items: imgList
+              items: companyList
                   .map(
                     (item) => PartnerCard(item: item)
                   )
@@ -54,7 +70,7 @@ class _PartnersCarouselState extends State<PartnersCarousel> {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: imgList.asMap().entries.map((entry) {
+                children: companyList.asMap().entries.map((entry) {
                   return GestureDetector(
                     onTap: () => _controller.animateToPage(entry.key),
                     child: Container(

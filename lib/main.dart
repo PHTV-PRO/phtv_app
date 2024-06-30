@@ -8,8 +8,8 @@ final theme = ThemeData(
   colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.red,
   ),
-  fontFamily: GoogleFonts.lexend().fontFamily,
-  textTheme: GoogleFonts.lexendTextTheme(),
+  fontFamily: GoogleFonts.inter().fontFamily,
+  textTheme: GoogleFonts.interTextTheme(),
 );
 
 void main() {

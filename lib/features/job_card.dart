@@ -19,6 +19,7 @@ class JobCard extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    int jobId = jobInfo['id'] ?? 0;
     String companyName = jobInfo['company']['name'] ?? 'company name';
     String jobTitle = jobInfo['title'] ?? 'job title';
     String logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
@@ -60,7 +61,7 @@ class JobCard extends StatelessWidget{
       child: InkWell(
         onTap: () async {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => const JobsDetailScreen()));
+              builder: (ctx) => JobsDetailScreen(jobId: jobId)));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

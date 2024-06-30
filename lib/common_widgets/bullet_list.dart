@@ -7,12 +7,13 @@ class BulletList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var data = strings.where((element) => element != '').toList();
     return Container(
       alignment: Alignment.centerLeft,
       padding: const EdgeInsets.only(left: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: strings.map((str) {
+        children: data.map((str) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

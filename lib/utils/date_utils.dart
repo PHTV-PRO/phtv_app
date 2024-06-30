@@ -9,7 +9,7 @@ class AppDateUtils {
     String time = DateFormat("HH:mm").format(from);
     String difference = (to.difference(from).inDays).toString();
 
-    if (seconds >= 24 * 3600)  return '$difference ago';
+    if (seconds >= 24 * 3600)  return '$difference days ago';
     int interval = (seconds / 3600).floor();
     if (interval >= 1)  return '$interval hours ago';
     interval = (seconds / 60).floor();

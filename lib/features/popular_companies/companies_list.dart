@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:phtv_app/apis/company_apis.dart';
-import 'package:phtv_app/screens/companies/company_card.dart';
+import 'package:phtv_app/apis/apis_list.dart';
+import 'package:phtv_app/features/company_card.dart';
 
 class CompaniesList extends StatefulWidget {
   const CompaniesList({super.key});

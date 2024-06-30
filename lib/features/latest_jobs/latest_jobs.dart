@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:phtv_app/apis/job_apis.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/job_card.dart';
 
 class LatestJobs extends StatefulWidget {

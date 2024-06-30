@@ -1,6 +1,5 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:phtv_app/apis/job_apis.dart';
 import 'package:phtv_app/features/ads_carousel.dart';
 import 'package:phtv_app/features/hot_jobs/hot_jobs.dart';
 import 'package:phtv_app/features/latest_jobs/latest_jobs.dart';
