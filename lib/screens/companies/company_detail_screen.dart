@@ -17,6 +17,10 @@ class CompaniesDetailScreen extends StatefulWidget {
 class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   var companyDetail = {};
+  String companyTitle = '';
+  String about = '';
+  String linkweb = '';
+  String location = '';
   bool isLoading = true;
 
   @override
@@ -42,8 +46,10 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
 
   @override
   Widget build(BuildContext context) {
-    String companyTitle = companyDetail['name'] ?? 'COMPANY NAME';
-    String about = companyDetail['introduction'] ?? 'ABOUT';
+    companyTitle = companyDetail['name'] ?? '';
+    about = companyDetail['introduction'] ?? '';
+    linkweb = companyDetail['link_website'] ?? '';
+    location = companyDetail['locations'][0]['name'] ?? '';
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -208,15 +214,20 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HeaderText('Information'),
-                  BodyText(
-                      'Program Development, unit test, bug fix based on the design documents from Korea Headquarter '
-                          '(Korea H.Q: System design and Operation, Vietnam Development Center: Development & bug fix, '
-                          'Design implementation step by step).'),
-                  BodyText(
-                      'Program Development, unit test, bug fix based on the design documents from Korea Headquarter '
-                          '(Korea H.Q: System design and Operation, Vietnam Development Center: Development & bug fix, '
-                          'Design implementation step by step).'),
+                  const HeaderText('Information'),
+                  Row(children: [
+                    const Icon(EneftyIcons.link_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Text(linkweb),
+                    const SizedBox(width: 4),
+                    const Icon(EneftyIcons.export_outline, size: 16),
+                  ],),
+                  Row(crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                    const Icon(EneftyIcons.location_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Flexible(child: Text(location, softWrap: true,)),
+                  ],)
                 ],
               ),
             ),

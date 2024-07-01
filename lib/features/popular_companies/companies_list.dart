@@ -11,6 +11,8 @@ class CompaniesList extends StatefulWidget {
 
 class _CompaniesListState extends State<CompaniesList> {
   var _dropDownValue = '';
+  late List location = [{'id': 0, 'name': ''}];
+  late List industry = [{'id': 0, 'name': ''}];
   var companyList = [];
   bool isLoading = true;
 
@@ -20,7 +22,23 @@ class _CompaniesListState extends State<CompaniesList> {
     getCompanies();
   }
 
+  getLocationList() async {
+    var data = await LocationApi.getLocationList.sendRequest();
+    for (var dt in data){
+      location.add(dt);
+    }
+  }
+
+  getIndustryList() async {
+    var data = await IndustryApi.getIndustryList.sendRequest();
+    for (var dt in data){
+      industry.add(dt);
+    }
+  }
+
   getCompanies() async {
+    getLocationList();
+    getIndustryList();
     companyList = await CompanyApi.getAllCompanies.sendRequest();
     setState(() {
       isLoading = false;
@@ -62,24 +80,25 @@ class _CompaniesListState extends State<CompaniesList> {
                       Row(
                         children: [
                           SizedBox(
-                            width: 140,
+                            width: 160,
                             height: 40,
                             child: DropdownButtonFormField(
+                              isDense: true,
                                 hint: const Text('Location'),
                                 decoration: InputDecoration(
                                   contentPadding:
-                                      const EdgeInsets.symmetric(horizontal: 14),
+                                      const EdgeInsets.symmetric(horizontal: 12),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
                                   ),
                                 ),
-                                // isExpanded: true,
+                                isExpanded: true,
                                 borderRadius: BorderRadius.circular(20.0),
-                                items: ['One', 'Two', 'Three'].map(
+                                items: location.map(
                                   (val) {
                                     return DropdownMenuItem<String>(
-                                      value: val,
-                                      child: Text(val),
+                                      value: val['name'] == '' ? 'All' : val['name'],
+                                      child: Text(val['name'] == '' ? 'All' : val['name']),
                                     );
                                   },
                                 ).toList(),
@@ -92,24 +111,24 @@ class _CompaniesListState extends State<CompaniesList> {
                           ),
                           const Spacer(),
                           SizedBox(
-                            width: 140,
+                            width: 160,
                             height: 40,
                             child: DropdownButtonFormField(
-                                hint: const Text('Location'),
+                                hint: const Text('Industry'),
                                 decoration: InputDecoration(
                                   contentPadding:
-                                      const EdgeInsets.symmetric(horizontal: 14),
+                                      const EdgeInsets.symmetric(horizontal: 12),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50.0),
                                   ),
                                 ),
-                                // isExpanded: true,
+                                isExpanded: true,
                                 borderRadius: BorderRadius.circular(20.0),
-                                items: ['One', 'Two', 'Three'].map(
+                                items: industry.map(
                                   (val) {
                                     return DropdownMenuItem<String>(
-                                      value: val,
-                                      child: Text(val),
+                                      value: val['name'] == '' ? 'All' : val['name'],
+                                      child: Text(val['name'] == '' ? 'All' : val['name']),
                                     );
                                   },
                                 ).toList(),

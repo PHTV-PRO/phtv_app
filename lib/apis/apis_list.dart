@@ -33,3 +33,23 @@ class JobApi extends ApiConfig {
   static final getLatestJobs = JobApi(path: '', method: RequestMethod.get);
   static final getJobDetail = JobApi(path: '', method: RequestMethod.get);
 }
+
+class LocationApi extends ApiConfig {
+  LocationApi(
+      {super.module = 'general/city_province',
+        required super.path,
+        required super.method,
+        super.isAuth = false});
+
+  static final getLocationList = LocationApi(path: '', method: RequestMethod.get);
+}
+
+class IndustryApi extends ApiConfig {
+  IndustryApi(
+      {super.module = 'general/industry',
+        required super.path,
+        required super.method,
+        super.isAuth = false});
+
+  static final getIndustryList = IndustryApi(path: '', method: RequestMethod.get);
+}
