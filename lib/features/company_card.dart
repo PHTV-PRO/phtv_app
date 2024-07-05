@@ -1,5 +1,6 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,7 +8,7 @@ import 'package:phtv_app/screens/companies/company_detail_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
-class CompanyCard extends ConsumerWidget{
+class CompanyCard extends StatefulWidget{
   const CompanyCard({
     super.key,
     required this.company,
@@ -16,10 +17,24 @@ class CompanyCard extends ConsumerWidget{
   final dynamic company;
 
   @override
-  Widget build(BuildContext context,ref) {
-    int companyId = company['id'] ?? 0;
-    String companyName = company['name'] ?? 'company name';
-    String address = company['name'] ?? 'address';
+  State<CompanyCard> createState() => _CompanyCardState();
+}
+
+class _CompanyCardState extends State<CompanyCard> {
+  Set industries = {};
+  Set skills = {};
+  
+  @override
+  Widget build(BuildContext context) {
+    int companyId = widget.company['id'] ?? 0;
+    String companyName = widget.company['name'] ?? '';
+    String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
+    int openingJobs = widget.company['opening_jobs'] ?? 0;
+
+    for (var i in widget.company['skills']) {
+      industries.add(i['industry']['name']);
+      skills.add(i['name']);
+    }
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -67,6 +82,10 @@ class CompanyCard extends ConsumerWidget{
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         softWrap: true,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87
+                        ),
                       ),
                     ),
                     IconButton(
@@ -78,7 +97,28 @@ class CompanyCard extends ConsumerWidget{
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    for(int i = 0; i < skills.length; i++)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.grey.withOpacity(0.3),
+                        ),
+                        child: Text(
+                          skills.elementAtOrNull(i),
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     const Icon(EneftyIcons.location_outline, size: 18),
@@ -92,54 +132,27 @@ class CompanyCard extends ConsumerWidget{
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                const Row(
-                  children: [
-                    Icon(EneftyIcons.dollar_circle_outline, size: 18),
-                    SizedBox(width: 4),
-                    Text('Negotiable'),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                const Row(
-                  children: [
-                    Icon(EneftyIcons.clock_2_outline, size: 18),
-                    SizedBox(width: 4),
-                    Text('6 hours ago'),
-                  ],
-                ),
+                const SizedBox(height: 6),
                 Row(
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 8, right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                      child: const Text(
-                        'Hello World!',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8, right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                      child: const Text(
-                        'Hello World!',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    const Icon(EneftyIcons.profile_2user_outline, size: 18),
+                    const SizedBox(width: 4),
+                    const Text('25 - 99'),
+                    const SizedBox(width: 26),
+                    const Icon(EneftyIcons.briefcase_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Text("$openingJobs job"),
                   ],
-                )
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(EneftyIcons.tag_outline, size: 18),
+                    const SizedBox(width: 4),
+                    Expanded(child: Text(industries.join(", "), maxLines: 2, softWrap: true,overflow: TextOverflow.ellipsis,)),
+                  ],
+                ),
               ],
             ),
           ),

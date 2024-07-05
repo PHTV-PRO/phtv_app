@@ -10,9 +10,10 @@ class CompaniesList extends StatefulWidget {
 }
 
 class _CompaniesListState extends State<CompaniesList> {
-  var _dropDownValue = '';
-  late List location = [{'id': 0, 'name': ''}];
-  late List industry = [{'id': 0, 'name': ''}];
+  var _location = '';
+  var _industry = '';
+  late List location = [{'id': 0, 'name': 'All'}];
+  late List industry = [{'id': 0, 'name': 'All'}];
   var companyList = [];
   bool isLoading = true;
 
@@ -36,6 +37,8 @@ class _CompaniesListState extends State<CompaniesList> {
     }
   }
 
+
+
   getCompanies() async {
     getLocationList();
     getIndustryList();
@@ -45,8 +48,20 @@ class _CompaniesListState extends State<CompaniesList> {
     });
   }
 
+  filterCompany() async {
+    Map<String, String> jsonBody = {
+      'province_city_id': _location,
+      'industry_id': _industry
+    };
+    var data = await CompanyApi.filterCompany.sendRequest(body: jsonBody);
+    setState(() {
+      companyList = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return isLoading
         ? const CircularProgressIndicator()
         : Column(
@@ -97,16 +112,17 @@ class _CompaniesListState extends State<CompaniesList> {
                                 items: location.map(
                                   (val) {
                                     return DropdownMenuItem<String>(
-                                      value: val['name'] == '' ? 'All' : val['name'],
-                                      child: Text(val['name'] == '' ? 'All' : val['name']),
+                                      value: val['id'].toString(),
+                                      child: Text(val['name']),
                                     );
                                   },
                                 ).toList(),
                                 onChanged: (val) {
                                   setState(() {
-                                      _dropDownValue = val!;
+                                      _location = val! == '0' ? '' : val;
                                     },
                                   );
+                                  filterCompany();
                                 }),
                           ),
                           const Spacer(),
@@ -127,17 +143,17 @@ class _CompaniesListState extends State<CompaniesList> {
                                 items: industry.map(
                                   (val) {
                                     return DropdownMenuItem<String>(
-                                      value: val['name'] == '' ? 'All' : val['name'],
-                                      child: Text(val['name'] == '' ? 'All' : val['name']),
+                                      value: val['id'].toString(),
+                                      child: Text(val['name']),
                                     );
                                   },
                                 ).toList(),
                                 onChanged: (val) {
-                                  setState(
-                                    () {
-                                      _dropDownValue = val!;
+                                  setState(() {
+                                      _industry = val! == '0' ? '' : val;
                                     },
                                   );
+                                  filterCompany();
                                 }),
                           ),
                         ],
@@ -151,7 +167,8 @@ class _CompaniesListState extends State<CompaniesList> {
                           itemBuilder: (BuildContext context, int index) =>
                               CompanyCard(
                                 company: companyList[index],
-                              )),
+                              ),
+                      ),
                     ],
                   ),
                 ),

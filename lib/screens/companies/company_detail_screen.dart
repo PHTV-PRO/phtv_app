@@ -49,7 +49,8 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
     companyTitle = companyDetail['name'] ?? '';
     about = companyDetail['introduction'] ?? '';
     linkweb = companyDetail['link_website'] ?? '';
-    location = companyDetail['locations'][0]['name'] ?? '';
+    List comAddress = companyDetail['locations'] ?? [];
+    location = comAddress.isNotEmpty ? companyDetail['locations'][0]['name'] : '';
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -218,7 +219,9 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                   Row(children: [
                     const Icon(EneftyIcons.link_outline, size: 18),
                     const SizedBox(width: 4),
-                    Text(linkweb),
+                    Text(linkweb, style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                    ),),
                     const SizedBox(width: 4),
                     const Icon(EneftyIcons.export_outline, size: 16),
                   ],),
@@ -226,7 +229,9 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                     children: [
                     const Icon(EneftyIcons.location_outline, size: 18),
                     const SizedBox(width: 4),
-                    Flexible(child: Text(location, softWrap: true,)),
+                    Flexible(child: Text(location, softWrap: true, style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                    ),)),
                   ],)
                 ],
               ),
