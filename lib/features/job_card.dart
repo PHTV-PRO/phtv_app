@@ -4,6 +4,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/screens/jobs/jobs_detail_screen.dart';
 import 'package:phtv_app/utils/date_utils.dart';
 
@@ -60,6 +61,10 @@ class JobCard extends StatelessWidget{
       ),
       child: InkWell(
         onTap: () async {
+          Map<String, String> jsonBody = {
+            'job_id': jobId.toString(),
+          };
+          await CandidateJobApi.viewJob.sendRequest(body: jsonBody);
           Navigator.of(context).push(MaterialPageRoute(
               builder: (ctx) => JobsDetailScreen(jobId: jobId)));
         },
@@ -103,7 +108,7 @@ class JobCard extends StatelessWidget{
                 const SizedBox(height: 8),
                 Text(
                   jobTitle,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
                   style: const TextStyle(
@@ -137,7 +142,7 @@ class JobCard extends StatelessWidget{
                 Row(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(top: 8, right: 8),
+                      margin: const EdgeInsets.only(top: 8, right: 8),
                       padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
@@ -151,7 +156,7 @@ class JobCard extends StatelessWidget{
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 8, right: 8),
+                      margin: const EdgeInsets.only(top: 8, right: 8),
                       padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),

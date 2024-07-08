@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/request_login_box.dart';
 import 'package:phtv_app/features/job_card.dart';
 
@@ -11,6 +12,8 @@ class ViewedJobs extends StatefulWidget {
 }
 
 class _ViewedJobsState extends State<ViewedJobs> {
+  var jobList = [];
+  bool isLoading = true;
   bool isLoggedIn = false;
 
   @override
@@ -23,13 +26,22 @@ class _ViewedJobsState extends State<ViewedJobs> {
     if (await storage.read(key: "user") != null) {
       setState(() {
         isLoggedIn = true;
+        isLoading = false;
       });
     }
   }
 
+  getJobs() async {
+    var data = await CandidateJobApi.getViewedJobs.sendRequest();
+    jobList = data.map((e) => e).toList();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return isLoading ? const CircularProgressIndicator() : Column(
       children: [
         Container(
           color: Colors.white,

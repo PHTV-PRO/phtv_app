@@ -28,13 +28,18 @@ class _CompanyCardState extends State<CompanyCard> {
   Widget build(BuildContext context) {
     int companyId = widget.company['id'] ?? 0;
     String companyName = widget.company['name'] ?? '';
-    String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
+    // String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
+    String address = '';
+    String companySize = widget.company['size'] ?? '';
     int openingJobs = widget.company['opening_jobs'] ?? 0;
 
-    for (var i in widget.company['skills']) {
-      industries.add(i['industry']['name']);
-      skills.add(i['name']);
+    if(widget.company['skills'] != null){
+      for (var i in widget.company['skills']) {
+        industries.add(i['industry']['name']);
+        skills.add(i['name']);
+      }
     }
+
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -137,7 +142,7 @@ class _CompanyCardState extends State<CompanyCard> {
                   children: [
                     const Icon(EneftyIcons.profile_2user_outline, size: 18),
                     const SizedBox(width: 4),
-                    const Text('25 - 99'),
+                    Text(companySize),
                     const SizedBox(width: 26),
                     const Icon(EneftyIcons.briefcase_outline, size: 18),
                     const SizedBox(width: 4),

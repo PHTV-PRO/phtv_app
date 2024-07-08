@@ -19,8 +19,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isLoggedIn = false;
 
   onGoBack(dynamic value) {
-    // loginState();
-    // setState(() {});
+    loginState();
+    setState(() {});
   }
 
   @override
@@ -44,12 +44,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       isLoggedIn = false;
     });
-    // Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    String userName = userInfo['name'] ?? 'ANONYMOUS';
+    String userName = userInfo['name'] ?? '';
     String userEmail = userInfo['email'] ?? '';
 
     return Scaffold(
@@ -118,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    userName,
+                                    isLoggedIn ? userName : 'ANONYMOUS',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                         fontSize: 22,
@@ -128,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    userEmail,
+                                    isLoggedIn ? userEmail : '',
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -342,7 +342,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
             foregroundColor: Colors.red,
           ),
           onPressed: () {
-            deleteAuthAll();
+
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('You are signing out?'),
+                  content: const SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('You are about to sign out our app'),
+                        Text('Would you please confirm?'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: const Text('Signout'),
+                      onPressed: () {
+                        deleteAuthAll();
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Cancel'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
           },
           child: const Text('Sign out'),
         ),
