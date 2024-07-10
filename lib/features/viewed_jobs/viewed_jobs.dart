@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/request_login_box.dart';
 import 'package:phtv_app/features/job_card.dart';
@@ -19,24 +18,19 @@ class _ViewedJobsState extends State<ViewedJobs> {
   @override
   void initState() {
     super.initState();
-    loginState();
+    getJobs();
   }
 
-  loginState() async {
-    if (await storage.read(key: "user") != null) {
+  getJobs() async {
+    var userToken = await storage.read(key: 'token');
+    var data = await CandidateJobApi.getViewedJobs.sendRequest(token: userToken);
+    jobList = data.map((e) => e).toList();
+    if (userToken != null && data != null) {
       setState(() {
         isLoggedIn = true;
         isLoading = false;
       });
     }
-  }
-
-  getJobs() async {
-    var data = await CandidateJobApi.getViewedJobs.sendRequest();
-    jobList = data.map((e) => e).toList();
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -69,21 +63,23 @@ class _ViewedJobsState extends State<ViewedJobs> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                SizedBox(
-                  height: isLoggedIn == true ? 220 : 110,
-                  child: isLoggedIn == true ? ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: 2,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Container(
-                                width: 340,
-                                margin: const EdgeInsets.only(right: 14),
-                                child: const JobCard(jobInfo: 1),
-                              ),
-                      ) : const RequestLoginBox()
-                  ),
+                isLoggedIn ? (
+                    jobList.isEmpty ? Container(height: 110, alignment: Alignment.center, child: const Text('You still not view any jobs')) : SizedBox(
+                      height: 240,
+                      child: ListView.builder(
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: jobList.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            Container(
+                              width: 340,
+                              margin: const EdgeInsets.only(right: 14),
+                              child: JobCard(jobInfo: jobList[index]),
+                            ),
+                      ),
+                    )
+                ) : const RequestLoginBox(),
               ],
             ),
           ),

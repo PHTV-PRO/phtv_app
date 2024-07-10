@@ -44,6 +44,7 @@ class _LoginFormState extends State<LoginForm> {
     String accessToken = result['token'];
     await storage.write(key: 'token', value: accessToken);
     await storage.write(key: 'user', value: json.encode(result['account']));
+    print(accessToken);
     Navigator.pop(context, () {});
   }
 

@@ -10,7 +10,6 @@ var storage = const FlutterSecureStorage();
 
 enum RequestMethod { get, post, put, delete }
 
-
 const String baseUrl = String.fromEnvironment(
   'API_BASE_URL',
   defaultValue: 'http://10.0.2.2:8080/api/',
@@ -38,18 +37,18 @@ abstract class ApiConfig {
   }
 
   Future<dynamic> sendRequest(
-      {String? urlParam, RequestBody? body, ApiHeaderType? headersCustom}) {
+      {String? urlParam, RequestBody? body, ApiHeaderType? headersCustom, String? token}) {
     return RequestHandler.call(getUrlString(urlParam: urlParam), method,
-        authorized: isAuth, body: body, headersCustom: headersCustom);
+        authorized: isAuth, body: body, headersCustom: headersCustom, token: token);
   }
 }
 
 extension MethodManager on RequestMethod {
   Future<http.Response> apiCall(
-      Uri url, {
-        Map<String, String>? headers,
-        Object? body,
-      }) async {
+    Uri url, {
+    Map<String, String>? headers,
+    Object? body,
+  }) async {
     switch (this) {
       case RequestMethod.get:
         return await http.get(url, headers: headers);
@@ -67,36 +66,35 @@ class RequestHandler {
   static Future<dynamic> call(String urlString, RequestMethod method,
       {bool authorized = true,
       RequestBody? body,
-      ApiHeaderType? headersCustom}) async {
+      ApiHeaderType? headersCustom,
+      String? token}) async {
     try {
       Map<String, String> headers = headersCustom ??
           {
             'Content-Type': 'application/json',
-            if (authorized) HttpHeaders.authorizationHeader: 'Bearer $getToken',
+            if (authorized) 'Authorization': 'Bearer $token',
           };
 
       final response = await method.apiCall(Uri.parse(urlString),
           headers: headers, body: json.encode(body));
 
       if (response.statusCode == 200) {
-        final dynamic result = json.decode(utf8.decode(response.bodyBytes))['data'];
+        final dynamic result =
+            json.decode(utf8.decode(response.bodyBytes))['data'];
         return result;
       } else {
-        OneContext().showDialog(
-            builder: (_) => AlertDialog(
-              title: const Text("Alert"),
-              content: Text(json.decode(utf8.decode(response.bodyBytes))['message']),
-            )
-        );
+        print(json.decode(utf8.decode(response.bodyBytes))['message']);
+        // OneContext().showDialog(
+        //     builder: (_) => AlertDialog(
+        //           title: const Text("Alert"),
+        //           content: Text(
+        //               json.decode(utf8.decode(response.bodyBytes))['message']),
+        //         ));
         throw Exception(response.reasonPhrase);
       }
     } catch (e) {
-        print('There is an issue with : $urlString');
-        throw Exception(e.toString());
+      print('There is an issue with : $urlString');
+      throw Exception(e.toString());
     }
   }
-}
-
-Future<String?> getToken() async {
-  return await storage.read(key: 'token');
 }

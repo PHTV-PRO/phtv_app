@@ -61,10 +61,11 @@ class JobCard extends StatelessWidget{
       ),
       child: InkWell(
         onTap: () async {
+          var userToken = await storage.read(key: 'token');
           Map<String, String> jsonBody = {
             'job_id': jobId.toString(),
           };
-          await CandidateJobApi.viewJob.sendRequest(body: jsonBody);
+          await CandidateJobApi.viewJob.sendRequest(body: jsonBody, token: userToken);
           Navigator.of(context).push(MaterialPageRoute(
               builder: (ctx) => JobsDetailScreen(jobId: jobId)));
         },
@@ -97,7 +98,13 @@ class JobCard extends StatelessWidget{
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        var userToken = await storage.read(key: 'token');
+                        Map<String, String> jsonBody2 = {
+                          'job_id': jobId.toString(),
+                        };
+                        await CandidateJobApi.saveJob.sendRequest(body: jsonBody2, token: userToken);
+                      },
                       icon: const Icon(
                         FluentIcons.bookmark_20_regular,
                         color: Colors.grey,
