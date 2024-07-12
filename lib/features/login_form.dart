@@ -41,11 +41,13 @@ class _LoginFormState extends State<LoginForm> {
       'password': _enteredPassword
     };
     var result = await AuthApi.login.sendRequest(body: jsonBody);
-    String accessToken = result['token'];
-    await storage.write(key: 'token', value: accessToken);
-    await storage.write(key: 'user', value: json.encode(result['account']));
-    print(accessToken);
-    Navigator.pop(context, () {});
+    if(result != null){
+      String accessToken = result['token'];
+      await storage.write(key: 'token', value: accessToken);
+      await storage.write(key: 'user', value: json.encode(result['account']));
+      print(accessToken);
+      Navigator.pop(context, () {});
+    }
   }
 
   @override
@@ -63,6 +65,7 @@ class _LoginFormState extends State<LoginForm> {
               hintStyle: TextStyle(color: Colors.grey[800]),
               hintText: "Email",
               fillColor: Colors.white,
+              errorStyle: const TextStyle(color: Colors.black87),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
@@ -73,7 +76,7 @@ class _LoginFormState extends State<LoginForm> {
                   value.trim().isEmpty ||
                   !value.contains('@') ||
                   !value.contains('.')) {
-                return 'Invalid email';
+                return 'Invalid email!';
               }
               return null;
             },
@@ -98,6 +101,7 @@ class _LoginFormState extends State<LoginForm> {
                     color: Colors.grey[800],
                   ),
                   onPressed: _toggle),
+              errorStyle: const TextStyle(color: Colors.black87),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
@@ -123,6 +127,10 @@ class _LoginFormState extends State<LoginForm> {
           ),
           ElevatedButton(
             onPressed: _submitLogin,
+            style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white
+            ),
             child: const Text(
               'Sign in',
               style: TextStyle(

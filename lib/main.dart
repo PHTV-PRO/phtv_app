@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:one_context/one_context.dart';
 import 'package:phtv_app/screens/tabs_screen.dart';
 
 
@@ -23,6 +24,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: theme,
+      builder: OneContext().builder,
+      navigatorKey: OneContext().key,
       home: const TabsScreen(),
     );
   }

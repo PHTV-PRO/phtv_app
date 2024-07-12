@@ -342,7 +342,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             foregroundColor: Colors.red,
           ),
           onPressed: () {
-
             showDialog(
               context: context,
               builder: (context) {
@@ -356,19 +355,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
+                  backgroundColor: Colors.white,
+                  elevation: 0,
                   actions: <Widget>[
-                    TextButton(
-                      child: const Text('Signout'),
-                      onPressed: () {
-                        deleteAuthAll();
-                      },
-                    ),
                     TextButton(
                       child: const Text('Cancel'),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
                     ),
+                    ElevatedButton(
+                      child: const Text('Signout'),
+                      onPressed: () {
+                        deleteAuthAll();
+                      },
+                    ),
+
                   ],
                 );
               },

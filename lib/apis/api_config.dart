@@ -1,3 +1,4 @@
+import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -83,14 +84,26 @@ class RequestHandler {
             json.decode(utf8.decode(response.bodyBytes))['data'];
         return result;
       } else {
-        print(json.decode(utf8.decode(response.bodyBytes))['message']);
-        // OneContext().showDialog(
-        //     builder: (_) => AlertDialog(
-        //           title: const Text("Alert"),
-        //           content: Text(
-        //               json.decode(utf8.decode(response.bodyBytes))['message']),
-        //         ));
-        throw Exception(response.reasonPhrase);
+        OneContext().showDialog(
+            builder: (_) => AlertDialog(
+                  title: const Text('Oops!', textAlign: TextAlign.center,),
+                  elevation: 0,
+                  backgroundColor: Colors.white,
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset(
+                        'assets/images/fail.png',
+                        width: 120.0,
+                        height: 120.0,
+                        fit: BoxFit.cover,
+                      ),
+                      Text(
+                          json.decode(utf8.decode(response.bodyBytes))['message']),
+                    ],
+                  ),
+                ));
+        // throw Exception(response.reasonPhrase);
       }
     } catch (e) {
       print('There is an issue with : $urlString');

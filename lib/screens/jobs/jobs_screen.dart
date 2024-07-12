@@ -31,24 +31,6 @@ class _JobsScreenState extends State<JobsScreen> {
     super.initState();
   }
 
-  // void uploadImage(File upfile) async {
-  //   try {
-  //     http.MultipartRequest request = new http.MultipartRequest("POST", Uri.parse('http://10.0.2.2:8080/api/candidate/cv'));
-  //     http.MultipartFile multipartFile = await http.MultipartFile.fromPath(upfile.path.toString(), upfile.path);
-  //     request.files.add(multipartFile);
-  //     var streamedResponse = await request.send();
-  //     var response = await http.Response.fromStream(streamedResponse);
-  //     if (response.statusCode == 200 ) {
-  //       return json.decode(utf8.decode(response.bodyBytes))['message'];
-  //     }else{
-  //       print(response.statusCode);
-  //     }
-  //   }
-  //   catch (e) {
-  //     return null;
-  //   }
-  // }
-
 
   uploadFile(File upfile)async {
     var userToken = await storage.read(key: 'token');

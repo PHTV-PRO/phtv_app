@@ -35,7 +35,7 @@ class _ViewedJobsState extends State<ViewedJobs> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading ? const CircularProgressIndicator() : Column(
+    return Column(
       children: [
         Container(
           color: Colors.white,
@@ -63,7 +63,7 @@ class _ViewedJobsState extends State<ViewedJobs> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                isLoggedIn ? (
+                isLoggedIn ? isLoading ? const CircularProgressIndicator() : (
                     jobList.isEmpty ? Container(height: 110, alignment: Alignment.center, child: const Text('You still not view any jobs')) : SizedBox(
                       height: 240,
                       child: ListView.builder(

@@ -117,7 +117,7 @@ class _RegisterFormState extends State<RegisterForm> {
               ),
               filled: true,
               hintStyle: TextStyle(color: Colors.grey[800]),
-              hintText: "Fullname",
+              hintText: "Full Name",
               fillColor: Colors.white,
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -136,6 +136,7 @@ class _RegisterFormState extends State<RegisterForm> {
               hintStyle: TextStyle(color: Colors.grey[800]),
               hintText: "Email",
               fillColor: Colors.white,
+              errorStyle: const TextStyle(color: Colors.black87),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
@@ -181,6 +182,7 @@ class _RegisterFormState extends State<RegisterForm> {
               hintStyle: TextStyle(color: Colors.grey[800]),
               hintText: "Password (*)",
               fillColor: Colors.white,
+              errorStyle: const TextStyle(color: Colors.black87),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               suffixIcon: IconButton(
@@ -215,6 +217,7 @@ class _RegisterFormState extends State<RegisterForm> {
               hintStyle: TextStyle(color: Colors.grey[800]),
               hintText: "Confirm password (*)",
               fillColor: Colors.white,
+              errorStyle: const TextStyle(color: Colors.black87),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               suffixIcon: IconButton(

@@ -77,6 +77,9 @@ flutter:
     - assets/images/loginbg.png
     - assets/images/promo.jpg
     - assets/images/icon.png
+    - assets/images/mycvicon.png
+    - assets/images/salaryconvert.png
+    - assets/images/fail.png
     - assets/images/splashscreen.svg
     - assets/images/darksplashscreen.svg
     - assets/images/google.png
