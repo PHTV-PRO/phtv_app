@@ -23,44 +23,13 @@ class JobsScreen extends StatefulWidget{
 }
 
 class _JobsScreenState extends State<JobsScreen> {
-  File? cvFile;
-  String filename = '';
+
+
 
   @override
   void initState() {
     super.initState();
   }
-
-
-  uploadFile(File upfile)async {
-    var userToken = await storage.read(key: 'token');
-    Map<String, String> reqHeaders = {
-      HttpHeaders.contentTypeHeader: 'multipart/form-data',
-      'Authorization' : 'Bearer $userToken',
-      'Content-Type' : 'application/json',
-    };
-    var request = http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:8080/api/candidate/cv'));
-    request.headers.addAll(reqHeaders);
-    request.files.add(http.MultipartFile.fromBytes(
-      'file',
-      File(upfile.path).readAsBytesSync(),
-      filename: 'test.jpg',
-    ));
-    var response = await request.send();
-    final respStr = await response.stream.bytesToString();
-
-    print(
-      jsonDecode(respStr),
-    );
-
-    if (response.statusCode == 200) {
-      // return jsonDecode(response.body)['data'];
-    } else {
-      throw Exception('Failed to upload Photo');
-    }
-  }
-
-
 
 
   @override
@@ -104,46 +73,9 @@ class _JobsScreenState extends State<JobsScreen> {
           //Hot for you
           const HotJobs(),
 
-          Container(
-              height: 200,
-              child: FormField(
-                  builder: (formFieldState) {
-                    return Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            var file = await FilePicker.platform.pickFiles();
-                            if (file != null) {
-                                setState(() {
-                                  cvFile = File(file.files.first.path!);
-                                  filename = File(file.files.first.name).toString();
-                                });
-                            }
-
-                          },
-                        ),
 
 
 
-                        if (formFieldState.hasError)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8, top: 10),
-                            child: Text(
-                              formFieldState.errorText!,
-                              style: TextStyle(
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: 13,
-                                  color: Colors.red[700],
-                                  height: 0.5),
-                            ),
-                          )
-                      ],
-                    );
-                  })
-          ),
-
-          Text(filename),
-          ElevatedButton(onPressed: (){uploadFile(cvFile!);}, child: Text('upload')),
 
           //Latest jobs
           const LatestJobs(),

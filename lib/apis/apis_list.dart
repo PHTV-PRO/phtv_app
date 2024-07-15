@@ -58,6 +58,16 @@ class CandidateJobApi extends ApiConfig {
   static final saveJob = CandidateJobApi(path: '/save', method: RequestMethod.post);
 }
 
+class CandidateCVApi extends ApiConfig {
+  CandidateCVApi(
+      {super.module = 'candidate/cv',
+        required super.path,
+        required super.method,
+        super.isAuth = true});
+
+  static final getAllCVs = CandidateCVApi(path: '/account', method: RequestMethod.get);
+}
+
 class LocationApi extends ApiConfig {
   LocationApi(
       {super.module = 'general/city_province',
