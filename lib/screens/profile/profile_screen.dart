@@ -44,7 +44,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       isLoggedIn = false;
     });
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 
   @override
@@ -368,6 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: const Text('Signout'),
                       onPressed: () {
                         deleteAuthAll();
+                        Navigator.of(context).pop();
                       },
                     ),
 
