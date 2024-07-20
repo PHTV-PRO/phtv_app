@@ -65,7 +65,7 @@ class _SavedJobsState extends State<SavedJobs> {
                 const SizedBox(height: 10),
                 isLoggedIn ? isLoading ? const CircularProgressIndicator() : (
                     jobList.isEmpty ? Container(height: 110, alignment: Alignment.center, child: const Text('You still not save any jobs')) : SizedBox(
-                      height: 220,
+                      height: 240,
                       child: ListView.builder(
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,

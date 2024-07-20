@@ -8,6 +8,7 @@ class AuthApi extends ApiConfig {
         super.isAuth = false});
 
   static final login = AuthApi(path: '/login', method: RequestMethod.post);
+  static final checkToken = AuthApi(path: '/check_token', method: RequestMethod.post);
 }
 
 class SearchApi extends ApiConfig {
@@ -66,6 +67,7 @@ class CandidateCVApi extends ApiConfig {
         super.isAuth = true});
 
   static final getAllCVs = CandidateCVApi(path: '/account', method: RequestMethod.get);
+  static final deleteCV = CandidateCVApi(path: '', method: RequestMethod.delete);
 }
 
 class LocationApi extends ApiConfig {

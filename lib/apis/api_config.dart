@@ -103,7 +103,7 @@ class RequestHandler {
                     ],
                   ),
                 ));
-        // throw Exception(response.reasonPhrase);
+        throw Exception(response.reasonPhrase);
       }
     } catch (e) {
       print('There is an issue with : $urlString');

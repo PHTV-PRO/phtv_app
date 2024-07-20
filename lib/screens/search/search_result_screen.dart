@@ -78,6 +78,17 @@ class _SearchResultScreenState extends State<SearchResultScreen> with SingleTick
         );
   }
 
+  Container noResult() {
+    return Container(
+      alignment: Alignment.topCenter,
+        margin: const EdgeInsets.symmetric(vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: const Text('Sorry we did not found any result,\n please try other keyword', style: TextStyle(
+          color: Colors.black45
+        ), textAlign: TextAlign.center,)
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -163,19 +174,25 @@ class _SearchResultScreenState extends State<SearchResultScreen> with SingleTick
           body: TabBarView(
             controller: _tabController,
             children: [
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(children: [
-                  for(int i =0; i <jobsData.length; i++)
-                    JobCard(jobInfo: jobsData[i])
-                ]),
+              SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: jobsData.isEmpty
+                      ? noResult()
+                      : Column(children: [
+                    for(int i =0; i <jobsData.length; i++)
+                      JobCard(jobInfo: jobsData[i])
+                  ]),
+                ),
               ),
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(children: [
-                  for(int i =0; i <companyData.length; i++)
-                    CompanyCard(company: companyData[i])
-                ]),
+              SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.all(10.0),
+                  child: companyData.isEmpty ? noResult() : Column(children: [
+                    for(int i =0; i <companyData.length; i++)
+                      CompanyCard(company: companyData[i])
+                  ]),
+                ),
               ),
             ],
           )),

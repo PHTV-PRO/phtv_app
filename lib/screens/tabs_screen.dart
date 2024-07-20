@@ -9,6 +9,8 @@ import 'package:phtv_app/screens/profile/profile_screen.dart';
 import 'package:phtv_app/screens/search/search_screen.dart';
 import 'package:phtv_app/screens/tools_screen.dart';
 
+import '../apis/apis_list.dart';
+
 var storage = const FlutterSecureStorage();
 
 class TabsScreen extends ConsumerStatefulWidget {
@@ -25,14 +27,25 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   bool isLoggedIn = false;
 
   void _selectPage(int index) async {
-    var loggedUser = await storage.read(key: "user");
     setState(() {
       _selectPageIndex = index;
     });
   }
 
   loginState() async {
-    // isLoggedIn = await AppUtils.checkLoginState();
+    String? userToken = await storage.read(key: 'token');
+    if(userToken != null || userToken != '') {
+      print(userToken);
+      var data = await AuthApi.checkToken.sendRequest(token: userToken);
+      if (data != null) {
+        setState(() {
+          isLoggedIn = true;
+        });
+      }
+    }else{
+      await storage.deleteAll();
+    }
+
   }
 
   @override
@@ -43,7 +56,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    loginState();
+    // loginState();
     Widget activePage = const JobsScreen();
 
     switch (_selectPageIndex) {

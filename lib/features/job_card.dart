@@ -23,6 +23,7 @@ class JobCard extends StatelessWidget{
     int jobId = jobInfo['id'] ?? 0;
     String companyName = jobInfo['company']['name'] ?? 'company name';
     String jobTitle = jobInfo['title'] ?? 'job title';
+    bool isSaved = jobInfo['job_is_save'] ?? false;
     String logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
     String province = jobInfo['location']['cityProvince']['name'] ?? 'Ho Chi Minh';;
     String salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
@@ -105,9 +106,9 @@ class JobCard extends StatelessWidget{
                         };
                         await CandidateJobApi.saveJob.sendRequest(body: jsonBody2, token: userToken);
                       },
-                      icon: const Icon(
-                        FluentIcons.bookmark_20_regular,
-                        color: Colors.grey,
+                      icon: Icon(isSaved == true ?
+                      FluentIcons.bookmark_20_filled : FluentIcons.bookmark_20_regular,
+                        color: isSaved == true ? Colors.red : Colors.grey,
                       ),
                     ),
                   ],

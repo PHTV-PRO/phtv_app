@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:enefty_icons/enefty_icons.dart';
@@ -7,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/apis/apis_list.dart';
+import 'package:phtv_app/screens/pdf_view_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
@@ -40,13 +40,21 @@ class _MyCVScreenState extends State<MyCVScreen> {
     }
   }
 
+  deleteCV(int id) async {
+    String? userToken = await storage.read(key: 'token');
+    await CandidateCVApi.deleteCV.sendRequest(token: userToken, urlParam: '?id=$id');
+    getAllCV();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color.fromARGB(255, 241, 242, 243),
         appBar: AppBar(
-          title: const Text('My CV'),
+          title: const Text('My CV', style: TextStyle(fontWeight: FontWeight.bold),),
           centerTitle: true,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
         ),
         bottomNavigationBar: Container(
           color: Colors.transparent,
@@ -78,30 +86,18 @@ class _MyCVScreenState extends State<MyCVScreen> {
                           'Authorization': 'Bearer $userToken',
                           'Content-Type': 'application/json',
                         };
-                        var request = http.MultipartRequest(
-                            'POST', Uri.parse('http://10.0.2.2:8080/api/candidate/cv'));
+                        var request = http.MultipartRequest('POST',
+                            Uri.parse('http://10.0.2.2:8080/api/candidate/cv'));
                         request.headers.addAll(reqHeaders);
-                        // Map<String, String> data = {
-                        //   'name': cvName
-                        // };
-                        // var data = {
-                        //   'name': cvName,
-                        // };
-                        // request.fields.addAll(jsonEncode(data) as Map<String, String>);
-                        request.fields.addAll(
-                          {'name': cvName,}
-                        );
+                        request.fields.addAll({
+                          'name': cvName,
+                        });
                         request.files.add(http.MultipartFile.fromBytes(
                           'file',
                           File(upfile.path).readAsBytesSync(),
                           filename: filename,
                         ));
                         var response = await request.send();
-                        final respStr = await response.stream.bytesToString();
-
-                        print(request.toString());
-                        print(cvName);
-
                         if (response.statusCode == 200) {
                           Navigator.of(context).pop();
                         } else {
@@ -133,18 +129,24 @@ class _MyCVScreenState extends State<MyCVScreen> {
                                           borderType: BorderType.RRect,
                                           radius: const Radius.circular(15),
                                           child: Container(
-                                            padding: const EdgeInsets.all(10),
-                                            height: 150,
-                                            width: double.infinity,
-                                            alignment: Alignment.center,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(EneftyIcons.document_upload_outline, size: 60, color: Colors.grey.withOpacity(0.5),),
-                                                Text(filename),
-                                              ],
-                                            )
-                                          ),
+                                              padding: const EdgeInsets.all(10),
+                                              height: 150,
+                                              width: double.infinity,
+                                              alignment: Alignment.center,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    EneftyIcons
+                                                        .document_upload_outline,
+                                                    size: 60,
+                                                    color: Colors.grey
+                                                        .withOpacity(0.5),
+                                                  ),
+                                                  Text(filename),
+                                                ],
+                                              )),
                                         ),
                                         onTap: () async {
                                           var file = await FilePicker.platform.pickFiles();
@@ -167,12 +169,12 @@ class _MyCVScreenState extends State<MyCVScreen> {
                                             color: Colors.red[700],
                                             height: 0.5),
                                       ),
-
                                   ],
                                 );
                               }),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 6),
                                 child: Form(
                                   key: _formCVName,
                                   child: TextFormField(
@@ -185,11 +187,10 @@ class _MyCVScreenState extends State<MyCVScreen> {
                                       hintText: "Please enter CV name",
                                       fillColor: Colors.white,
                                       errorStyle: const TextStyle(color: Colors.red),
-                                      contentPadding:
-                                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                     ),
                                     validator: (value) {
-                                      if(cvFile == null){
+                                      if (cvFile == null) {
                                         return 'Please select CV to upload';
                                       }
                                       if (value == null || value.trim().isEmpty) {
@@ -205,7 +206,6 @@ class _MyCVScreenState extends State<MyCVScreen> {
                               ),
                               ElevatedButton(
                                   onPressed: () async {
-                                    print(cvName);
                                     final isValid = _formCVName.currentState?.validate();
                                     if (!isValid!) {
                                       return;
@@ -217,7 +217,6 @@ class _MyCVScreenState extends State<MyCVScreen> {
 
                                     await Future.delayed(const Duration(seconds: 1));
                                     uploadFile(cvFile!);
-
                                   },
                                   child: Text(status)),
                             ],
@@ -227,9 +226,9 @@ class _MyCVScreenState extends State<MyCVScreen> {
                     }).then((value) => getAllCV());
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.red),
-                foregroundColor: MaterialStateProperty.all(Colors.white),
-                shape: MaterialStateProperty.all(
+                backgroundColor: WidgetStateProperty.all(Colors.red),
+                foregroundColor: WidgetStateProperty.all(Colors.white),
+                shape: WidgetStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -239,29 +238,94 @@ class _MyCVScreenState extends State<MyCVScreen> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            Container(
-                child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : (cvList.isEmpty
-                        ? Container(
-                            height: 110,
-                            alignment: Alignment.center,
-                            child: const Text('You still not create any CV'))
-                        : ListView.builder(
-                            physics: const ClampingScrollPhysics(),
-                            shrinkWrap: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: cvList.length,
-                            itemBuilder: (BuildContext context, int index) =>
-                                Container(
-                              width: 340,
-                              margin: const EdgeInsets.only(right: 14),
-                              child: Text(cvList[index]['file_name']),
-                            ),
-                          ))),
-          ],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                  child: isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : (cvList.isEmpty
+                          ? Container(
+                              height: 110,
+                              alignment: Alignment.center,
+                              child: const Text('You still not create any CV'))
+                          : ListView.builder(
+                              physics: const ClampingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: cvList.length,
+                              itemBuilder: (BuildContext context, int index) =>
+                                  Container(
+                                margin: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        spreadRadius: 0,
+                                        blurRadius: 6,
+                                      ),
+                                    ]
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Icon(EneftyIcons.document_favorite_outline, color: Colors.red, size: 35),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(cvList[index]['name'] != '' ? cvList[index]['name'].toString().toUpperCase() : 'NO-NAME', style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red
+                                          ),),
+                                          Text('Upload date: ${cvList[index]['create_at'].toString().substring(0,10)}', style: const TextStyle(fontSize: 12),),
+                                          const SizedBox(height: 8),
+                                          Text((cvList[index]['id'].toString())),
+                                          SizedBox(
+                                            height:25,
+                                              child: ElevatedButton.icon(onPressed: (){
+                                                print(cvList[index]['file_name']);
+                                               Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => PDFViewScreen(path: cvList[index]['file_name'])));
+
+                                              }, icon: const Icon(EneftyIcons.eye_outline, size: 18), label: const Text('Preview')))
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(onPressed: (){
+                                      showDialog(
+                                          context: context,
+                                          useRootNavigator: false,
+                                          builder: (BuildContext dialogContext) => AlertDialog(
+                                            elevation: 0,
+                                            backgroundColor: Colors.white,
+                                            title: const Text('Confirm Delete', textAlign: TextAlign.center),
+                                            content: Text('Are you sure to delete CV ${cvList[index]['name'].toString().toUpperCase()}', textAlign: TextAlign.center),
+                                            actions: [
+                                              TextButton(onPressed: (){
+                                                Navigator.of(context).pop();
+                                              }, child: const Text('Cancel')),
+                                              ElevatedButton(
+                                                  onPressed: (){
+                                                    deleteCV(cvList[index]['id']);
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+                                                  child: const Text('Confirm'))
+                                            ],
+                                          ));
+                                      }, icon: const Icon(EneftyIcons.trash_outline, size: 18, color: Colors.red))
+                                  ],
+                                ),
+                              ),
+                            ))),
+            ],
+          ),
         ));
   }
+
+
 }
