@@ -27,6 +27,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   var jobDetail = {};
   var cvList = [];
   bool isLoading = true;
+  int jobId = 0;
   String jobTitle = '';
   String companyName = '';
   String jobDescription = '';
@@ -35,6 +36,8 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   String jobBenefit = '';
   String createdDate = '';
 
+  int selectCvId = 0;
+  bool isApplied = false;
 
   @override
   void initState() {
@@ -54,6 +57,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   getJobDetail(int id) async {
     jobDetail = await JobApi.getJobDetail.sendRequest(urlParam: '/${id.toString()}');
     setState(() {
+      jobId = jobDetail['id'] ?? 0;
       jobTitle = jobDetail['title'] ?? '';
       companyName = jobDetail['company']['name'] ?? '';
       jobDescription = jobDetail['description'] ?? '';
@@ -61,6 +65,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
       jobRequired = jobDetail['skill_required'] ?? '';
       jobBenefit = jobDetail['benefit'] ?? '';
       createdDate = AppDateUtils.daysBetween(jobDetail['start_date']) ?? '';
+      isApplied = jobDetail['job_is_apply'] ?? false;
       isLoading = false;
     });
   }
@@ -78,6 +83,23 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
     }
   }
 
+  applyJob() async {
+    var userToken = await storage.read(key: 'token');
+    Map<String, String> jsonBody = {
+      'job_id': jobId.toString(),
+      'cv_id' : selectCvId.toString(),
+      'note' : ''
+    };
+
+    var data = await CandidateJobApi.applyJob.sendRequest(body: jsonBody, token: userToken);
+    if (data != null){
+      setState(() {
+        isApplied = true;
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return isLoading == true
@@ -85,12 +107,19 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
         : Scaffold(
             appBar: AppBar(
               title: const Text(
-                'Job Details',
+                'Job Details', style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold
+              ),
+              ),
+              backgroundColor: Colors.red,
+              leading: const BackButton(
+                  color: Colors.white
               ),
               centerTitle: true,
               actions: [
                 IconButton(
-                    icon: const Icon(EneftyIcons.send_2_outline),
+                    icon: const Icon(EneftyIcons.send_2_outline, color: Colors.white,),
                     onPressed: () {}),
               ],
             ),
@@ -180,9 +209,9 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                 alignment: Alignment.center,
                                                 child: const Text('You still not create any CV'))
                                                 : Container(
-                                                  margin: const EdgeInsets.only(top: 40),
-                                                padding: const EdgeInsets.all(8),
-                                                height: 560,
+                                                  margin: const EdgeInsets.only(top: 50),
+                                                // padding: const EdgeInsets.all(8),
+                                                height: 550,
                                                 child: SingleChildScrollView(
                                                   child: Column(
                                                   children: [
@@ -192,12 +221,12 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                       scrollDirection: Axis.vertical,
                                                       itemCount: cvList.length,
                                                       itemBuilder: (BuildContext context, int index) =>
-                                                          Container(
-                                                            margin: const EdgeInsets.all(10),
-                                                            padding: const EdgeInsets.all(20),
+                                                        RadioListTile(
+                                                          title: Container(
+                                                            padding: const EdgeInsets.all(15),
                                                             decoration: BoxDecoration(
                                                                 borderRadius: BorderRadius.circular(10),
-                                                                color: Colors.white,
+                                                                color: cvList[index]['id'] == selectCvId ? const Color.fromARGB(255, 252, 203, 203): Colors.white,
                                                                 boxShadow: [
                                                                   BoxShadow(
                                                                     color: Colors.grey.withOpacity(0.4),
@@ -215,7 +244,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                                   child: Column(
                                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                                     children: [
-                                                                      Text(cvList[index]['name'] != '' ? cvList[index]['name'].toString().toUpperCase() : 'NO-NAME', style: const TextStyle(
+                                                                      Text(cvList[index]['name'].toString().toUpperCase(), style: const TextStyle(
                                                                           fontWeight: FontWeight.bold,
                                                                           color: Colors.red
                                                                       ),),
@@ -232,11 +261,18 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                               ],
                                                             ),
                                                           ),
+                                                          value: cvList[index]['id'],
+                                                          groupValue: selectCvId,
+                                                          onChanged: (value) {
+                                                            setState(() {
+                                                              selectCvId = value;
+                                                            });
+                                                          },
+                                                        ),
                                                     ),
-                                                  ],
-                                                                                                ),
+                                                  ],                               ),
                                                 ),
-                                                                                            )),
+                                            )),
                                             Positioned.fill(
                                               bottom: 10,
                                                 child: Align(
@@ -244,7 +280,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                   child: SizedBox(
                                                     width: 250,
                                                     child: ElevatedButton(
-                                                    onPressed: (){},
+                                                    onPressed: applyJob,
                                                       style: ButtonStyle(
                                                         backgroundColor: WidgetStateProperty.all(Colors.red),
                                                         foregroundColor: WidgetStateProperty.all(Colors.white),
@@ -254,7 +290,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                           ),
                                                         ),
                                                       ),
-                                                    child: const Text('Apply'),
+                                                    child: const Text('Apply This Job'),
                                                     ),
                                                   ),
                                                 ))
@@ -275,7 +311,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                 ),
                               ),
                             ),
-                            child: const Text('EASY APPLY'),
+                            child: Text(isApplied == true ? 'You already applied' : 'EASY APPLY'),
                           ),
                         )
                       ],

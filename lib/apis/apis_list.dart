@@ -57,6 +57,7 @@ class CandidateJobApi extends ApiConfig {
   static final getSavedJobs = CandidateJobApi(path: '/save', method: RequestMethod.get);
   static final viewJob = CandidateJobApi(path: '/viewed', method: RequestMethod.post);
   static final saveJob = CandidateJobApi(path: '/save', method: RequestMethod.post);
+  static final applyJob = CandidateJobApi(path: '/application', method: RequestMethod.post);
 }
 
 class CandidateCVApi extends ApiConfig {

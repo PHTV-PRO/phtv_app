@@ -80,10 +80,9 @@ class RequestHandler {
           headers: headers, body: json.encode(body));
 
       if (response.statusCode == 200) {
-        final dynamic result =
-            json.decode(utf8.decode(response.bodyBytes))['data'];
+        final dynamic result = json.decode(utf8.decode(response.bodyBytes))['data'];
         return result;
-      } else {
+      } else if(json.decode(utf8.decode(response.bodyBytes))['message'] != null) {
         OneContext().showDialog(
             builder: (_) => AlertDialog(
                   title: const Text('Oops!', textAlign: TextAlign.center,),
@@ -98,11 +97,12 @@ class RequestHandler {
                         height: 120.0,
                         fit: BoxFit.cover,
                       ),
-                      Text(
-                          json.decode(utf8.decode(response.bodyBytes))['message']),
+                      Text(json.decode(utf8.decode(response.bodyBytes))['message']),
                     ],
                   ),
                 ));
+        throw Exception(response.reasonPhrase);
+      } else{
         throw Exception(response.reasonPhrase);
       }
     } catch (e) {

@@ -34,16 +34,22 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   loginState() async {
     String? userToken = await storage.read(key: 'token');
-    if(userToken != null || userToken != '') {
+    if(userToken != null && userToken != '') {
       print(userToken);
-      var data = await AuthApi.checkToken.sendRequest(token: userToken);
-      if (data != null) {
-        setState(() {
-          isLoggedIn = true;
-        });
-      }
+      // Map<String, String> jsonBody = {
+      //   'token': userToken
+      // };
+      // var data = await AuthApi.checkToken.sendRequest(body: jsonBody);
+      // print(data['name'].toString());
+      // if (data != null) {
+      //   setState(() {
+      //     isLoggedIn = true;
+      //   });
+      // }else{
+      //   // await storage.deleteAll();
+      // }
     }else{
-      await storage.deleteAll();
+      // await storage.deleteAll();
     }
 
   }
@@ -56,7 +62,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // loginState();
+    loginState();
     Widget activePage = const JobsScreen();
 
     switch (_selectPageIndex) {

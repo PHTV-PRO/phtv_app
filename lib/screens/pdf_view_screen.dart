@@ -9,7 +9,7 @@ class PDFViewScreen extends StatefulWidget {
   final String path;
 
   @override
-  _PDFViewScreenState createState() => _PDFViewScreenState();
+  State<PDFViewScreen> createState() => _PDFViewScreenState();
 }
 
 class _PDFViewScreenState extends State<PDFViewScreen> {
