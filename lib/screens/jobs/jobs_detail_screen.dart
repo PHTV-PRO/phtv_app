@@ -55,7 +55,13 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   }
 
   getJobDetail(int id) async {
-    jobDetail = await JobApi.getJobDetail.sendRequest(urlParam: '/${id.toString()}');
+    String? userToken = await storage.read(key: 'token');
+    if(userToken == null || userToken == ''){
+      jobDetail = await JobApi.getJobDetail.sendRequest(token: userToken, urlParam: '/${id.toString()}');
+    }else{
+      jobDetail = await JobApi.getJobDetailAuth.sendRequest(token: userToken, urlParam: '/${id.toString()}');
+    }
+
     setState(() {
       jobId = jobDetail['id'] ?? 0;
       jobTitle = jobDetail['title'] ?? '';
@@ -277,20 +283,45 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                               bottom: 10,
                                                 child: Align(
                                                   alignment: Alignment.bottomCenter,
-                                                  child: SizedBox(
-                                                    width: 250,
-                                                    child: ElevatedButton(
-                                                    onPressed: applyJob,
-                                                      style: ButtonStyle(
-                                                        backgroundColor: WidgetStateProperty.all(Colors.red),
-                                                        foregroundColor: WidgetStateProperty.all(Colors.white),
-                                                        shape: WidgetStateProperty.all(
-                                                          RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(6),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                    child: Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          child: ElevatedButton(
+                                                            onPressed: (){},
+                                                            style: ButtonStyle(
+                                                              backgroundColor: WidgetStateProperty.all(Colors.white),
+                                                              shape: WidgetStateProperty.all(
+                                                                RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(6),
+                                                                ),
+                                                              ),
+                                                                side: WidgetStateProperty.all(
+                                                                    const BorderSide(color: Colors.red))
+                                                            ),
+                                                            child: const Text('Upload CV'),
                                                           ),
                                                         ),
-                                                      ),
-                                                    child: const Text('Apply This Job'),
+                                                        const SizedBox(width: 12),
+                                                        Expanded(
+                                                          child: SizedBox(
+                                                            child: ElevatedButton(
+                                                            onPressed: applyJob,
+                                                              style: ButtonStyle(
+                                                                backgroundColor: WidgetStateProperty.all(Colors.red),
+                                                                foregroundColor: WidgetStateProperty.all(Colors.white),
+                                                                shape: WidgetStateProperty.all(
+                                                                  RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(6),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            child: const Text('Apply This Job'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ))

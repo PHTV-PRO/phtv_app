@@ -3,6 +3,9 @@ import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/screens/auth/login_screen.dart';
+import 'package:phtv_app/features/job_card.dart';
+import 'package:phtv_app/common_widgets/body_text.dart';
+import 'package:phtv_app/common_widgets/header_text.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -13,7 +16,8 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin{
+  late TabController _tabController;
   var userInfo = {};
   // bool isLoading = true;
   bool isLoggedIn = false;
@@ -25,9 +29,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_handleTabSelection);
     super.initState();
     loginState();
   }
+
 
   loginState() async {
     if (await storage.read(key: "user") != null) {
@@ -36,6 +43,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         userInfo = json.decode(user!);
         isLoggedIn = true;
       });
+    }
+  }
+
+  _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      setState(() {});
     }
   }
 

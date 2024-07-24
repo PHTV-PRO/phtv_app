@@ -50,7 +50,56 @@ class ToolsScreen extends StatelessWidget{
                             'My CV',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontSize: 20,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          const Spacer(),
+                          const Icon(EneftyIcons.arrow_right_3_outline,size: 22,)
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.4),
+                    spreadRadius: 0,
+                    blurRadius: 10,
+                  ),
+                ]
+            ),
+            margin: const EdgeInsets.only(bottom: 12),
+            child: InkWell(
+              onTap: () async {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          Image.asset(
+                            'assets/images/mycompany.png',
+                            width: 60.0,
+                            height: 60.0,
+                            fit: BoxFit.cover,
+                          ),
+                          const SizedBox(width: 14),
+                          const Text(
+                            'My Following Companies',
+                            style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
                           const Spacer(),
@@ -99,7 +148,7 @@ class ToolsScreen extends StatelessWidget{
                             'Salary Converter',
                             style: TextStyle(
                                 color: Colors.red,
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
                           const Spacer(),

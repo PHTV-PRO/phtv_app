@@ -22,14 +22,26 @@ class _SavedJobsState extends State<SavedJobs> {
   }
 
   getJobs() async {
-    var userToken = await storage.read(key: 'token');
-    var data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken);
-    jobList = data.map((e) => e).toList();
-    if (userToken != null && data != null) {
-      setState(() {
-        isLoggedIn = true;
-        isLoading = false;
-      });
+    String? userToken = await storage.read(key: 'token');
+    if(userToken != null && userToken != '') {
+      Map<String, String> jsonBody = {
+        'token': userToken
+      };
+      var logUser = await AuthApi.checkToken.sendRequest(body: jsonBody);
+      if (logUser != null) {
+        var data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken);
+        if(data != null){
+          jobList = data.map((e) => e).toList();
+          setState(() {
+            isLoggedIn = true;
+            isLoading = false;
+          });
+        }
+      }else{
+        await storage.deleteAll();
+      }
+    }else{
+      await storage.deleteAll();
     }
   }
 
@@ -63,7 +75,7 @@ class _SavedJobsState extends State<SavedJobs> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                isLoggedIn ? isLoading ? const CircularProgressIndicator() : (
+                isLoggedIn ? isLoading ? const Center(child: CircularProgressIndicator()) : (
                     jobList.isEmpty ? Container(height: 110, alignment: Alignment.center, child: const Text('You still not save any jobs')) : SizedBox(
                       height: 240,
                       child: ListView.builder(

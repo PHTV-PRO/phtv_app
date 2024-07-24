@@ -80,6 +80,7 @@ flutter:
     - assets/images/promo.jpg
     - assets/images/icon.png
     - assets/images/mycvicon.png
+    - assets/images/mycompany.png
     - assets/images/salaryconvert.png
     - assets/images/fail.png
     - assets/images/splashscreen.svg

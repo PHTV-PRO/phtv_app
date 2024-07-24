@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/screens/companies/companies_screen.dart';
 import 'package:phtv_app/screens/jobs/jobs_screen.dart';
+import 'package:phtv_app/screens/my_jobs/my_jobs_screen.dart';
 import 'package:phtv_app/screens/profile/profile_screen.dart';
 import 'package:phtv_app/screens/search/search_screen.dart';
 import 'package:phtv_app/screens/tools_screen.dart';
@@ -35,23 +36,21 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   loginState() async {
     String? userToken = await storage.read(key: 'token');
     if(userToken != null && userToken != '') {
-      print(userToken);
-      // Map<String, String> jsonBody = {
-      //   'token': userToken
-      // };
-      // var data = await AuthApi.checkToken.sendRequest(body: jsonBody);
-      // print(data['name'].toString());
-      // if (data != null) {
-      //   setState(() {
-      //     isLoggedIn = true;
-      //   });
-      // }else{
-      //   // await storage.deleteAll();
-      // }
-    }else{
-      // await storage.deleteAll();
-    }
+      Map<String, String> jsonBody = {
+        'token': userToken
+      };
+      var data = await AuthApi.checkToken.sendRequest(body: jsonBody);
 
+      if (data != null) {
+        setState(() {
+          isLoggedIn = true;
+        });
+      }else{
+        await storage.deleteAll();
+      }
+    }else{
+      await storage.deleteAll();
+    }
   }
 
   @override
@@ -62,7 +61,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    loginState();
     Widget activePage = const JobsScreen();
 
     switch (_selectPageIndex) {
@@ -73,14 +71,17 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         activePage = const CompaniesScreen();
         break;
       case 2:
-        activePage = const ToolsScreen();
+        activePage = const MyJobsScreen();
         break;
       case 3:
+        activePage = const ToolsScreen();
+        break;
+      case 4:
         activePage = const ProfileScreen();
     }
 
     return Scaffold(
-      appBar: _selectPageIndex != 3 ? AppBar(
+      appBar: _selectPageIndex == 4 || _selectPageIndex == 2 ? null : AppBar(
         backgroundColor: Colors.red,
         title: _selectPageIndex != 1 ? const Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +140,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
             ),
           ),
         ],
-      ) : null,
+      ),
       backgroundColor: const Color.fromARGB(255, 241, 242, 243),
       body: activePage,
       bottomNavigationBar: Container(
@@ -178,6 +179,10 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
                   icon: Icon(EneftyIcons.home_2_outline),
                   label: 'Companies',
                   activeIcon: Icon(EneftyIcons.home_2_bold)),
+              BottomNavigationBarItem(
+                  icon: Icon(EneftyIcons.paperclip_2_outline),
+                  label: 'My Jobs',
+                  activeIcon: Icon(EneftyIcons.paperclip_2_bold)),
               BottomNavigationBarItem(
                   icon: Icon(EneftyIcons.element_3_outline),
                   label: 'Tools',

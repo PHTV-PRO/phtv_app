@@ -44,6 +44,7 @@ class JobApi extends ApiConfig {
 
   static final getLatestJobs = JobApi(path: '', method: RequestMethod.get);
   static final getJobDetail = JobApi(path: '', method: RequestMethod.get);
+  static final getJobDetailAuth = JobApi(path: '', isAuth: true, method: RequestMethod.get);
 }
 
 class CandidateJobApi extends ApiConfig {
@@ -53,6 +54,7 @@ class CandidateJobApi extends ApiConfig {
         required super.method,
         super.isAuth = true});
 
+  static final getAppliedJobs = CandidateJobApi(path: '/application', method: RequestMethod.get);
   static final getViewedJobs = CandidateJobApi(path: '/viewed', method: RequestMethod.get);
   static final getSavedJobs = CandidateJobApi(path: '/save', method: RequestMethod.get);
   static final viewJob = CandidateJobApi(path: '/viewed', method: RequestMethod.post);
