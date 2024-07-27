@@ -1,5 +1,6 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:phtv_app/modals/login_request.dart';
 import 'package:phtv_app/screens/my_cv/my_cv_screen.dart';
 
 class ToolsScreen extends StatelessWidget{
@@ -25,9 +26,17 @@ class ToolsScreen extends StatelessWidget{
             ),
             margin: const EdgeInsets.only(bottom: 12),
             child: InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => const MyCVScreen()));
+              onTap: () async {
+                var userToken = await storage.read(key: "token");
+                if (userToken == null) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+                        return const LoginRequestModal();
+                      });
+                }else{
+                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const MyCVScreen()));
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16),
@@ -77,7 +86,18 @@ class ToolsScreen extends StatelessWidget{
             ),
             margin: const EdgeInsets.only(bottom: 12),
             child: InkWell(
-              onTap: () async {},
+              onTap: () async {
+                var userToken = await storage.read(key: "token");
+                if (userToken == null) {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+                        return const LoginRequestModal();
+                      });
+                }else{
+
+                }
+              },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16),
                 child: SizedBox(

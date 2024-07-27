@@ -8,6 +8,7 @@ class LoginRequestModal extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       elevation: 0,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(
@@ -23,9 +24,8 @@ class LoginRequestModal extends StatelessWidget {
         text: const TextSpan(
             style: TextStyle(
                 color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-            text: "Welcome to PHTV PRO"),
+                fontSize: 18),
+            text: "Please login to continue"),
       ),
       content: SingleChildScrollView(
         padding: const EdgeInsets.all(14.0),

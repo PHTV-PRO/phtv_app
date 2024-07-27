@@ -45,7 +45,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
     _tabController.addListener(_handleTabSelection);
     super.initState();
     getJobDetail(widget.jobId);
-    getAllCV();
+    getAllCV(10,1);
   }
 
   _handleTabSelection() {
@@ -57,7 +57,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   getJobDetail(int id) async {
     String? userToken = await storage.read(key: 'token');
     if(userToken == null || userToken == ''){
-      jobDetail = await JobApi.getJobDetail.sendRequest(token: userToken, urlParam: '/${id.toString()}');
+      jobDetail = await JobApi.getJobDetail.sendRequest(urlParam: '/${id.toString()}');
     }else{
       jobDetail = await JobApi.getJobDetailAuth.sendRequest(token: userToken, urlParam: '/${id.toString()}');
     }
@@ -76,10 +76,10 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
     });
   }
 
-  getAllCV() async {
+  getAllCV(int size, int page) async {
     String? userToken = await storage.read(key: 'token');
     if (userToken != null && userToken != '') {
-      var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken);
+      var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       if (data != null) {
         cvList = data.map((e) => e).toList();
         setState(() {
@@ -276,7 +276,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                           },
                                                         ),
                                                     ),
-                                                  ],                               ),
+                                                  ],),
                                                 ),
                                             )),
                                             Positioned.fill(

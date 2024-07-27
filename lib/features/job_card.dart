@@ -5,31 +5,80 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:phtv_app/apis/apis_list.dart';
+import 'package:phtv_app/modals/login_request.dart';
 import 'package:phtv_app/screens/jobs/jobs_detail_screen.dart';
 import 'package:phtv_app/utils/date_utils.dart';
 
 var storage = const FlutterSecureStorage();
 
-class JobCard extends StatelessWidget{
+class JobCard extends StatefulWidget{
+
   const JobCard({
     super.key,
-    this.jobInfo,
+    this.jobId,
+    required this.notifyParent
   });
+  final Function notifyParent;
+  final dynamic jobId;
 
-  final dynamic jobInfo;
+  @override
+  State<JobCard> createState() => _JobCardState();
+}
+
+class _JobCardState extends State<JobCard> {
+  var jobInfo = {};
+  int jobId = 0;
+  String companyName = '';
+  String jobTitle = '';
+  bool isSaved = false;
+  String logoImage = 'https://i.pravatar.cc/40';
+  String province = '';
+  String salary = '';
+  String createdDate = '';
+  List jobSkills = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getJobs(widget.jobId);
+  }
+
+  getJobs(int id) async {
+    String? userToken = await storage.read(key: 'token');
+    if(userToken != null && userToken != '') {
+      jobInfo = await JobApi.getJobDetailAuth.sendRequest(token: userToken, urlParam: '/${id.toString()}');
+    }else{
+      jobInfo = await JobApi.getJobDetail.sendRequest(urlParam: '/${id.toString()}');
+
+    }
+    if(jobInfo.isNotEmpty){
+      setState(() {
+        jobId = jobInfo['id'] ?? 0;
+        companyName = jobInfo['company']['name'] ?? 'company name';
+        jobTitle = jobInfo['title'] ?? 'job title';
+        isSaved = jobInfo['job_is_save'] ?? false;
+        logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
+        province = jobInfo['location']['cityProvince']['name'] ?? 'Ho Chi Minh';;
+        salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
+        createdDate = AppDateUtils.daysBetween(jobInfo['start_date'] ?? DateFormat("dd-MM-yy").format(DateTime.now()));
+        jobSkills = jobInfo['skills'];
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    int jobId = jobInfo['id'] ?? 0;
-    String companyName = jobInfo['company']['name'] ?? 'company name';
-    String jobTitle = jobInfo['title'] ?? 'job title';
-    bool isSaved = jobInfo['job_is_save'] ?? false;
-    String logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
-    String province = jobInfo['location']['cityProvince']['name'] ?? 'Ho Chi Minh';;
-    String salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
-    String createdDate = AppDateUtils.daysBetween(jobInfo['start_date'] ?? DateFormat("dd-MM-yy").format(DateTime.now()));
 
-    return Container(
+    Set skills = {};
+    if(jobSkills.isNotEmpty){
+      for (var i in jobSkills) {
+        skills.add(i['name']);
+      }
+    }
+
+    return isLoading ? const CircularProgressIndicator() :  Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -67,8 +116,9 @@ class JobCard extends StatelessWidget{
             'job_id': jobId.toString(),
           };
           await CandidateJobApi.viewJob.sendRequest(body: jsonBody, token: userToken);
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => JobsDetailScreen(jobId: jobId)));
+          widget.notifyParent();
+          print('ahuhu');
+          Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => JobsDetailScreen(jobId: jobId)));
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -100,11 +150,20 @@ class JobCard extends StatelessWidget{
                     ),
                     IconButton(
                       onPressed: () async {
-                        var userToken = await storage.read(key: 'token');
-                        Map<String, String> jsonBody2 = {
-                          'job_id': jobId.toString(),
-                        };
-                        await CandidateJobApi.saveJob.sendRequest(body: jsonBody2, token: userToken);
+                        var userToken = await storage.read(key: "token");
+                        if (userToken == null) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext dialogContext) {
+                                return const LoginRequestModal();
+                              });
+                        }else{
+                          Map<String, String> jsonBody2 = {
+                            'job_id': jobId.toString(),
+                          };
+                          await CandidateJobApi.saveJob.sendRequest(body: jsonBody2, token: userToken);
+                          getJobs(jobId);
+                        }
                       },
                       icon: Icon(isSaved == true ?
                       FluentIcons.bookmark_20_filled : FluentIcons.bookmark_20_regular,
@@ -147,38 +206,27 @@ class JobCard extends StatelessWidget{
                     Text(createdDate),
                   ],
                 ),
-                Row(
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 8, right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                      child: const Text(
-                        'Hello World!',
-                        style: TextStyle(
-                          color: Colors.white,
+                    for(int i = 0; i < skills.length; i++)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.grey.withOpacity(0.3),
+                        ),
+                        child: Text(
+                          skills.elementAtOrNull(i),
+                          style: const TextStyle(
+                            color: Colors.black87,
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(top: 8, right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey.withOpacity(0.5),
-                      ),
-                      child: const Text(
-                        'Hello World!',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
                   ],
-                )
+                ),
               ],
             ),
           ),

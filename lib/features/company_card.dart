@@ -28,8 +28,7 @@ class _CompanyCardState extends State<CompanyCard> {
   Widget build(BuildContext context) {
     int companyId = widget.company['id'] ?? 0;
     String companyName = widget.company['name'] ?? '';
-    // String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
-    String address = '';
+    String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
     String companySize = widget.company['size'] ?? '';
     int openingJobs = widget.company['opening_jobs'] ?? 0;
 

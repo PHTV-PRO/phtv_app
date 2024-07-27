@@ -20,7 +20,7 @@ class _CompaniesListState extends State<CompaniesList> {
   @override
   void initState() {
     super.initState();
-    getCompanies();
+    getCompanies(0,0);
   }
 
   getLocationList() async {
@@ -37,12 +37,10 @@ class _CompaniesListState extends State<CompaniesList> {
     }
   }
 
-
-
-  getCompanies() async {
+  getCompanies(int size, int page) async {
     getLocationList();
     getIndustryList();
-    companyList = await CompanyApi.getAllCompanies.sendRequest();
+    companyList = await CompanyApi.getAllCompanies.sendRequest(urlParam: '?size=$size&page=$page');
     setState(() {
       isLoading = false;
     });

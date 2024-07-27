@@ -129,7 +129,8 @@ class _LoginFormState extends State<LoginForm> {
             onPressed: _submitLogin,
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                foregroundColor: Colors.white
+                foregroundColor: Colors.white,
+              fixedSize: const Size(150, 45)
             ),
             child: const Text(
               'Sign in',

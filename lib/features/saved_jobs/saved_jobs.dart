@@ -18,10 +18,10 @@ class _SavedJobsState extends State<SavedJobs> {
   @override
   void initState() {
     super.initState();
-    getJobs();
+    getJobs(10,1);
   }
 
-  getJobs() async {
+  getJobs(int size, int page) async {
     String? userToken = await storage.read(key: 'token');
     if(userToken != null && userToken != '') {
       Map<String, String> jsonBody = {
@@ -29,7 +29,7 @@ class _SavedJobsState extends State<SavedJobs> {
       };
       var logUser = await AuthApi.checkToken.sendRequest(body: jsonBody);
       if (logUser != null) {
-        var data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken);
+        var data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
         if(data != null){
           jobList = data.map((e) => e).toList();
           setState(() {
@@ -77,7 +77,7 @@ class _SavedJobsState extends State<SavedJobs> {
                 const SizedBox(height: 10),
                 isLoggedIn ? isLoading ? const Center(child: CircularProgressIndicator()) : (
                     jobList.isEmpty ? Container(height: 110, alignment: Alignment.center, child: const Text('You still not save any jobs')) : SizedBox(
-                      height: 240,
+                      height: 260,
                       child: ListView.builder(
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
@@ -87,7 +87,7 @@ class _SavedJobsState extends State<SavedJobs> {
                             Container(
                               width: 340,
                               margin: const EdgeInsets.only(right: 14),
-                              child: JobCard(jobInfo: jobList[index]),
+                              child: JobCard(jobId: jobList[index]['id'], notifyParent: (){}),
                             ),
                       ),
                     )

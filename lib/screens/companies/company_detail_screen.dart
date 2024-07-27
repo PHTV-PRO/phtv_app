@@ -21,6 +21,10 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
   String about = '';
   String linkweb = '';
   String location = '';
+  String companySize = '';
+  Set skills = {};
+  Set industries = {};
+  int openningJob = 0;
   bool isLoading = true;
 
   @override
@@ -50,7 +54,17 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
     about = companyDetail['introduction'] ?? '';
     linkweb = companyDetail['link_website'] ?? '';
     List comAddress = companyDetail['locations'] ?? [];
+    companySize = companyDetail['size'] ?? '';
     location = comAddress.isNotEmpty ? companyDetail['locations'][0]['name'] : '';
+    openningJob = companyDetail['opening_jobs'] ?? 0;
+
+    if(companyDetail['skills'] != null){
+      for (var i in companyDetail['skills']) {
+        skills.add(i['name']);
+        industries.add(i['industry']['name']);
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
           title: const Text(
@@ -102,48 +116,24 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'Feeling Good with Home Credit',
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
                               children: [
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 8, right: 8),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Colors.grey.withOpacity(0.5),
-                                  ),
-                                  child: const Text(
-                                    'Hello World!',
-                                    style: TextStyle(
-                                      color: Colors.white,
+                                for(int i = 0; i < skills.length; i++)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: Colors.grey.withOpacity(0.5),
+                                    ),
+                                    child: Text(
+                                      skills.elementAtOrNull(i),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 8, right: 8),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: Colors.grey.withOpacity(0.5),
-                                  ),
-                                  child: const Text(
-                                    'Hello World!',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                             Container(
@@ -158,7 +148,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                                 children: [
                                   Text('GET NOTIFICATION', style: TextStyle(color: Colors.red[300]),),
                                   const SizedBox(width: 4),
-                                  Icon(FluentIcons.alert_20_regular, color: Colors.red[300],)
+                                  Icon(FluentIcons.mail_alert_24_regular, color: Colors.red[300],)
                                 ],
                               ),
                             )
@@ -216,23 +206,16 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const HeaderText('Information'),
-                  Row(children: [
-                    const Icon(EneftyIcons.link_outline, size: 18),
-                    const SizedBox(width: 4),
-                    Text(linkweb, style: TextStyle(
-                      color: Colors.black.withOpacity(0.6),
-                    ),),
-                    const SizedBox(width: 4),
-                    const Icon(EneftyIcons.export_outline, size: 16),
-                  ],),
-                  Row(crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                    const Icon(EneftyIcons.location_outline, size: 18),
-                    const SizedBox(width: 4),
-                    Flexible(child: Text(location, softWrap: true, style: TextStyle(
-                      color: Colors.black.withOpacity(0.6),
-                    ),)),
-                  ],)
+                      companyDetailRow(EneftyIcons.link_outline, linkweb),
+                      const SizedBox(width: 8),
+                      const Icon(EneftyIcons.export_outline, size: 16),
+                    ],
+                  ),
+                  companyDetailRow(EneftyIcons.location_outline, location),
+                  companyDetailRow(EneftyIcons.profile_2user_outline, companySize),
+                  companyDetailRow(EneftyIcons.tag_outline, industries.join(", ")),
                 ],
               ),
             ),
@@ -268,11 +251,9 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                             isScrollable: true,
                             indicator: BoxDecoration(
                               borderRadius: BorderRadius.circular(40),
-                              // Creates border
                               color: Colors.red,
                             ),
-                            overlayColor:
-                                MaterialStateProperty.all(Colors.transparent),
+                            overlayColor: WidgetStateProperty.all(Colors.transparent),
                             padding: const EdgeInsets.symmetric(horizontal: 6),
                             labelColor: Colors.white,
                             labelStyle:
@@ -285,7 +266,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                             controller: _tabController,
                             tabs: [
                               myTab('About', 0),
-                              myTab('Opening', 2),
+                              myTab('Opening', openningJob),
                             ],
                           ),
                         ),
@@ -410,6 +391,23 @@ Container myTab(String text, int count) {
   );
 }
 
+Container companyDetailRow(IconData icon, String detail) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+        Icon(icon, size: 18),
+        const SizedBox(width: 6),
+        Flexible(child: Text(detail, softWrap: true, style: TextStyle(
+          color: Colors.black.withOpacity(0.6),
+        ),)),
+      ],
+    ),
+  );
+}
+
 Container aboutTab(String about) {
   return Container(
     margin: const EdgeInsets.only(top: 10),
@@ -422,8 +420,8 @@ Container openingTab() {
       margin: const EdgeInsets.only(top: 12),
       child: Column(
         children: [
-          JobCard(jobInfo: 1),
-          JobCard(jobInfo: 1)
+          JobCard(jobId: 1, notifyParent: (){}),
+          JobCard(jobId: 1, notifyParent: (){})
         ],
       )
   );

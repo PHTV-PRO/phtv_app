@@ -24,13 +24,13 @@ class _MyCVScreenState extends State<MyCVScreen> {
   @override
   void initState() {
     super.initState();
-    getAllCV();
+    getAllCV(5,1);
   }
 
-  getAllCV() async {
+  getAllCV(int size, int page) async {
     String? userToken = await storage.read(key: 'token');
     if (userToken != null && userToken != '') {
-      var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken);
+      var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       if (data != null) {
         cvList = data.map((e) => e).toList();
         setState(() {
@@ -43,7 +43,7 @@ class _MyCVScreenState extends State<MyCVScreen> {
   deleteCV(int id) async {
     String? userToken = await storage.read(key: 'token');
     await CandidateCVApi.deleteCV.sendRequest(token: userToken, urlParam: '?id=$id');
-    getAllCV();
+    getAllCV(10,1);
   }
 
   @override
@@ -223,7 +223,7 @@ class _MyCVScreenState extends State<MyCVScreen> {
                           ),
                         ),
                       );
-                    }).then((value) => getAllCV());
+                    }).then((value) => getAllCV(10,1));
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(Colors.red),

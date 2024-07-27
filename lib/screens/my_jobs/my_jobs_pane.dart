@@ -18,19 +18,19 @@ class _MyJobsPaneState extends State<MyJobsPane>{
   @override
   void initState() {
     super.initState();
-    getJobs();
+    getJobs(10,1);
   }
 
-  getJobs() async {
+  getJobs(int size, int page) async {
     String? userToken = await storage.read(key: 'token');
     if(userToken != null && userToken != '') {
       List data = [];
       if(widget.jobType == 0){
-        data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken);
+        data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       }else if(widget.jobType == 1){
-        data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken);
+        data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       }else if(widget.jobType == 2){
-        data = await CandidateJobApi.getViewedJobs.sendRequest(token: userToken);
+        data = await CandidateJobApi.getViewedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       }
       if(data.isNotEmpty){
         jobList = data.map((e) => e).toList();
@@ -70,7 +70,7 @@ class _MyJobsPaneState extends State<MyJobsPane>{
       child: jobList.isEmpty ? noResult() : SingleChildScrollView(
         child: Column(
           children: [
-            for(var item in jobList) JobCard(jobInfo: item),
+            for(var item in jobList) JobCard(jobId: item['id'], notifyParent: (){}),
           ],
         ),
       )

@@ -181,7 +181,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> with SingleTick
                       ? noResult()
                       : Column(children: [
                     for(int i =0; i <jobsData.length; i++)
-                      JobCard(jobInfo: jobsData[i])
+                      JobCard(jobId: jobsData[i]['id'], notifyParent: (){})
                   ]),
                 ),
               ),

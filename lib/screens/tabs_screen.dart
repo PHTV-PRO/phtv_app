@@ -3,6 +3,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:phtv_app/modals/login_request.dart';
 import 'package:phtv_app/screens/companies/companies_screen.dart';
 import 'package:phtv_app/screens/jobs/jobs_screen.dart';
 import 'package:phtv_app/screens/my_jobs/my_jobs_screen.dart';
@@ -27,10 +28,25 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectPageIndex = 0;
   bool isLoggedIn = false;
 
+  @override
+  void initState() {
+    super.initState();
+    loginState();
+  }
+
   void _selectPage(int index) async {
-    setState(() {
-      _selectPageIndex = index;
-    });
+    var userToken = await storage.read(key: "token");
+    if (userToken == null && index == 2) {
+      showDialog(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return const LoginRequestModal();
+          });
+    }else{
+      setState(() {
+        _selectPageIndex = index;
+      });
+    }
   }
 
   loginState() async {
@@ -40,7 +56,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         'token': userToken
       };
       var data = await AuthApi.checkToken.sendRequest(body: jsonBody);
-
       if (data != null) {
         setState(() {
           isLoggedIn = true;
@@ -51,12 +66,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     }else{
       await storage.deleteAll();
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loginState();
   }
 
   @override

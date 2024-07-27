@@ -4,6 +4,7 @@ import 'package:enefty_icons/enefty_icons.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/ads_carousel.dart';
 import 'package:phtv_app/features/hot_jobs/hot_jobs.dart';
 import 'package:phtv_app/features/latest_jobs/latest_jobs.dart';
@@ -23,12 +24,31 @@ class JobsScreen extends StatefulWidget{
 }
 
 class _JobsScreenState extends State<JobsScreen> {
-
-
+  bool isLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
+    loginState();
+  }
+
+  loginState() async {
+    String? userToken = await storage.read(key: 'token');
+    if(userToken != null && userToken != '') {
+      Map<String, String> jsonBody = {
+        'token': userToken
+      };
+      var data = await AuthApi.checkToken.sendRequest(body: jsonBody);
+      if (data != null) {
+        setState(() {
+          isLoggedIn = true;
+        });
+      }else{
+        await storage.deleteAll();
+      }
+    }else{
+      await storage.deleteAll();
+    }
   }
 
 
@@ -73,10 +93,6 @@ class _JobsScreenState extends State<JobsScreen> {
           //Hot for you
           const HotJobs(),
 
-
-
-
-
           //Latest jobs
           const LatestJobs(),
 
@@ -84,10 +100,10 @@ class _JobsScreenState extends State<JobsScreen> {
           const AdsCarousel(),
 
           //Viewed jobs
-          const ViewedJobs(),
+          isLoggedIn == true ? const ViewedJobs() : const SizedBox.shrink(),
 
           //Saved jobs
-          const SavedJobs(),
+          isLoggedIn == true ? const SavedJobs() : const SizedBox.shrink(),
         ],
       ),
     );

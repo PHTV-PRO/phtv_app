@@ -65,7 +65,7 @@ class _LatestJobsState extends State<LatestJobs> {
                           scrollDirection: Axis.vertical,
                           itemCount: jobList.length,
                           itemBuilder: (BuildContext context, int index) =>
-                              JobCard(jobInfo: jobList[index])
+                              JobCard(jobId: jobList[index]['id'], notifyParent: (){},)
                       ),
                     ],
                   ),

@@ -16,6 +16,13 @@ class PartnerCard extends ConsumerWidget {
     String comanyImage = item['background_image'] ?? 'https://i.pravatar.cc/160';
     String companyIntro = item['introduction'] ?? '';
 
+    Set skills = {};
+    if(item['skills'] != null){
+      for (var i in item['skills']) {
+        skills.add(i['name']);
+      }
+    }
+
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
@@ -75,40 +82,26 @@ class PartnerCard extends ConsumerWidget {
                       Text('2 jobs'),
                     ],
                   ),
-                  Row(
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
                     children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 8, right: 8),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        child: const Text(
-                          'Hello World!',
-                          style: TextStyle(
-                            color: Colors.white,
+                      for(int i = 0; i < skills.length; i++)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.grey.withOpacity(0.3),
+                          ),
+                          child: Text(
+                            skills.elementAtOrNull(i),
+                            style: const TextStyle(
+                              color: Colors.black87,
+                            ),
                           ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 8, right: 8),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.grey.withOpacity(0.5),
-                        ),
-                        child: const Text(
-                          'Hello World!',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             )

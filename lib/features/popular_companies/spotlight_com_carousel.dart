@@ -19,11 +19,11 @@ class _SpotlightComCarouselState extends State<SpotlightComCarousel> {
   @override
   void initState() {
     super.initState();
-    getSpotlightCompanies();
+    getSpotlightCompanies(5,1);
   }
 
-  getSpotlightCompanies() async {
-    companyList = await CompanyApi.getSpotlightCompany.sendRequest();
+  getSpotlightCompanies(int size, int page) async {
+    companyList = await CompanyApi.getSpotlightCompany.sendRequest(urlParam: '?size=$size&page=$page');
     setState(() {
       isLoading = false;
     });
