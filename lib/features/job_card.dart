@@ -112,12 +112,13 @@ class _JobCardState extends State<JobCard> {
       child: InkWell(
         onTap: () async {
           var userToken = await storage.read(key: 'token');
-          Map<String, String> jsonBody = {
-            'job_id': jobId.toString(),
-          };
-          await CandidateJobApi.viewJob.sendRequest(body: jsonBody, token: userToken);
-          widget.notifyParent();
-          print('ahuhu');
+          if(userToken != null && userToken != ''){
+            Map<String, String> jsonBody = {
+              'job_id': jobId.toString(),
+            };
+            await CandidateJobApi.viewJob.sendRequest(body: jsonBody, token: userToken);
+            widget.notifyParent();
+          }
           Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => JobsDetailScreen(jobId: jobId)));
         },
         child: Padding(

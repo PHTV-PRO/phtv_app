@@ -30,7 +30,7 @@ class _HotJobsState extends State<HotJobs> {
       };
       var logUser = await AuthApi.checkToken.sendRequest(body: jsonBody);
       if (logUser != null) {
-        var data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
+        var data = await CandidateJobApi.getRecommendJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
         if(data != null){
           jobList = data.map((e) => e).toList();
           setState(() {

@@ -6,6 +6,7 @@ import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/body_text.dart';
 import 'package:phtv_app/common_widgets/bullet_list.dart';
 import 'package:phtv_app/common_widgets/header_text.dart';
+import 'package:phtv_app/modals/login_request.dart';
 import 'package:phtv_app/utils/date_utils.dart';
 
 import '../pdf_view_screen.dart';
@@ -45,7 +46,6 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
     _tabController.addListener(_handleTabSelection);
     super.initState();
     getJobDetail(widget.jobId);
-    getAllCV(10,1);
   }
 
   _handleTabSelection() {
@@ -62,18 +62,22 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
       jobDetail = await JobApi.getJobDetailAuth.sendRequest(token: userToken, urlParam: '/${id.toString()}');
     }
 
-    setState(() {
-      jobId = jobDetail['id'] ?? 0;
-      jobTitle = jobDetail['title'] ?? '';
-      companyName = jobDetail['company']['name'] ?? '';
-      jobDescription = jobDetail['description'] ?? '';
-      jobResponsibility = jobDetail['reponsibility'] ?? '';
-      jobRequired = jobDetail['skill_required'] ?? '';
-      jobBenefit = jobDetail['benefit'] ?? '';
-      createdDate = AppDateUtils.daysBetween(jobDetail['start_date']) ?? '';
-      isApplied = jobDetail['job_is_apply'] ?? false;
-      isLoading = false;
-    });
+    getAllCV(10,1);
+
+    if(jobDetail.isNotEmpty){
+      setState(() {
+        jobId = jobDetail['id'] ?? 0;
+        jobTitle = jobDetail['title'] ?? '';
+        companyName = jobDetail['company']['name'] ?? '';
+        jobDescription = jobDetail['description'] ?? '';
+        jobResponsibility = jobDetail['reponsibility'] ?? '';
+        jobRequired = jobDetail['skill_required'] ?? '';
+        jobBenefit = jobDetail['benefit'] ?? '';
+        createdDate = AppDateUtils.daysBetween(jobDetail['start_date']) ?? '';
+        isApplied = jobDetail['job_is_apply'] ?? false;
+        isLoading = false;
+      });
+    }
   }
 
   getAllCV(int size, int page) async {
@@ -82,9 +86,6 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
       var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       if (data != null) {
         cvList = data.map((e) => e).toList();
-        setState(() {
-          isLoading = false;
-        });
       }
     }
   }
@@ -108,8 +109,8 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    return isLoading == true
-        ? const CircularProgressIndicator()
+    return  isLoading == true
+        ? const Center(child: CircularProgressIndicator())
         : Scaffold(
             appBar: AppBar(
               title: const Text(
@@ -154,7 +155,16 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            var userToken = await storage.read(key: "token");
+                            if (userToken == null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext dialogContext) {
+                                    return const LoginRequestModal();
+                                  });
+                            }
+                          },
                           style: ButtonStyle(
                               backgroundColor:
                                   WidgetStateProperty.all(Colors.white),
@@ -179,157 +189,167 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                         const SizedBox(width: 14),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20),
-                                    ),
-                                  ),
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  builder: (BuildContext context) {
-                                    return StatefulBuilder(
-                                      builder: (BuildContext context, setState) => Container(
-                                        width: double.infinity,
-                                        height: MediaQuery.of(context).size.height * 0.85,
-                                        color: Colors.white,
-                                        child: Stack(
-                                          children: [
-                                            Positioned.fill(
-                                              top: 0,
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                                child: const Text('Please choose one CV to apply',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold
-                                                                                              ),),)
-                                            ),
-                                            Positioned(
-                                                child: cvList.isEmpty
-                                                ? Container(
-                                                height: 110,
-                                                alignment: Alignment.center,
-                                                child: const Text('You still not create any CV'))
-                                                : Container(
-                                                  margin: const EdgeInsets.only(top: 50),
-                                                // padding: const EdgeInsets.all(8),
-                                                height: 550,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                  children: [
-                                                    ListView.builder(
-                                                      physics: const ClampingScrollPhysics(),
-                                                      shrinkWrap: true,
-                                                      scrollDirection: Axis.vertical,
-                                                      itemCount: cvList.length,
-                                                      itemBuilder: (BuildContext context, int index) =>
-                                                        RadioListTile(
-                                                          title: Container(
-                                                            padding: const EdgeInsets.all(15),
-                                                            decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(10),
-                                                                color: cvList[index]['id'] == selectCvId ? const Color.fromARGB(255, 252, 203, 203): Colors.white,
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Colors.grey.withOpacity(0.4),
-                                                                    spreadRadius: 0,
-                                                                    blurRadius: 6,
-                                                                  ),
-                                                                ]
-                                                            ),
-                                                            child: Row(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                const Icon(EneftyIcons.document_favorite_outline, color: Colors.red, size: 35),
-                                                                const SizedBox(width: 20),
-                                                                Expanded(
-                                                                  child: Column(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      Text(cvList[index]['name'].toString().toUpperCase(), style: const TextStyle(
-                                                                          fontWeight: FontWeight.bold,
-                                                                          color: Colors.red
-                                                                      ),),
-                                                                      Text('Upload date: ${cvList[index]['create_at'].toString().substring(0,10)}', style: const TextStyle(fontSize: 12),),
-                                                                      const SizedBox(height: 8),
-                                                                      SizedBox(
-                                                                          height:25,
-                                                                          child: ElevatedButton.icon(onPressed: (){
-                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => PDFViewScreen(path: cvList[index]['file_name'])));
-                                                                          }, icon: const Icon(EneftyIcons.eye_outline, size: 18), label: const Text('Preview')))
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          value: cvList[index]['id'],
-                                                          groupValue: selectCvId,
-                                                          onChanged: (value) {
-                                                            setState(() {
-                                                              selectCvId = value;
-                                                            });
-                                                          },
-                                                        ),
-                                                    ),
-                                                  ],),
-                                                ),
-                                            )),
-                                            Positioned.fill(
-                                              bottom: 10,
-                                                child: Align(
-                                                  alignment: Alignment.bottomCenter,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                                                    child: Row(
-                                                      children: [
-                                                        SizedBox(
-                                                          child: ElevatedButton(
-                                                            onPressed: (){},
-                                                            style: ButtonStyle(
-                                                              backgroundColor: WidgetStateProperty.all(Colors.white),
-                                                              shape: WidgetStateProperty.all(
-                                                                RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.circular(6),
-                                                                ),
-                                                              ),
-                                                                side: WidgetStateProperty.all(
-                                                                    const BorderSide(color: Colors.red))
-                                                            ),
-                                                            child: const Text('Upload CV'),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(width: 12),
-                                                        Expanded(
-                                                          child: SizedBox(
-                                                            child: ElevatedButton(
-                                                            onPressed: applyJob,
-                                                              style: ButtonStyle(
-                                                                backgroundColor: WidgetStateProperty.all(Colors.red),
-                                                                foregroundColor: WidgetStateProperty.all(Colors.white),
-                                                                shape: WidgetStateProperty.all(
-                                                                  RoundedRectangleBorder(
-                                                                    borderRadius: BorderRadius.circular(6),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            child: const Text('Apply This Job'),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ))
-                                          ],
-                                        )
+                            onPressed: () async {
+                              var userToken = await storage.read(key: "token");
+                              if (userToken == null) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      return const LoginRequestModal();
+                                    });
+                              }else{
+                                showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
                                       ),
-                                    );
-                                  });
+                                    ),
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    builder: (BuildContext context) {
+                                      return StatefulBuilder(
+                                        builder: (BuildContext context, setState) => Container(
+                                            width: double.infinity,
+                                            height: MediaQuery.of(context).size.height * 0.85,
+                                            color: Colors.white,
+                                            child: Stack(
+                                              children: [
+                                                Positioned.fill(
+                                                    top: 0,
+                                                    child: Container(
+                                                      padding: const EdgeInsets.symmetric(vertical: 16),
+                                                      child: const Text('Please choose one CV to apply',
+                                                        textAlign: TextAlign.center,
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold
+                                                        ),),)
+                                                ),
+                                                Positioned(
+                                                    child: cvList.isEmpty
+                                                        ? Container(
+                                                        height: 110,
+                                                        alignment: Alignment.center,
+                                                        child: const Text('You still not create any CV'))
+                                                        : Container(
+                                                      margin: const EdgeInsets.only(top: 50),
+                                                      // padding: const EdgeInsets.all(8),
+                                                      height: 550,
+                                                      child: SingleChildScrollView(
+                                                        child: Column(
+                                                          children: [
+                                                            ListView.builder(
+                                                              physics: const ClampingScrollPhysics(),
+                                                              shrinkWrap: true,
+                                                              scrollDirection: Axis.vertical,
+                                                              itemCount: cvList.length,
+                                                              itemBuilder: (BuildContext context, int index) =>
+                                                                  RadioListTile(
+                                                                    title: Container(
+                                                                      padding: const EdgeInsets.all(15),
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(10),
+                                                                          color: cvList[index]['id'] == selectCvId ? const Color.fromARGB(255, 252, 203, 203): Colors.white,
+                                                                          boxShadow: [
+                                                                            BoxShadow(
+                                                                              color: Colors.grey.withOpacity(0.4),
+                                                                              spreadRadius: 0,
+                                                                              blurRadius: 6,
+                                                                            ),
+                                                                          ]
+                                                                      ),
+                                                                      child: Row(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          const Icon(EneftyIcons.document_favorite_outline, color: Colors.red, size: 35),
+                                                                          const SizedBox(width: 20),
+                                                                          Expanded(
+                                                                            child: Column(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Text(cvList[index]['name'].toString().toUpperCase(), style: const TextStyle(
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                    color: Colors.red
+                                                                                ),),
+                                                                                Text('Upload date: ${cvList[index]['create_at'].toString().substring(0,10)}', style: const TextStyle(fontSize: 12),),
+                                                                                const SizedBox(height: 8),
+                                                                                SizedBox(
+                                                                                    height:25,
+                                                                                    child: ElevatedButton.icon(onPressed: (){
+                                                                                      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => PDFViewScreen(path: cvList[index]['file_name'])));
+                                                                                    }, icon: const Icon(EneftyIcons.eye_outline, size: 18), label: const Text('Preview')))
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                    value: cvList[index]['id'],
+                                                                    groupValue: selectCvId,
+                                                                    onChanged: (value) {
+                                                                      setState(() {
+                                                                        selectCvId = value;
+                                                                      });
+                                                                    },
+                                                                  ),
+                                                            ),
+                                                          ],),
+                                                      ),
+                                                    )),
+                                                Positioned.fill(
+                                                    bottom: 10,
+                                                    child: Align(
+                                                      alignment: Alignment.bottomCenter,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                                                        child: Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              child: ElevatedButton(
+                                                                onPressed: (){},
+                                                                style: ButtonStyle(
+                                                                    backgroundColor: WidgetStateProperty.all(Colors.white),
+                                                                    shape: WidgetStateProperty.all(
+                                                                      RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(6),
+                                                                      ),
+                                                                    ),
+                                                                    side: WidgetStateProperty.all(
+                                                                        const BorderSide(color: Colors.red))
+                                                                ),
+                                                                child: const Text('Upload CV'),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(width: 12),
+                                                            Expanded(
+                                                              child: SizedBox(
+                                                                child: ElevatedButton(
+                                                                  onPressed: applyJob,
+                                                                  style: ButtonStyle(
+                                                                    backgroundColor: WidgetStateProperty.all(Colors.red),
+                                                                    foregroundColor: WidgetStateProperty.all(Colors.white),
+                                                                    shape: WidgetStateProperty.all(
+                                                                      RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(6),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  child: const Text('Apply This Job'),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ))
+                                              ],
+                                            )
+                                        ),
+                                      );
+                                    });
+                              }
+
                             },
                             style: ButtonStyle(
                               backgroundColor:
@@ -520,7 +540,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                         Center(
                           child: [
                             jobDetailsTab(jobDescription, jobResponsibility, jobRequired, jobBenefit),
-                            companyTab()
+                            companyTab(jobDetail)
                           ][_tabController.index],
                         ),
                       ],
@@ -532,65 +552,148 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
           );
   }
 
-
-
-  Container companyTab() {
+  Container myTab(String text, int count) {
     return Container(
-        margin: const EdgeInsets.only(top: 12),
+      height: 28,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Tab(
+          child: Row(
+            children: [
+              Text(
+                text,
+              ),
+              if (count > 0) const SizedBox(width: 4),
+              if (count > 0)
+                Badge(
+                  label: Text(count > 0 ? count.toString() : ''),
+                  backgroundColor: Colors.red.shade300,
+                )
+            ],
+          )),
+    );
+  }
+
+
+  Container companyTab(dynamic jobDetail) {
+    var companyDetail = jobDetail['company'];
+    String linkweb = companyDetail['link_website'] ?? '';
+    String companySize = companyDetail['size'] ?? '';
+    String location = jobDetail['location']['name'] ?? '';
+    Set skills = {};
+    Set industries = {};
+    if(jobDetail['skills'] != null){
+      for (var i in jobDetail['skills']) {
+        skills.add(i['name']);
+        industries.add(i['industry']['name']);
+      }
+    }
+
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
-          children: [Text('ahuhu')],
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const HeaderText('Information'),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                companyDetailRow(EneftyIcons.link_outline, linkweb),
+                const SizedBox(width: 8),
+                const Icon(EneftyIcons.export_outline, size: 16),
+              ],
+            ),
+            companyDetailRow(EneftyIcons.location_outline, location),
+            companyDetailRow(EneftyIcons.profile_2user_outline, companySize),
+            companyDetailRow(EneftyIcons.tag_outline, industries.join(", ")),
+
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.red.shade200),
+                  borderRadius: BorderRadius.circular(8)
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('GET NOTIFICATION', style: TextStyle(color: Colors.red[300]),),
+                  const SizedBox(width: 6),
+                  Icon(FluentIcons.mail_alert_24_regular, color: Colors.red[300],)
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(8)
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('VIEW DETAIL', style: TextStyle(color: Colors.black54),),
+                  SizedBox(width: 6),
+                  Icon(FluentIcons.eye_24_regular, color: Colors.black54,)
+                ],
+              ),
+            ),
+            const HeaderText('Information'),
+            BodyText(companyDetail['introduction']),
+          ],
         ));
   }
-}
 
-Container myTab(String text, int count) {
-  return Container(
-    height: 28,
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: Tab(
-        child: Row(
-      children: [
-        Text(
-          text,
-        ),
-        if (count > 0) const SizedBox(width: 4),
-        if (count > 0)
-          Badge(
-            label: Text(count > 0 ? count.toString() : ''),
-            backgroundColor: Colors.red.shade300,
-          )
-      ],
-    )),
-  );
-}
+  Container jobDetailsTab(String jobDes, String jobRes, String jobReq, String jobBen) {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const HeaderText('Information'),
+            const BodyText(
+                'Program Development, unit test, bug fix based on the design documents from Korea Headquarter '
+                    '(Korea H.Q: System design and Operation, Vietnam Development Center: Development & bug fix, '
+                    'Design implementation step by step).'),
 
-Container jobDetailsTab(String jobDes, String jobRes, String jobReq, String jobBen) {
-  return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Column(
+            if(jobDes != '') const HeaderText('Job Description'),
+            if(jobDes != '') BulletList(jobDes.split('\n')),
+
+            if(jobRes != '') const HeaderText('Your Role & Responsibilities'),
+            if(jobRes != '') BulletList(jobRes.split('\n')),
+
+            if(jobReq != '') const HeaderText('Your Skills & Qualifications'),
+            if(jobReq != '') BulletList(jobReq.split('\n')),
+
+            if(jobBen != '') const HeaderText('Benefits For You'),
+            if(jobBen != '') BulletList(jobBen.split('\n')),
+
+            const HeaderText('Recommend For You'),
+            // const RecommendJobs()
+          ],
+        ));
+  }
+
+  Container companyDetailRow(IconData icon, String detail) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const HeaderText('Information'),
-          const BodyText(
-              'Program Development, unit test, bug fix based on the design documents from Korea Headquarter '
-                  '(Korea H.Q: System design and Operation, Vietnam Development Center: Development & bug fix, '
-                  'Design implementation step by step).'),
-
-          if(jobDes != '') const HeaderText('Job Description'),
-          if(jobDes != '') BulletList(jobDes.split('\n')),
-
-          if(jobRes != '') const HeaderText('Your Role & Responsibilities'),
-          if(jobRes != '') BulletList(jobRes.split('\n')),
-
-          if(jobReq != '') const HeaderText('Your Skills & Qualifications'),
-          if(jobReq != '') BulletList(jobReq.split('\n')),
-
-          if(jobBen != '') const HeaderText('Benefits For You'),
-          if(jobBen != '') BulletList(jobBen.split('\n')),
-
-          const HeaderText('Recommend For You'),
-          // const RecommendJobs()
+          Icon(icon, size: 18),
+          const SizedBox(width: 6),
+          Flexible(child: Text(detail, softWrap: true, style: TextStyle(
+            color: Colors.black.withOpacity(0.6),
+          ),)),
         ],
-      ));
+      ),
+    );
+  }
 }
+
+
+
+

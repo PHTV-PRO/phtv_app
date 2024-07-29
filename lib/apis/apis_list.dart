@@ -57,6 +57,7 @@ class CandidateJobApi extends ApiConfig {
   static final getAppliedJobs = CandidateJobApi(path: '/application', method: RequestMethod.get);
   static final getViewedJobs = CandidateJobApi(path: '/viewed', method: RequestMethod.get);
   static final getSavedJobs = CandidateJobApi(path: '/save', method: RequestMethod.get);
+  static final getRecommendJobs = CandidateJobApi(path: '/hot', method: RequestMethod.get);
   static final viewJob = CandidateJobApi(path: '/viewed', method: RequestMethod.post);
   static final saveJob = CandidateJobApi(path: '/save', method: RequestMethod.post);
   static final applyJob = CandidateJobApi(path: '/application', method: RequestMethod.post);
