@@ -16,7 +16,7 @@ const String baseUrl = String.fromEnvironment(
   defaultValue: 'http://10.0.2.2:8080/api/',
 );
 
-typedef RequestBody = Map<String, String>;
+typedef RequestBody = Map<String, dynamic>;
 typedef ResponseBody = Map<String, dynamic>;
 typedef ApiHeaderType = Map<String, String>;
 
@@ -75,10 +75,8 @@ class RequestHandler {
             'Content-Type': 'application/json',
             if (authorized) 'Authorization': 'Bearer $token',
           };
-
       final response = await method.apiCall(Uri.parse(urlString),
           headers: headers, body: json.encode(body));
-
       if (response.statusCode == 200) {
         final dynamic result = json.decode(utf8.decode(response.bodyBytes))['data'];
         return result;

@@ -72,6 +72,7 @@ class CandidateCVApi extends ApiConfig {
 
   static final getAllCVs = CandidateCVApi(path: '/account', method: RequestMethod.get);
   static final deleteCV = CandidateCVApi(path: '', method: RequestMethod.delete);
+  static final createCV = CandidateCVApi(path: '/generate_pdf', method: RequestMethod.post);
 }
 
 class LocationApi extends ApiConfig {

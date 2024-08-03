@@ -1,12 +1,11 @@
-import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
+import 'dart:convert' show json, utf8;
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/apis/apis_list.dart';
-import 'package:phtv_app/screens/pdf_view_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
@@ -21,33 +20,68 @@ class _CVFromScreenState extends State<CvFormScreen> {
   final _formKeyCV = GlobalKey<FormState>();
   final _formKeyProject = GlobalKey<FormState>();
 
-  var _enteredEmail = '';
-  var _enteredPassword = '';
+  String _cvname = '';
+  String _yourname = '';
+  String _decription = '';
+  String _email = '';
+  String _address = '';
+  String _phone = '';
+  String _skill = '';
+  String _name_school = '';
+  String _year = '';
+  String _major= '';
 
-  List project = [];
-  String _projectName = '';
-  String _projectDescription = '';
-  String _projectSkill = '';
+  List work_experience = [];
+  String _compamyName = '';
+  String _workDescription = '';
+  String _workSkill = '';
 
   @override
   void initState() {
     super.initState();
   }
 
-  _addProject() async {
+  _addWorkExp() async {
     final isValid = _formKeyProject.currentState!.validate();
     if (!isValid) {
       return;
     }
     _formKeyProject.currentState!.save();
-    Map<String, String> proj = {
-      'name_project': _projectName,
-      'content': _projectDescription,
-      'skill_project': _projectSkill
+    Map<String, String> exp = {
+      'name': _compamyName,
+      'content': _workDescription,
+      'skill': _workSkill
     };
-    project.add(proj);
+    work_experience.add(exp);
     setState(() {});
     Navigator.of(context).pop();
+  }
+
+  _createCv() async {
+    final isValid = _formKeyCV.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    _formKeyCV.currentState!.save();
+    Map<String, dynamic> jsonBody = {
+      'name_cv': _cvname,
+      'name': _yourname,
+      'decription': _decription,
+      'email': _email,
+      'address': _address,
+      'phone': _phone,
+      'skill': _skill,
+      'name_school': _name_school,
+      'year': _year,
+      'major': _major,
+      'work_experiences': work_experience
+    };
+    String? userToken = await storage.read(key: 'token');
+    var result = await CandidateCVApi.createCV.sendRequest(token: userToken, body: jsonBody);
+    print(result);
+    if(result == 'Success'){
+      Navigator.pop(context, () {});
+    }
   }
 
 
@@ -64,7 +98,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
             Container(
               margin: const EdgeInsets.only(right: 16),
               child: ElevatedButton(
-                onPressed: (){},
+                onPressed: _createCv,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
@@ -103,51 +137,51 @@ class _CVFromScreenState extends State<CvFormScreen> {
                           child: Column(
                             children: [
                               TextFormField(
-                                decoration: cvFormField('Project Name'),
+                                decoration: cvFormField('Company Name'),
                                 autocorrect: true,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Please fill in project name';
+                                    return 'Please fill in company name';
                                   }
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  _projectName = value!;
+                                  _compamyName = value!;
                                 },
                               ),
                               const SizedBox(height: 16),
                               TextFormField(
-                                decoration: cvFormField('Project Description'),
+                                decoration: cvFormField('Work Description'),
                                 keyboardType: TextInputType.multiline,
                                 minLines: 5,
                                 maxLines: 5,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Please fill in project description';
+                                    return 'Please fill in work description';
                                   }
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  _projectDescription = value!;
+                                  _workDescription = value!;
                                 },
                               ),
                               const SizedBox(height: 16),
                               TextFormField(
-                                decoration: cvFormField('Project Skills'),
+                                decoration: cvFormField('Work Skills'),
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Please fill in project description';
+                                    return 'Please fill in work skills';
                                   }
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  _projectSkill = value!;
+                                  _workSkill = value!;
                                 },
                               ),
                               const SizedBox(height: 32),
                               ElevatedButton(
-                                onPressed: _addProject,
-                                child: const Text('Add Project'),
+                                onPressed: _addWorkExp,
+                                child: const Text('Add Experience'),
                               ),
                             ],
                           ),
@@ -158,7 +192,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                 );
               },
               icon: const Icon(EneftyIcons.add_circle_outline),
-              label: const Text('Add Project'),
+              label: const Text('Add Work Experience'),
             ),
           ),
         ),
@@ -170,7 +204,21 @@ class _CVFromScreenState extends State<CvFormScreen> {
               child: Column(
                 children: [
                   TextFormField(
-                    decoration: cvFormField('Name'),
+                    decoration: cvFormField('CV name'),
+                    autocorrect: true,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please fill in CV name';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _cvname = value!;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    decoration: cvFormField('Your name'),
                     autocorrect: true,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -179,7 +227,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _enteredEmail = value!;
+                      _yourname = value!;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -195,7 +243,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _enteredPassword = value!;
+                      _decription = value!;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -207,8 +255,9 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       }
                       return null;
                     },
+                    keyboardType: TextInputType.emailAddress,
                     onSaved: (value) {
-                      _enteredPassword = value!;
+                      _email = value!;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -221,7 +270,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _enteredPassword = value!;
+                      _address = value!;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -233,8 +282,9 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       }
                       return null;
                     },
+                    keyboardType: TextInputType.phone,
                     onSaved: (value) {
-                      _enteredPassword = value!;
+                      _phone = value!;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -247,7 +297,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _enteredPassword = value!;
+                      _skill = value!;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -260,7 +310,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      _enteredPassword = value!;
+                      _name_school = value!;
                     },
                   ),
                   const SizedBox(height: 16),
@@ -269,6 +319,10 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       Expanded(
                         child: TextFormField(
                           decoration: cvFormField('Graduation year'),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Please fill in graduation year';
@@ -276,7 +330,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                             return null;
                           },
                           onSaved: (value) {
-                            _enteredPassword = value!;
+                            _year = value!;
                           },
                         ),
                       ),
@@ -291,7 +345,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                             return null;
                           },
                           onSaved: (value) {
-                            _enteredPassword = value!;
+                            _major = value!;
                           },
                         ),
                       ),
@@ -300,7 +354,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                   const SizedBox(height: 16),
                   Column(
                     children: [
-                      for(int i = 0; i < project.length; i++) projectItem(i+1, project[i]['name_project'], project[i]['content'], project[i]['skill_project'])
+                      for(int i = 0; i < work_experience.length; i++) projectItem(i+1, work_experience[i]['name'], work_experience[i]['content'], work_experience[i]['skill'])
                     ],
                   )
                 ],
@@ -336,12 +390,12 @@ class _CVFromScreenState extends State<CvFormScreen> {
         children: [
           Row(
             children: [
-              Text('Project $pId', style: const TextStyle(color: Colors.black54, fontSize: 12),),
+              Text('Work Exprience $pId', style: const TextStyle(color: Colors.black54, fontSize: 12),),
               const Spacer(),
               InkWell(
                 child: const Icon(EneftyIcons.close_outline, size: 22, color: Colors.red,),
                   onTap: (){
-                    project.removeAt(pId-1);
+                    work_experience.removeAt(pId-1);
                     setState(() {});
                   },
               )
@@ -355,10 +409,19 @@ class _CVFromScreenState extends State<CvFormScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(pName, style: const TextStyle(fontWeight: FontWeight.bold),),
+                const SizedBox(height: 6),
                 Text(pDes),
-                Text(pSkills),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.grey.withOpacity(0.3),
+                  ),
+                  child: Text(pSkills, style: const TextStyle(fontStyle: FontStyle.italic,)),
+                ),
               ],
-            ),
+            )
           ),
         ],
       ),

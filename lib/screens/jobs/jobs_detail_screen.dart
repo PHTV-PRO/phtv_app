@@ -7,6 +7,8 @@ import 'package:phtv_app/common_widgets/body_text.dart';
 import 'package:phtv_app/common_widgets/bullet_list.dart';
 import 'package:phtv_app/common_widgets/header_text.dart';
 import 'package:phtv_app/modals/login_request.dart';
+import 'package:phtv_app/screens/companies/company_detail_screen.dart';
+import 'package:phtv_app/screens/my_cv/my_cv_screen.dart';
 import 'package:phtv_app/utils/date_utils.dart';
 
 import '../pdf_view_screen.dart';
@@ -307,7 +309,10 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                           children: [
                                                             SizedBox(
                                                               child: ElevatedButton(
-                                                                onPressed: (){},
+                                                                onPressed: (){
+                                                                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                                      builder: (ctx) => MyCVScreen()));
+                                                                },
                                                                 style: ButtonStyle(
                                                                     backgroundColor: WidgetStateProperty.all(Colors.white),
                                                                     shape: WidgetStateProperty.all(
@@ -318,7 +323,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                                     side: WidgetStateProperty.all(
                                                                         const BorderSide(color: Colors.red))
                                                                 ),
-                                                                child: const Text('Upload CV'),
+                                                                child: const Text('Manage CV'),
                                                               ),
                                                             ),
                                                             const SizedBox(width: 12),
@@ -579,6 +584,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
     String linkweb = companyDetail['link_website'] ?? '';
     String companySize = companyDetail['size'] ?? '';
     String location = jobDetail['location']['name'] ?? '';
+    int companyId = companyDetail['id'];
     Set skills = {};
     Set industries = {};
     if(jobDetail['skills'] != null){
@@ -630,10 +636,16 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
               ),
               margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 4),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('VIEW DETAIL', style: TextStyle(color: Colors.black54),),
+                  InkWell(
+                    onTap: () {
+                      if (companyId <= 0) return;
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (ctx) => CompaniesDetailScreen(companyId: companyId)));
+                    },
+                      child: Text('VIEW DETAIL', style: TextStyle(color: Colors.black54),)),
                   SizedBox(width: 6),
                   Icon(FluentIcons.eye_24_regular, color: Colors.black54,)
                 ],

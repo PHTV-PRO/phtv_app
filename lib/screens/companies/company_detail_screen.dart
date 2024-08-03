@@ -25,6 +25,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
   Set skills = {};
   Set industries = {};
   int openningJob = 0;
+  List lstOpenningJob = [];
   bool isLoading = true;
 
   @override
@@ -44,20 +45,20 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
   getCompanyDetail(int id) async {
     companyDetail = await CompanyApi.getCompanyDetail.sendRequest(urlParam: '/${id.toString()}');
     setState(() {
+      companyTitle = companyDetail['name'] ?? '';
+      about = companyDetail['introduction'] ?? '';
+      linkweb = companyDetail['link_website'] ?? '';
+      List comAddress = companyDetail['locations'] ?? [];
+      companySize = companyDetail['size'] ?? '';
+      location = comAddress.isNotEmpty ? companyDetail['locations'][0]['name'] : '';
+      openningJob = companyDetail['opening_jobs'] ?? 0;
+      lstOpenningJob = companyDetail['jobs'];
       isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    companyTitle = companyDetail['name'] ?? '';
-    about = companyDetail['introduction'] ?? '';
-    linkweb = companyDetail['link_website'] ?? '';
-    List comAddress = companyDetail['locations'] ?? [];
-    companySize = companyDetail['size'] ?? '';
-    location = comAddress.isNotEmpty ? companyDetail['locations'][0]['name'] : '';
-    openningJob = companyDetail['opening_jobs'] ?? 0;
-
     if(companyDetail['skills'] != null){
       for (var i in companyDetail['skills']) {
         skills.add(i['name']);
@@ -273,7 +274,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                         Center(
                           child: [
                             aboutTab(about),
-                            openingTab()
+                            openingTab(lstOpenningJob)
                           ][_tabController.index],
                         ),
                       ],
@@ -299,7 +300,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HeaderText('Image'),
+                  const HeaderText('Image'),
                   Wrap(
                     runSpacing: 8,
                     children: [
@@ -415,13 +416,12 @@ Container aboutTab(String about) {
   );
 }
 
-Container openingTab() {
+Container openingTab(List openingJobs) {
   return Container(
       margin: const EdgeInsets.only(top: 12),
-      child: Column(
+      child: openingJobs.isEmpty? const Text('No opening job') :  Column(
         children: [
-          JobCard(jobId: 1, notifyParent: (){}),
-          JobCard(jobId: 1, notifyParent: (){})
+          for(int i = 0; i < openingJobs.length; i++) JobCard(jobId: openingJobs[i]['id'], notifyParent: (){}),
         ],
       )
   );

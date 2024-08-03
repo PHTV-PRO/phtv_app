@@ -25,11 +25,12 @@ class _MyCVScreenState extends State<MyCVScreen> {
   @override
   void initState() {
     super.initState();
-    getAllCV(5,1);
+    getAllCV(10,1);
   }
 
   getAllCV(int size, int page) async {
     String? userToken = await storage.read(key: 'token');
+    print(userToken);
     if (userToken != null && userToken != '') {
       var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       if (data != null) {
@@ -142,8 +143,7 @@ class _MyCVScreenState extends State<MyCVScreen> {
                                                         MainAxisAlignment.center,
                                                     children: [
                                                       Icon(
-                                                        EneftyIcons
-                                                            .document_upload_outline,
+                                                        EneftyIcons.document_upload_outline,
                                                         size: 60,
                                                         color: Colors.grey
                                                             .withOpacity(0.5),
@@ -241,7 +241,7 @@ class _MyCVScreenState extends State<MyCVScreen> {
                 ),
                 ElevatedButton(
                   onPressed: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const CvFormScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const CvFormScreen())).then((value) => getAllCV(10,1));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
@@ -301,15 +301,12 @@ class _MyCVScreenState extends State<MyCVScreen> {
                                             fontWeight: FontWeight.bold,
                                             color: Colors.red
                                           ),),
-                                          Text('Upload date: ${cvList[index]['create_at'].toString().substring(0,10)}', style: const TextStyle(fontSize: 12),),
+                                          Text('Created date: ${cvList[index]['create_at'].toString().substring(0,10)}', style: const TextStyle(fontSize: 12),),
                                           const SizedBox(height: 8),
-                                          Text((cvList[index]['id'].toString())),
                                           SizedBox(
                                             height:25,
                                               child: ElevatedButton.icon(onPressed: (){
-                                                print(cvList[index]['file_name']);
-                                               Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => PDFViewScreen(path: cvList[index]['file_name'])));
-
+                                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => PDFViewScreen(path: cvList[index]['file_name'])));
                                               }, icon: const Icon(EneftyIcons.eye_outline, size: 18), label: const Text('Preview')))
                                         ],
                                       ),
