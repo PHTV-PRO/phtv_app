@@ -1,8 +1,5 @@
-import 'dart:convert' show json, utf8;
 import 'package:enefty_icons/enefty_icons.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/apis/apis_list.dart';
@@ -35,6 +32,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
   String _compamyName = '';
   String _workDescription = '';
   String _workSkill = '';
+  String _workTime = '';
 
   @override
   void initState() {
@@ -48,9 +46,10 @@ class _CVFromScreenState extends State<CvFormScreen> {
     }
     _formKeyProject.currentState!.save();
     Map<String, String> exp = {
-      'name': _compamyName,
+      'name_work_experience': _compamyName,
       'content': _workDescription,
-      'skill': _workSkill
+      'skill_work_experience': _workSkill,
+      'working_time': _workTime
     };
     work_experience.add(exp);
     setState(() {});
@@ -129,7 +128,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                       padding: MediaQuery.of(context).viewInsets,
                       child: Container(
                         width: double.infinity,
-                        height: 400,
+                        height: 500,
                         padding: const EdgeInsets.all(20),
                         margin: const EdgeInsets.only(top: 16),
                         child: Form(
@@ -147,6 +146,19 @@ class _CVFromScreenState extends State<CvFormScreen> {
                                 },
                                 onSaved: (value) {
                                   _compamyName = value!;
+                                },
+                              ),
+                              const SizedBox(height: 16),
+                              TextFormField(
+                                decoration: cvFormField('Working Time'),
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Please fill in work time';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _workTime = value!;
                                 },
                               ),
                               const SizedBox(height: 16),
@@ -354,7 +366,13 @@ class _CVFromScreenState extends State<CvFormScreen> {
                   const SizedBox(height: 16),
                   Column(
                     children: [
-                      for(int i = 0; i < work_experience.length; i++) projectItem(i+1, work_experience[i]['name'], work_experience[i]['content'], work_experience[i]['skill'])
+                      for(int i = 0; i < work_experience.length; i++)
+                        workExpItem(
+                          i+1,
+                          work_experience[i]['name_work_experience'],
+                            work_experience[i]['working_time'],
+                            work_experience[i]['content'],
+                            work_experience[i]['skill_work_experience'])
                     ],
                   )
                 ],
@@ -382,7 +400,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
     );
   }
 
-  Container projectItem(int pId, String pName, String pDes, String pSkills){
+  Container workExpItem(int pId, String wName, String wTime, String wDes, String wSkills){
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Column(
@@ -408,9 +426,11 @@ class _CVFromScreenState extends State<CvFormScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(pName, style: const TextStyle(fontWeight: FontWeight.bold),),
+                Text(wName, style: const TextStyle(fontWeight: FontWeight.bold),),
                 const SizedBox(height: 6),
-                Text(pDes),
+                Text('Working time: $wTime'),
+                const SizedBox(height: 6),
+                Text(wDes),
                 const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
@@ -418,7 +438,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
                     borderRadius: BorderRadius.circular(4),
                     color: Colors.grey.withOpacity(0.3),
                   ),
-                  child: Text(pSkills, style: const TextStyle(fontStyle: FontStyle.italic,)),
+                  child: Text(wSkills, style: const TextStyle(fontStyle: FontStyle.italic,)),
                 ),
               ],
             )

@@ -1,8 +1,5 @@
-import 'package:enefty_icons/enefty_icons.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AdvCard extends ConsumerWidget{
   const AdvCard({
@@ -14,7 +11,6 @@ class AdvCard extends ConsumerWidget{
 
   @override
   Widget build(BuildContext context,ref) {
-    var storage = const FlutterSecureStorage();
     return Container(
       margin: const EdgeInsets.only(right: 18,bottom: 8),
       child: InkWell(

@@ -1,16 +1,5 @@
-import 'package:enefty_icons/enefty_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:phtv_app/apis/apis_list.dart';
-import 'package:phtv_app/features/ads_carousel.dart';
-import 'package:phtv_app/features/company_card.dart';
-import 'package:phtv_app/features/hot_jobs/hot_jobs.dart';
-import 'package:phtv_app/features/job_card.dart';
-import 'package:phtv_app/features/latest_jobs/latest_jobs.dart';
-import 'package:phtv_app/features/saved_jobs/saved_jobs.dart';
-import 'package:phtv_app/features/top_keywords/top_keywords.dart';
-import 'package:phtv_app/features/viewed_jobs/viewed_jobs.dart';
 import 'package:phtv_app/screens/my_jobs/my_jobs_pane.dart';
 
 class MyJobsScreen extends StatefulWidget {

@@ -59,7 +59,7 @@ class _JobCardState extends State<JobCard> {
         jobTitle = jobInfo['title'] ?? 'job title';
         isSaved = jobInfo['job_is_save'] ?? false;
         logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
-        province = jobInfo['location']['cityProvince']['name'] ?? 'Ho Chi Minh';;
+        province = jobInfo['location']['cityProvince']['name'] ?? 'Ho Chi Minh';
         salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
         createdDate = AppDateUtils.daysBetween(jobInfo['start_date'] ?? DateFormat("dd-MM-yy").format(DateTime.now()));
         jobSkills = jobInfo['skills'];
@@ -74,6 +74,7 @@ class _JobCardState extends State<JobCard> {
     Set skills = {};
     if(jobSkills.isNotEmpty){
       for (var i in jobSkills) {
+        if(skills.length > 3) break;
         skills.add(i['name']);
       }
     }
@@ -223,6 +224,7 @@ class _JobCardState extends State<JobCard> {
                           skills.elementAtOrNull(i),
                           style: const TextStyle(
                             color: Colors.black87,
+                            fontSize: 12
                           ),
                         ),
                       ),

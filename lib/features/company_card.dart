@@ -1,8 +1,6 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/screens/companies/company_detail_screen.dart';
 
@@ -28,7 +26,8 @@ class _CompanyCardState extends State<CompanyCard> {
   Widget build(BuildContext context) {
     int companyId = widget.company['id'] ?? 0;
     String companyName = widget.company['name'] ?? '';
-    String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
+    String address = '';
+    // widget.company['locations'][0]['cityProvince']['name'] ?? '';
     String companySize = widget.company['size'] ?? '';
     int openingJobs = widget.company['opening_jobs'] ?? 0;
 

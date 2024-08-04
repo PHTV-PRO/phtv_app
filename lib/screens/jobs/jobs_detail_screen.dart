@@ -75,7 +75,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
         jobResponsibility = jobDetail['reponsibility'] ?? '';
         jobRequired = jobDetail['skill_required'] ?? '';
         jobBenefit = jobDetail['benefit'] ?? '';
-        createdDate = AppDateUtils.daysBetween(jobDetail['start_date']) ?? '';
+        createdDate = AppDateUtils.daysBetween(jobDetail['start_date']);
         isApplied = jobDetail['job_is_apply'] ?? false;
         isLoading = false;
       });
@@ -311,7 +311,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                                               child: ElevatedButton(
                                                                 onPressed: (){
                                                                   Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                                                      builder: (ctx) => MyCVScreen()));
+                                                                      builder: (ctx) => const MyCVScreen()));
                                                                 },
                                                                 style: ButtonStyle(
                                                                     backgroundColor: WidgetStateProperty.all(Colors.white),
@@ -645,9 +645,9 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => CompaniesDetailScreen(companyId: companyId)));
                     },
-                      child: Text('VIEW DETAIL', style: TextStyle(color: Colors.black54),)),
-                  SizedBox(width: 6),
-                  Icon(FluentIcons.eye_24_regular, color: Colors.black54,)
+                      child: const Text('VIEW DETAIL', style: TextStyle(color: Colors.black54),)),
+                  const SizedBox(width: 6),
+                  const Icon(FluentIcons.eye_24_regular, color: Colors.black54,)
                 ],
               ),
             ),

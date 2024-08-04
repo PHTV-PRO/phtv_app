@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:enefty_icons/enefty_icons.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/apis/apis_list.dart';
@@ -12,7 +9,6 @@ import 'package:phtv_app/features/partner_jobs/partners_carousel.dart';
 import 'package:phtv_app/features/saved_jobs/saved_jobs.dart';
 import 'package:phtv_app/features/viewed_jobs/viewed_jobs.dart';
 import 'package:phtv_app/screens/search/search_screen.dart';
-import 'package:http/http.dart' as http;
 
 var storage = const FlutterSecureStorage();
 
@@ -91,7 +87,7 @@ class _JobsScreenState extends State<JobsScreen> {
           const PartnersCarousel(),
 
           //Hot for you
-          const HotJobs(),
+          isLoggedIn == true ? const HotJobs() : const SizedBox.shrink(),
 
           //Latest jobs
           const LatestJobs(),

@@ -41,7 +41,6 @@ class _LoginFormState extends State<LoginForm> {
       'password': _enteredPassword
     };
     var result = await AuthApi.login.sendRequest(body: jsonBody);
-    print(result);
     if(result != null){
       String accessToken = result['token'];
       await storage.write(key: 'token', value: accessToken);

@@ -419,10 +419,15 @@ Container aboutTab(String about) {
 Container openingTab(List openingJobs) {
   return Container(
       margin: const EdgeInsets.only(top: 12),
-      child: openingJobs.isEmpty? const Text('No opening job') :  Column(
-        children: [
-          for(int i = 0; i < openingJobs.length; i++) JobCard(jobId: openingJobs[i]['id'], notifyParent: (){}),
-        ],
-      )
+      child: openingJobs.isEmpty
+          ? const Padding(
+              padding: EdgeInsets.symmetric(vertical: 28.0),
+              child: Text('No opening job'),
+            )
+          :  Column(
+              children: [
+                for(int i = 0; i < openingJobs.length; i++) JobCard(jobId: openingJobs[i]['id'], notifyParent: (){}),
+              ],
+            )
   );
 }

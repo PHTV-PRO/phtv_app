@@ -22,9 +22,11 @@ class _LatestJobsState extends State<LatestJobs> {
   getJobs() async {
     var data = await JobApi.getLatestJobs.sendRequest();
     jobList = data.map((e) => e).toList();
-    setState(() {
-      isLoading = false;
-    });
+    if(data != null){
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override

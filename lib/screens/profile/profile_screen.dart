@@ -3,9 +3,6 @@ import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/screens/auth/login_screen.dart';
-import 'package:phtv_app/features/job_card.dart';
-import 'package:phtv_app/common_widgets/body_text.dart';
-import 'package:phtv_app/common_widgets/header_text.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -293,7 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           ),
                           icon: Image.asset('assets/images/zalo.png',
                               height: 22, color: Colors.black54),
-                          label: Text('Zalo'),
+                          label: const Text('Zalo'),
                           onPressed: () async {},
                         ),
                       ),
@@ -325,7 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                             foregroundColor: Colors.black54,
                           ),
                           icon: const Icon(EneftyIcons.call_outline),
-                          label: Text('Hotline'),
+                          label: const Text('Hotline'),
                           onPressed: () async {},
                         ),
                       ),
@@ -339,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                             foregroundColor: Colors.black54,
                           ),
                           icon: const Icon(Icons.mail_outline),
-                          label: Text('Email'),
+                          label: const Text('Email'),
                           onPressed: () async {},
                         ),
                       ),

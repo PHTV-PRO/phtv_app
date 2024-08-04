@@ -16,7 +16,7 @@ class AdsCarousel extends ConsumerWidget {
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: 2,
-              itemBuilder: (BuildContext context, int index) => AdvCard(article: 1)
+              itemBuilder: (BuildContext context, int index) => const AdvCard(article: 1)
           )
       ),
     );

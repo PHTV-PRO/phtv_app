@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:phtv_app/features/job_card.dart';
 
 class TopKeywords extends ConsumerWidget {
   const TopKeywords({super.key});
@@ -9,7 +8,7 @@ class TopKeywords extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return Padding(
       padding: const EdgeInsets.all(12.0),
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

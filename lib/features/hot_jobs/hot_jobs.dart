@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/request_login_box.dart';
 import 'package:phtv_app/features/job_card.dart';
@@ -77,7 +76,7 @@ class _HotJobsState extends State<HotJobs> {
                 ),
                 const SizedBox(height: 10),
                 isLoggedIn ? isLoading ? const Center(child: CircularProgressIndicator()) : (
-                    jobList.isEmpty ? Container(height: 110, alignment: Alignment.center, child: const Text('You still not save any jobs')) : SizedBox(
+                    jobList.isEmpty ? Container(height: 110, alignment: Alignment.center, child: const Text('Please travel around our app first')) : SizedBox(
                       height: 240,
                       child: ListView.builder(
                         physics: const ClampingScrollPhysics(),

@@ -106,7 +106,7 @@ class _MyCVScreenState extends State<MyCVScreen> {
                             if (response.statusCode == 200) {
                               Navigator.of(context).pop();
                             } else {
-                              throw Exception('Failed to upload Photo');
+                              throw Exception('Failed to upload file');
                             }
                           }
 
@@ -148,12 +148,12 @@ class _MyCVScreenState extends State<MyCVScreen> {
                                                         color: Colors.grey
                                                             .withOpacity(0.5),
                                                       ),
-                                                      Text(filename),
+                                                      Text(filename != '' ? filename : 'Accept only PDF type'),
                                                     ],
                                                   )),
                                             ),
                                             onTap: () async {
-                                              var file = await FilePicker.platform.pickFiles();
+                                              var file = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf'],);
                                               if (file != null) {
                                                 formFieldState.save();
                                                 setState(() {
