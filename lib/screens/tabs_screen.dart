@@ -9,7 +9,7 @@ import 'package:phtv_app/screens/jobs/jobs_screen.dart';
 import 'package:phtv_app/screens/my_jobs/my_jobs_screen.dart';
 import 'package:phtv_app/screens/profile/profile_screen.dart';
 import 'package:phtv_app/screens/search/search_screen.dart';
-import 'package:phtv_app/screens/tools_screen.dart';
+import 'package:phtv_app/screens/tools/tools_screen.dart';
 
 import '../apis/apis_list.dart';
 
@@ -51,6 +51,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   loginState() async {
     String? userToken = await storage.read(key: 'token');
+    print(userToken);
     if(userToken != null && userToken != '') {
       Map<String, String> jsonBody = {
         'token': userToken

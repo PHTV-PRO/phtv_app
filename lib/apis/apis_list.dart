@@ -75,6 +75,16 @@ class CandidateCVApi extends ApiConfig {
   static final createCV = CandidateCVApi(path: '/generate_pdf', method: RequestMethod.post);
 }
 
+class CandidateCompanyApi extends ApiConfig {
+  CandidateCompanyApi(
+      {super.module = 'candidate/company',
+        required super.path,
+        required super.method,
+        super.isAuth = true});
+
+  static final followCompany = CandidateCompanyApi(path: '/save', method: RequestMethod.post);
+}
+
 class LocationApi extends ApiConfig {
   LocationApi(
       {super.module = 'general/city_province',

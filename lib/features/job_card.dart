@@ -74,8 +74,10 @@ class _JobCardState extends State<JobCard> {
     Set skills = {};
     if(jobSkills.isNotEmpty){
       for (var i in jobSkills) {
-        if(skills.length > 3) break;
-        skills.add(i['name']);
+        if(skills.length > 4) break;
+        String s = i['name'];
+        s = s.length < 10 ? s : '${s.substring(0,10)}...';
+        skills.add(s);
       }
     }
 

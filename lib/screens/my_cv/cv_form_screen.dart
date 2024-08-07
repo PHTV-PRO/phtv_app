@@ -52,6 +52,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
       'working_time': _workTime
     };
     work_experience.add(exp);
+    FocusScope.of(context).requestFocus(FocusNode());
     setState(() {});
     Navigator.of(context).pop();
   }
@@ -64,7 +65,7 @@ class _CVFromScreenState extends State<CvFormScreen> {
     _formKeyCV.currentState!.save();
     Map<String, dynamic> jsonBody = {
       'name_cv': _cvname,
-      'name': _yourname,
+      'name_candidate': _yourname,
       'decription': _decription,
       'email': _email,
       'address': _address,

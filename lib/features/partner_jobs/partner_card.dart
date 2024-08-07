@@ -21,8 +21,10 @@ class PartnerCard extends ConsumerWidget {
     Set skills = {};
     if(item['skills'] != null){
       for (var i in item['skills']) {
-        if(skills.length > 3) break;
-        skills.add(i['name']);
+        if(skills.length > 4) break;
+        String s = i['name'];
+        s = s.length < 10 ? s : '${s.substring(0,10)}...';
+        skills.add(s);
       }
     }
 
@@ -108,7 +110,7 @@ class PartnerCard extends ConsumerWidget {
                               skills.elementAtOrNull(i),
                               style: const TextStyle(
                                 color: Colors.black87,
-                                fontSize: 12
+                                fontSize: 11
                               ),
                             ),
                           ),

@@ -105,6 +105,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
       setState(() {
         isApplied = true;
       });
+      Navigator.of(context).pop();
     }
   }
 

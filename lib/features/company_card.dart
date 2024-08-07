@@ -26,15 +26,17 @@ class _CompanyCardState extends State<CompanyCard> {
   Widget build(BuildContext context) {
     int companyId = widget.company['id'] ?? 0;
     String companyName = widget.company['name'] ?? '';
-    String address = '';
-    // widget.company['locations'][0]['cityProvince']['name'] ?? '';
+    String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
     String companySize = widget.company['size'] ?? '';
     int openingJobs = widget.company['opening_jobs'] ?? 0;
 
     if(widget.company['skills'] != null){
       for (var i in widget.company['skills']) {
         industries.add(i['industry']['name']);
-        skills.add(i['name']);
+        if(skills.length > 4) break;
+        String s = i['name'];
+        s = s.length < 10 ? s : '${s.substring(0,10)}...';
+        skills.add(s);
       }
     }
 

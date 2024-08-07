@@ -57,6 +57,15 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
     });
   }
 
+  followCompany(int id) async {
+    String? userToken = await storage.read(key: 'token');
+    Map<String, String> jsonBody = {
+      'company_id': id.toString()
+    };
+    var data = await CandidateCompanyApi.followCompany.sendRequest(token: userToken, body: jsonBody);
+    print(data);
+  }
+
   @override
   Widget build(BuildContext context) {
     if(companyDetail['skills'] != null){
@@ -147,7 +156,11 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text('GET NOTIFICATION', style: TextStyle(color: Colors.red[300]),),
+                                  InkWell(
+                                    onTap: (){
+                                      followCompany(companyDetail['id']);
+                                    },
+                                      child: Text('FOLLOW THIS COMPANY', style: TextStyle(color: Colors.red[300]),)),
                                   const SizedBox(width: 4),
                                   Icon(FluentIcons.mail_alert_24_regular, color: Colors.red[300],)
                                 ],

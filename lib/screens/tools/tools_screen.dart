@@ -2,6 +2,8 @@ import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:phtv_app/modals/login_request.dart';
 import 'package:phtv_app/screens/my_cv/my_cv_screen.dart';
+import 'package:phtv_app/screens/tools/my_follow_company_screen.dart';
+import 'package:phtv_app/screens/tools/salary_converter_screen.dart';
 
 class ToolsScreen extends StatelessWidget{
   const ToolsScreen({super.key});
@@ -95,7 +97,7 @@ class ToolsScreen extends StatelessWidget{
                         return const LoginRequestModal();
                       });
                 }else{
-
+                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const MyFollowCompanyScreen()));
                 }
               },
               child: Padding(
@@ -146,7 +148,9 @@ class ToolsScreen extends StatelessWidget{
             ),
             margin: const EdgeInsets.only(bottom: 12),
             child: InkWell(
-              onTap: () async {},
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const SalaryConverterScreen()));
+              },
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 32.0, horizontal: 16),
                 child: SizedBox(

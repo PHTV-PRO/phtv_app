@@ -26,7 +26,7 @@ class _MyJobsPaneState extends State<MyJobsPane>{
     if(userToken != null && userToken != '') {
       List data = [];
       if(widget.jobType == 0){
-        data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
+        data = await CandidateJobApi.getAppliedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       }else if(widget.jobType == 1){
         data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       }else if(widget.jobType == 2){
