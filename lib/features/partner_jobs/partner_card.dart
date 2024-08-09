@@ -15,6 +15,7 @@ class PartnerCard extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     int companyId = item['id'] ?? 0;
     String companyName = item['name'] ?? '';
+    String comanyLogo = item['logo_image'] ?? 'https://i.pravatar.cc/160';
     String comanyImage = item['background_image'] ?? 'https://i.pravatar.cc/160';
     String companyIntro = item['introduction'] ?? '';
 
@@ -54,10 +55,15 @@ class PartnerCard extends ConsumerWidget {
                     Image.network(comanyImage, width: double.infinity, height: 205, fit: BoxFit.cover),
                     Container(
                       margin: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(6.0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                        borderRadius: BorderRadius.circular(8)
+                      ),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.network('https://i.pravatar.cc/160',
-                              height: 60, width: 120, fit: BoxFit.cover,)),
+                          child: Image.network(comanyLogo,
+                              height: 50, width: 110, fit: BoxFit.cover,)),
                     ),
                   ],
                 )),

@@ -17,6 +17,8 @@ class CompaniesDetailScreen extends StatefulWidget {
 class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   var companyDetail = {};
+  String companyLogo = '';
+  String companyBg = '';
   String companyTitle = '';
   String about = '';
   String linkweb = '';
@@ -26,6 +28,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
   Set industries = {};
   int openningJob = 0;
   List lstOpenningJob = [];
+  List lstCompanyImage = [];
   bool isLoading = true;
 
   @override
@@ -45,14 +48,16 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
   getCompanyDetail(int id) async {
     companyDetail = await CompanyApi.getCompanyDetail.sendRequest(urlParam: '/${id.toString()}');
     setState(() {
+      companyLogo = companyDetail['logo_image'] ?? 'https://i.pravatar.cc/160';
+      companyBg = companyDetail['background_image'] ?? 'https://i.pravatar.cc/200';
       companyTitle = companyDetail['name'] ?? '';
       about = companyDetail['introduction'] ?? '';
       linkweb = companyDetail['link_website'] ?? '';
-      List comAddress = companyDetail['locations'] ?? [];
       companySize = companyDetail['size'] ?? '';
-      location = comAddress.isNotEmpty ? companyDetail['locations'][0]['name'] : '';
+      location = companyDetail['location'] ?? '';
       openningJob = companyDetail['opening_jobs'] ?? 0;
       lstOpenningJob = companyDetail['jobs'];
+      lstCompanyImage = companyDetail['list_image_mobile'];
       isLoading = false;
     });
   }
@@ -88,7 +93,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0),
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: isLoading ? const Center(child: CircularProgressIndicator()) : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -107,7 +112,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                       ]),
                   child: Column(
                     children: [
-                      Image.network('https://i.pravatar.cc/200',
+                      Image.network(companyBg,
                           height: 200,
                           width: double.infinity,
                           fit: BoxFit.cover),
@@ -181,8 +186,10 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                         width: 90.0,
                         height: 90.0,
                         margin: const EdgeInsets.only(top: 160, bottom: 30),
+                        padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black87.withOpacity(0.4),
@@ -193,9 +200,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                             ]),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            'https://i.pravatar.cc/160',
-                          ),
+                          child: Image.network(companyLogo),
                         ),
                       ),
                     )
@@ -317,56 +322,13 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                   Wrap(
                     runSpacing: 8,
                     children: [
-                      Container(
+                      for (var item in lstCompanyImage)  Container(
                         margin: const EdgeInsets.only(right: 8),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(8.0),
                           child: Image.network(
-                            'https://i.pravatar.cc/160',
-                            height: 80,
-                            width: 80,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            'https://i.pravatar.cc/160',
-                            height: 80,
-                            width: 80,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            'https://i.pravatar.cc/160',
-                            height: 80,
-                            width: 80,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            'https://i.pravatar.cc/160',
-                            height: 80,
-                            width: 80,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            'https://i.pravatar.cc/160',
+                            item,
+                            fit: BoxFit.cover,
                             height: 80,
                             width: 80,
                           ),

@@ -30,6 +30,7 @@ class _JobsScreenState extends State<JobsScreen> {
 
   loginState() async {
     String? userToken = await storage.read(key: 'token');
+    print(userToken);
     if(userToken != null && userToken != '') {
       Map<String, String> jsonBody = {
         'token': userToken

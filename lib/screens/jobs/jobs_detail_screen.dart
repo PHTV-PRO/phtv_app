@@ -33,11 +33,15 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   int jobId = 0;
   String jobTitle = '';
   String companyName = '';
+  String companyLogo = '';
+  String companyBg = '';
   String jobDescription = '';
   String jobResponsibility = '';
   String jobRequired = '';
   String jobBenefit = '';
   String createdDate = '';
+  Set skills = {};
+  Set industries = {};
 
   int selectCvId = 0;
   bool isApplied = false;
@@ -71,6 +75,8 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
         jobId = jobDetail['id'] ?? 0;
         jobTitle = jobDetail['title'] ?? '';
         companyName = jobDetail['company']['name'] ?? '';
+        companyLogo = jobDetail['company']['logo_image'] ?? 'https://i.pravatar.cc/160';
+        companyBg = jobDetail['company']['background_image'] ?? 'https://i.pravatar.cc/200';
         jobDescription = jobDetail['description'] ?? '';
         jobResponsibility = jobDetail['reponsibility'] ?? '';
         jobRequired = jobDetail['skill_required'] ?? '';
@@ -84,6 +90,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
 
   getAllCV(int size, int page) async {
     String? userToken = await storage.read(key: 'token');
+    print(userToken);
     if (userToken != null && userToken != '') {
       var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       if (data != null) {
@@ -112,7 +119,13 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    return  isLoading == true
+    if(jobDetail['company']['skills'] != null){
+      for (var i in jobDetail['company']['skills']) {
+        skills.add(i['name']);
+        industries.add(i['industry']['name']);
+      }
+    }
+    return  isLoading
         ? const Center(child: CircularProgressIndicator())
         : Scaffold(
             appBar: AppBar(
@@ -381,7 +394,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                 children: [
                   Stack(
                     children: [
-                      Image.network('https://i.pravatar.cc/200',
+                      Image.network(companyBg,
                           height: 200,
                           width: double.infinity,
                           fit: BoxFit.cover),
@@ -425,41 +438,24 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                    const SizedBox(height: 8),
+                                    Wrap(
+                                      spacing: 4,
+                                      runSpacing: 4,
                                       children: [
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 8, right: 8),
+                                        for (var item in skills) Container(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 4),
+                                              horizontal: 6, vertical: 4),
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(4),
                                             color: Colors.grey.withOpacity(0.5),
                                           ),
-                                          child: const Text(
-                                            'Hello World!',
-                                            style: TextStyle(
+                                          child: Text(
+                                            item,
+                                            style: const TextStyle(
                                               color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 8, right: 8),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8, vertical: 4),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(4),
-                                            color: Colors.grey.withOpacity(0.5),
-                                          ),
-                                          child: const Text(
-                                            'Hello World!',
-                                            style: TextStyle(
-                                              color: Colors.white,
+                                              fontSize: 12
                                             ),
                                           ),
                                         ),
@@ -484,6 +480,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                           Container(
                             margin: const EdgeInsets.only(top: 20),
                             decoration: BoxDecoration(
+                              color: Colors.white,
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
@@ -496,7 +493,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8.0),
                               child: Image.network(
-                                'https://i.pravatar.cc/160',
+                                companyLogo,
                                 height: 70.0,
                                 width: 70.0,
                               ),
@@ -584,7 +581,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
     var companyDetail = jobDetail['company'];
     String linkweb = companyDetail['link_website'] ?? '';
     String companySize = companyDetail['size'] ?? '';
-    String location = jobDetail['location']['name'] ?? '';
+    String location = companyDetail['location'] ?? '';
     int companyId = companyDetail['id'];
     Set skills = {};
     Set industries = {};

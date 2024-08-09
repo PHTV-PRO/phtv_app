@@ -25,8 +25,9 @@ class _CompanyCardState extends State<CompanyCard> {
   @override
   Widget build(BuildContext context) {
     int companyId = widget.company['id'] ?? 0;
+    String companyLogo = widget.company['logo_image'] ?? 'https://i.pravatar.cc/40';
     String companyName = widget.company['name'] ?? '';
-    String address = widget.company['locations'][0]['cityProvince']['name'] ?? '';
+    String address = widget.company['city_provence']['name']?? '';
     String companySize = widget.company['size'] ?? '';
     int openingJobs = widget.company['opening_jobs'] ?? 0;
 
@@ -71,12 +72,19 @@ class _CompanyCardState extends State<CompanyCard> {
               children: [
                 Row(
                   children: [
-                    ClipOval(// Image border
-                      child: SizedBox.fromSize(
-                        size: const Size(40, 40),
-                        child: Image.network(
-                          'https://i.pravatar.cc/40',
+                    Container(
+                      width: 40.0,
+                      height: 40.0,
+                      decoration: BoxDecoration(
+                        color: const Color(0xff7c94b6),
+                        image: DecorationImage(
+                          image: NetworkImage(companyLogo),
                           fit: BoxFit.cover,
+                        ),
+                        borderRadius: const BorderRadius.all( Radius.circular(50.0)),
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 1.0,
                         ),
                       ),
                     ),
