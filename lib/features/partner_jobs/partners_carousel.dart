@@ -23,7 +23,7 @@ class _PartnersCarouselState extends State<PartnersCarousel> {
   }
 
   getSpotlightCompanies(int size, int page) async {
-    companyList = await CompanyApi.getSpotlightCompany.sendRequest(urlParam: '?size=$size&page=$page');
+    companyList = await CompanyApi.getContractCompany.sendRequest(urlParam: '?size=$size&page=$page');
     setState(() {
       isLoading = false;
     });

@@ -1,7 +1,13 @@
 import 'dart:convert' show json, utf8;
+import 'dart:io';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/screens/auth/login_screen.dart';
 
 const storage = FlutterSecureStorage();
@@ -34,10 +40,16 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
 
   loginState() async {
-    if (await storage.read(key: "user") != null) {
-      var user = await storage.read(key: 'user');
+    var userToken = await storage.read(key: 'token');
+    print(userToken);
+    if(userToken != null && userToken != '') {
+      Map<String, String> jsonBody = {
+        'token': userToken
+      };
+      var loggedUser = await AuthApi.checkToken.sendRequest(body: jsonBody);
+      // var user = await storage.read(key: 'user');
       setState(() {
-        userInfo = json.decode(user!);
+        userInfo = loggedUser;
         isLoggedIn = true;
       });
     }
@@ -60,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     String userName = userInfo['name'] ?? '';
+    String userAva = userInfo['image'] ?? 'https://i.pravatar.cc/100';
     String userEmail = userInfo['email'] ?? '';
 
     return Scaffold(
@@ -154,13 +167,108 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                         child: CircleAvatar(
                           radius: 52,
                           backgroundColor: Colors.grey.withOpacity(0.5),
-                          child: const CircleAvatar(
+                          child: CircleAvatar(
                             radius: 48,
                             backgroundColor: Colors.white,
                             child: CircleAvatar(
                               backgroundImage:
-                                  NetworkImage('https://i.pravatar.cc/100'),
+                                  NetworkImage(userAva),
                               radius: 44,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        margin: const EdgeInsets.only(top: 90, left: 70),
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          padding: const EdgeInsets.all(2),
+                          child: Container(
+                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red[200]),
+                            child: Center(
+                              child: IconButton(
+                                icon: const Icon(Icons.image, size: 11, color: Colors.white),
+                                onPressed: () async {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20),
+                                        ),
+                                      ),
+                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                      builder: (BuildContext context) {
+                                        uploadFile(File upfile, String fname) async {
+                                          var userToken = await storage.read(key: 'token');
+                                          Map<String, String> reqHeaders = {
+                                            HttpHeaders.contentTypeHeader: 'multipart/form-data',
+                                            'Authorization': 'Bearer $userToken',
+                                            'Content-Type': 'application/json',
+                                          };
+                                          var request = http.MultipartRequest('PUT',
+                                              Uri.parse('http://10.0.2.2:8080/api/general/account'));
+                                          request.headers.addAll(reqHeaders);
+                                          request.files.add(http.MultipartFile.fromBytes(
+                                            'image',
+                                            File(upfile.path).readAsBytesSync(),
+                                            filename: fname,
+                                          ));
+                                          var response = await request.send();
+                                          if (response.statusCode == 200) {
+                                            Navigator.of(context).pop();
+                                          } else {
+                                            throw Exception('Failed to upload file');
+                                          }
+                                        }
+                                        return Container(
+                                            width: double.infinity,
+                                            height: MediaQuery.of(context).size.height * 0.20,
+                                            color: Colors.white,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () async {
+                                                    final picker = ImagePicker();
+                                                    final pickedImage = await picker.pickImage(
+                                                      source: ImageSource.gallery,
+                                                    );
+                                                    if (pickedImage == null) return;
+                                                    uploadFile(File(pickedImage.path), File(pickedImage.name).toString());
+                                                  },
+                                                  icon: Icon(
+                                                  EneftyIcons.gallery_outline,
+                                                  size: 50,
+                                                  color: Colors.grey.withOpacity(0.5)),
+                                                ),
+                                                const SizedBox(width: 80),
+                                                IconButton(
+                                                  onPressed: () async {
+                                                    final picker = ImagePicker();
+                                                    final pickedImage = await picker.pickImage(
+                                                      source: ImageSource.camera,
+                                                    );
+                                                    if (pickedImage == null) return;
+                                                    uploadFile(File(pickedImage.path), File(pickedImage.name).toString());
+                                                  },
+                                                  icon: Icon(
+                                                      EneftyIcons.camera_outline,
+                                                      size: 50,
+                                                      color: Colors.grey.withOpacity(0.5)),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                      }).then(onGoBack);
+                                },
+                              ),
                             ),
                           ),
                         ),

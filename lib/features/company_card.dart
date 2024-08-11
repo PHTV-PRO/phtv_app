@@ -101,13 +101,6 @@ class _CompanyCardState extends State<CompanyCard> {
                         ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        FluentIcons.bookmark_20_regular,
-                        color: Colors.grey,
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 6),

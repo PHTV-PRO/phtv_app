@@ -82,6 +82,10 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
         jobRequired = jobDetail['skill_required'] ?? '';
         jobBenefit = jobDetail['benefit'] ?? '';
         createdDate = AppDateUtils.daysBetween(jobDetail['start_date']);
+        for (var i in jobDetail['company']['skills']) {
+          skills.add(i['name']);
+          industries.add(i['industry']['name']);
+        }
         isApplied = jobDetail['job_is_apply'] ?? false;
         isLoading = false;
       });
@@ -119,12 +123,6 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
 
   @override
   Widget build(BuildContext context) {
-    if(jobDetail['company']['skills'] != null){
-      for (var i in jobDetail['company']['skills']) {
-        skills.add(i['name']);
-        industries.add(i['industry']['name']);
-      }
-    }
     return  isLoading
         ? const Center(child: CircularProgressIndicator())
         : Scaffold(

@@ -9,6 +9,7 @@ class AuthApi extends ApiConfig {
 
   static final login = AuthApi(path: '/login', method: RequestMethod.post);
   static final checkToken = AuthApi(path: '/check_token', method: RequestMethod.post);
+  static final uploadAvatar = AuthApi(path: '/account', method: RequestMethod.put);
 }
 
 class SearchApi extends ApiConfig {
