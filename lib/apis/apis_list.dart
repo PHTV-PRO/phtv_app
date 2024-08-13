@@ -31,9 +31,10 @@ class CompanyApi extends ApiConfig {
 
   static final getAllCompanies = CompanyApi(path: '', method: RequestMethod.get);
   static final getCompanyDetail = CompanyApi(path: '', method: RequestMethod.get);
+  static final getCompanyDetailAuth = CompanyApi(path: '', isAuth: true, method: RequestMethod.get);
   static final getContractCompany = CompanyApi(path: '/contract', method: RequestMethod.get);
   static final getSpotlightCompany = CompanyApi(path: '/application_most', method: RequestMethod.get);
-  static final filterCompany = CompanyApi(path: '/search', method: RequestMethod.post);
+  static final filterCompany = CompanyApi(path: '/filter', method: RequestMethod.post);
 }
 
 class JobApi extends ApiConfig {

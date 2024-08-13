@@ -94,7 +94,6 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
 
   getAllCV(int size, int page) async {
     String? userToken = await storage.read(key: 'token');
-    print(userToken);
     if (userToken != null && userToken != '') {
       var data = await CandidateCVApi.getAllCVs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
       if (data != null) {

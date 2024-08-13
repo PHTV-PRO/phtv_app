@@ -18,6 +18,7 @@ class PartnerCard extends ConsumerWidget {
     String comanyLogo = item['logo_image'] ?? 'https://i.pravatar.cc/160';
     String comanyImage = item['background_image'] ?? 'https://i.pravatar.cc/160';
     String companyIntro = item['introduction'] ?? '';
+    int openingJobs = item['opening_jobs'] ?? 0;
 
     Set skills = {};
     if(item['skills'] != null){
@@ -93,11 +94,11 @@ class PartnerCard extends ConsumerWidget {
                       softWrap: true,
                     ),
                     const SizedBox(height: 8),
-                    const Row(
+                    Row(
                       children: [
-                        Icon(EneftyIcons.briefcase_outline, size: 18),
-                        SizedBox(width: 4),
-                        Text('2 jobs'),
+                        const Icon(EneftyIcons.briefcase_outline, size: 18),
+                        const SizedBox(width: 4),
+                        Text('$openingJobs jobs'),
                       ],
                     ),
                     const SizedBox(height: 8),

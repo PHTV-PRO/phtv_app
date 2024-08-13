@@ -1,10 +1,15 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/body_text.dart';
 import 'package:phtv_app/common_widgets/header_text.dart';
 import 'package:phtv_app/features/job_card.dart';
+import 'package:phtv_app/screens/photo_viewer_screen.dart';
+
+import '../../modals/login_request.dart';
 
 class CompaniesDetailScreen extends StatefulWidget {
   const CompaniesDetailScreen({super.key, required this.companyId});
@@ -29,6 +34,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
   int openningJob = 0;
   List lstOpenningJob = [];
   List lstCompanyImage = [];
+  bool isFollow = false;
   bool isLoading = true;
 
   @override
@@ -46,11 +52,18 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
   }
 
   getCompanyDetail(int id) async {
+    String? userToken = await storage.read(key: 'token');
     companyDetail = await CompanyApi.getCompanyDetail.sendRequest(urlParam: '/${id.toString()}');
+    if(userToken == null || userToken == ''){
+      companyDetail = await CompanyApi.getCompanyDetail.sendRequest(urlParam: '/${id.toString()}');
+    }else{
+      companyDetail = await CompanyApi.getCompanyDetailAuth.sendRequest(token: userToken, urlParam: '/${id.toString()}');
+    }
     setState(() {
       companyLogo = companyDetail['logo_image'] ?? 'https://i.pravatar.cc/160';
       companyBg = companyDetail['background_image'] ?? 'https://i.pravatar.cc/200';
       companyTitle = companyDetail['name'] ?? '';
+      isFollow = companyDetail['company_is_follow'] ?? false;
       about = companyDetail['introduction'] ?? '';
       linkweb = companyDetail['link_website'] ?? '';
       companySize = companyDetail['size'] ?? '';
@@ -64,11 +77,30 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
 
   followCompany(int id) async {
     String? userToken = await storage.read(key: 'token');
-    Map<String, String> jsonBody = {
-      'company_id': id.toString()
-    };
-    var data = await CandidateCompanyApi.followCompany.sendRequest(token: userToken, body: jsonBody);
-    print(data);
+    if (userToken == null) {
+      showDialog(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return const LoginRequestModal();
+          });
+    }else {
+      Map<String, String> jsonBody = {
+        'company_id': id.toString()
+      };
+      var data = await CandidateCompanyApi.followCompany.sendRequest(token: userToken, body: jsonBody);
+      setState(() {
+
+      });
+    }
+
+  }
+
+  late int currentIndex = 0;
+
+  void onPageChanged(int index) {
+    setState(() {
+      currentIndex = index;
+    });
   }
 
   @override
@@ -151,24 +183,26 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                                   ),
                               ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.red.shade200),
-                                  borderRadius: BorderRadius.circular(8)
-                              ),
-                              margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: (){
-                                      followCompany(companyDetail['id']);
-                                    },
-                                      child: Text('FOLLOW THIS COMPANY', style: TextStyle(color: Colors.red[300]),)),
-                                  const SizedBox(width: 4),
-                                  Icon(FluentIcons.mail_alert_24_regular, color: Colors.red[300],)
-                                ],
+                            InkWell(
+                              onTap: (){
+                                followCompany(companyDetail['id']);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.red.shade200),
+                                    borderRadius: BorderRadius.circular(8),
+                                  color: isFollow ? Colors.red : Colors.white,
+                                ),
+                                margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    isFollow ? const Text('UNFOLLOW THIS COMPANY', style: TextStyle(color: Colors.white),) : Text('FOLLOW THIS COMPANY', style: TextStyle(color: Colors.red[300]),),
+                                    const SizedBox(width: 4),
+                                    Icon(FluentIcons.mail_alert_24_regular, color: Colors.red[300],)
+                                  ],
+                                ),
                               ),
                             )
                           ],
@@ -318,19 +352,25 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const HeaderText('Image'),
+                  const HeaderText('Gallery'),
                   Wrap(
                     runSpacing: 8,
                     children: [
-                      for (var item in lstCompanyImage)  Container(
-                        margin: const EdgeInsets.only(right: 8),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            item,
-                            fit: BoxFit.cover,
-                            height: 80,
-                            width: 80,
+                      for (int i = 0; i < lstCompanyImage.length; i++)  InkWell(
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => PhotoViewerScreen(initIdx: i, imageList: lstCompanyImage)));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(right: 8),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              lstCompanyImage[i],
+                              fit: BoxFit.cover,
+                              height: 80,
+                              width: 80,
+                            ),
                           ),
                         ),
                       ),

@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     String userName = userInfo['name'] ?? '';
-    String userAva = userInfo['image'] ?? 'https://i.pravatar.cc/100';
+    String userAva = userInfo['image'] ?? '';
     String userEmail = userInfo['email'] ?? '';
 
     return Scaffold(
@@ -170,15 +170,15 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           child: CircleAvatar(
                             radius: 48,
                             backgroundColor: Colors.white,
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(userAva),
+                            child:
+                            isLoggedIn ? CircleAvatar(
+                              backgroundImage: NetworkImage(userAva),
                               radius: 44,
-                            ),
+                            ) : const Icon(EneftyIcons.user_outline, size: 48, color: Colors.grey,),
                           ),
                         ),
                       ),
-                      Container(
+                      isLoggedIn ? Container(
                         alignment: Alignment.bottomCenter,
                         margin: const EdgeInsets.only(top: 90, left: 70),
                         child: Container(
@@ -272,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                             ),
                           ),
                         ),
-                      ),
+                      ) : const SizedBox.shrink(),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -495,7 +495,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
               },
             );
           },
-          child: const Text('Sign out'),
+          child: isLoggedIn ? const Text('Sign out') : const SizedBox.shrink(),
         ),
         const SizedBox(height: 20),
       ],

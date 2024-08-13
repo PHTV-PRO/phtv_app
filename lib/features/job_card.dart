@@ -81,7 +81,7 @@ class _JobCardState extends State<JobCard> {
       }
     }
 
-    return isLoading ? const CircularProgressIndicator() :  Container(
+    return isLoading ? const Center(child: CircularProgressIndicator()) :  Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         color: Colors.white,

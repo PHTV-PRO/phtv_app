@@ -46,12 +46,13 @@ class _CompaniesListState extends State<CompaniesList> {
     });
   }
 
-  filterCompany() async {
+  filterCompany(int size, int page) async {
     Map<String, String> jsonBody = {
       'province_city_id': _location,
       'industry_id': _industry
     };
-    var data = await CompanyApi.filterCompany.sendRequest(body: jsonBody);
+    print(jsonBody);
+    var data = await CompanyApi.filterCompany.sendRequest(body: jsonBody, urlParam: '?size=$size&page=$page');
     setState(() {
       companyList = data;
     });
@@ -120,7 +121,7 @@ class _CompaniesListState extends State<CompaniesList> {
                                       _location = val! == '0' ? '' : val;
                                     },
                                   );
-                                  filterCompany();
+                                  filterCompany(0,0);
                                 }),
                           ),
                           const Spacer(),
@@ -151,7 +152,7 @@ class _CompaniesListState extends State<CompaniesList> {
                                       _industry = val! == '0' ? '' : val;
                                     },
                                   );
-                                  filterCompany();
+                                  filterCompany(0,0);
                                 }),
                           ),
                         ],

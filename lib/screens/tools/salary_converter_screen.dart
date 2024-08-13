@@ -1,10 +1,6 @@
-import 'package:enefty_icons/enefty_icons.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:phtv_app/modals/login_request.dart';
-import 'package:phtv_app/screens/my_cv/my_cv_screen.dart';
 
 class SalaryConverterScreen extends StatefulWidget{
   const SalaryConverterScreen({super.key});
@@ -143,6 +139,9 @@ class _SalaryConverterScreenState extends State<SalaryConverterScreen> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please fill in your salary';
                     }
+                    if (value.length < 8) {
+                      return 'Min salary is 1,000,000';
+                    }
                     return null;
                   },
                   keyboardType: TextInputType.number,
@@ -168,8 +167,7 @@ class _SalaryConverterScreenState extends State<SalaryConverterScreen> {
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please fill in number of dependents';
-                    }
-                    if(int.tryParse(value)! < 0 || int.tryParse(value)! > 10){
+                    } else if(int.tryParse(value)! < 0 || int.tryParse(value)! > 10){
                       return 'Number of dependents must between 0-10';
                     }
                     return null;
@@ -186,6 +184,9 @@ class _SalaryConverterScreenState extends State<SalaryConverterScreen> {
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please fill in insurance premiums';
+                    }
+                    if (value.length < 8) {
+                      return 'Min insurance premiums is 1,000,000';
                     }
                     return null;
                   },
@@ -474,7 +475,7 @@ Container salGrossNetResult (String sal, String dpDedct, String insPre, String r
           ]),
           TableRow( children: [
             fieldName('Personal income tax'),
-            value('- ${formatter.format(personalTax)}')
+            value('${formatter.format(personalTax)}')
           ]),
           TableRow( children: [
             const Padding(
@@ -635,7 +636,7 @@ Container salNetGrossResult (String sal, String dpDedct, String insPre, String r
         ]),
         TableRow( children: [
           fieldName('Personal income tax'),
-          value('- ${formatter.format(personalTax)}')
+          value('${formatter.format(personalTax)}')
         ]),
         TableRow( children: [
           const Padding(
