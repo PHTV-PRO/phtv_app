@@ -59,7 +59,7 @@ class _JobCardState extends State<JobCard> {
         jobTitle = jobInfo['title'] ?? 'job title';
         isSaved = jobInfo['job_is_save'] ?? false;
         logoImage = jobInfo['logo_image'] ?? 'https://i.pravatar.cc/40';
-        province = jobInfo['company']['city_provence']['name'] ?? 'Ho Chi Minh';
+        province = jobInfo['company']['city_province']['name'] ?? 'Ho Chi Minh';
         salary = (jobInfo['salary_min'] ?? 'Negotiable') + (jobInfo['salary_max'] != null ? ' - ' + jobInfo['salary_max']  : '');
         createdDate = AppDateUtils.daysBetween(jobInfo['start_date'] ?? DateFormat("dd-MM-yy").format(DateTime.now()));
         jobSkills = jobInfo['skills'];
