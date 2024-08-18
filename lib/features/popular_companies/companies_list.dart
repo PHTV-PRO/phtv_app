@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/company_card.dart';
 
+import '../../screens/companies/company_detail_screen.dart';
+
 class CompaniesList extends StatefulWidget {
   const CompaniesList({super.key});
 
@@ -21,6 +23,11 @@ class _CompaniesListState extends State<CompaniesList> {
   void initState() {
     super.initState();
     getCompanies(0,0);
+  }
+
+  onGoBack(dynamic value) {
+    getCompanies(0,0);
+    setState(() {});
   }
 
   getLocationList() async {
@@ -51,7 +58,6 @@ class _CompaniesListState extends State<CompaniesList> {
       'province_city_id': _location,
       'industry_id': _industry
     };
-    print(jsonBody);
     var data = await CompanyApi.filterCompany.sendRequest(body: jsonBody, urlParam: '?size=$size&page=$page');
     setState(() {
       companyList = data;
@@ -164,8 +170,15 @@ class _CompaniesListState extends State<CompaniesList> {
                           scrollDirection: Axis.vertical,
                           itemCount: companyList.length,
                           itemBuilder: (BuildContext context, int index) =>
-                              CompanyCard(
-                                company: companyList[index],
+                              InkWell(
+                                onTap: () async{
+                                  if (companyList[index]['id'] <= 0) return;
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (ctx) => CompaniesDetailScreen(companyId: companyList[index]['id']))).then(onGoBack);
+                                },
+                                child: CompanyCard(
+                                  company: companyList[index],
+                                ),
                               ),
                       ),
                     ],

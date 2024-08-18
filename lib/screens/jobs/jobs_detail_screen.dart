@@ -35,6 +35,10 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   String companyName = '';
   String companyLogo = '';
   String companyBg = '';
+  int amount = 0;
+  String expRequired = '';
+  String salary = '';
+  String location = '';
   String jobDescription = '';
   String jobResponsibility = '';
   String jobRequired = '';
@@ -77,6 +81,10 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
         companyName = jobDetail['company']['name'] ?? '';
         companyLogo = jobDetail['company']['logo_image'] ?? 'https://i.pravatar.cc/160';
         companyBg = jobDetail['company']['background_image'] ?? 'https://i.pravatar.cc/200';
+        amount = jobDetail['amount'] ?? 0;
+        expRequired = jobDetail['experience_required'] ?? '';
+        salary = (jobDetail['salary_min'] != null ? jobDetail['salary_min'] + ' - ' : '') + (jobDetail['salary_max'] ?? '');
+        location = jobDetail['company']['location'] ?? 0;
         jobDescription = jobDetail['description'] ?? '';
         jobResponsibility = jobDetail['reponsibility'] ?? '';
         jobRequired = jobDetail['skill_required'] ?? '';
@@ -660,10 +668,11 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             const HeaderText('Information'),
-            const BodyText(
-                'Program Development, unit test, bug fix based on the design documents from Korea Headquarter '
-                    '(Korea H.Q: System design and Operation, Vietnam Development Center: Development & bug fix, '
-                    'Design implementation step by step).'),
+            companyDetailRow(EneftyIcons.location_outline, location),
+            companyDetailRow(EneftyIcons.people_outline, 'Amount: ${amount.toString()}'),
+            companyDetailRow(EneftyIcons.document_text_outline, 'Exp Required: $expRequired'),
+            companyDetailRow(EneftyIcons.dollar_circle_outline, 'Salary: $salary'),
+            companyDetailRow(EneftyIcons.tag_outline, industries.join(", ")),
 
             if(jobDes != '') const HeaderText('Job Description'),
             if(jobDes != '') BulletList(jobDes.split('\n')),

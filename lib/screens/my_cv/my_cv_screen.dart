@@ -25,7 +25,7 @@ class _MyCVScreenState extends State<MyCVScreen> {
   @override
   void initState() {
     super.initState();
-    getAllCV(10,1);
+    getAllCV(0,0);
   }
 
   getAllCV(int size, int page) async {

@@ -1,9 +1,12 @@
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/modals/login_request.dart';
 import 'package:phtv_app/screens/my_cv/my_cv_screen.dart';
 import 'package:phtv_app/screens/tools/my_follow_company_screen.dart';
 import 'package:phtv_app/screens/tools/salary_converter_screen.dart';
+
+var storage = const FlutterSecureStorage();
 
 class ToolsScreen extends StatelessWidget{
   const ToolsScreen({super.key});

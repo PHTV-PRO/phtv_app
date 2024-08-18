@@ -86,9 +86,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
         'company_id': id.toString()
       };
       var data = await CandidateCompanyApi.followCompany.sendRequest(token: userToken, body: jsonBody);
-      setState(() {
-
-      });
+      getCompanyDetail(widget.companyId);
     }
 
   }
@@ -198,7 +196,7 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
                                   children: [
                                     isFollow ? const Text('UNFOLLOW THIS COMPANY', style: TextStyle(color: Colors.white),) : Text('FOLLOW THIS COMPANY', style: TextStyle(color: Colors.red[300]),),
                                     const SizedBox(width: 4),
-                                    Icon(FluentIcons.mail_alert_24_regular, color: Colors.red[300],)
+                                    Icon(FluentIcons.mail_alert_24_regular, color: isFollow ? Colors.white : Colors.red[300],)
                                   ],
                                 ),
                               ),

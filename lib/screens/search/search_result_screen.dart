@@ -4,6 +4,8 @@ import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/company_card.dart';
 import 'package:phtv_app/features/job_card.dart';
 
+import '../companies/company_detail_screen.dart';
+
 class SearchResultScreen extends StatefulWidget {
   const SearchResultScreen({super.key, required this.keyword, required this.result});
   final String keyword;
@@ -51,11 +53,14 @@ class _SearchResultScreenState extends State<SearchResultScreen> with SingleTick
     }
     _formSearchMain.currentState!.save();
     var data = await SearchApi.search.sendRequest(urlParam: '/$value');
-    print(data['companies']);
     setState(() {
       jobsData = data['jobs'];
       companyData = data['companies'];
     });
+  }
+
+  onGoBack(dynamic value) {
+    setState(() {});
   }
 
   Container myTab(String text) {
@@ -183,7 +188,13 @@ class _SearchResultScreenState extends State<SearchResultScreen> with SingleTick
                   padding: const EdgeInsets.all(10.0),
                   child: companyData.isEmpty ? noResult() : Column(children: [
                     for(int i =0; i <companyData.length; i++)
-                      CompanyCard(company: companyData[i])
+                      InkWell(
+                          onTap: () async{
+                            if (companyData[i]['id'] <= 0) return;
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (ctx) => CompaniesDetailScreen(companyId: companyData[i]['id']))).then(onGoBack);
+                          },
+                          child: CompanyCard(company: companyData[i]))
                   ]),
                 ),
               ),

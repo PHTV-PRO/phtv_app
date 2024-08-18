@@ -7,7 +7,7 @@ import 'package:phtv_app/screens/companies/company_detail_screen.dart';
 var storage = const FlutterSecureStorage();
 
 class CompanyCard extends StatefulWidget{
-  const CompanyCard({
+  CompanyCard({
     super.key,
     required this.company,
   });
@@ -27,7 +27,7 @@ class _CompanyCardState extends State<CompanyCard> {
     int companyId = widget.company['id'] ?? 0;
     String companyLogo = widget.company['logo_image'] ?? 'https://i.pravatar.cc/40';
     String companyName = widget.company['name'] ?? '';
-    String address = widget.company['city_provence']['name']?? '';
+    String address = widget.company['city_province']['name']?? '';
     String companySize = widget.company['size'] ?? '';
     int openingJobs = widget.company['opening_jobs'] ?? 0;
 
@@ -56,111 +56,104 @@ class _CompanyCardState extends State<CompanyCard> {
           ),
         ]
       ),
-      child: InkWell(
-        onTap: () async {
-          if (companyId <= 0) return;
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => CompaniesDetailScreen(companyId: companyId)));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 40.0,
+                    height: 40.0,
+                    decoration: BoxDecoration(
+                      color: const Color(0xff7c94b6),
+                      image: DecorationImage(
+                        image: NetworkImage(companyLogo),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: const BorderRadius.all( Radius.circular(50.0)),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      companyName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for(int i = 0; i < skills.length; i++)
                     Container(
-                      width: 40.0,
-                      height: 40.0,
+                      padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xff7c94b6),
-                        image: DecorationImage(
-                          image: NetworkImage(companyLogo),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: const BorderRadius.all( Radius.circular(50.0)),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
+                        borderRadius: BorderRadius.circular(4),
+                        color: Colors.grey.withOpacity(0.3),
                       ),
-                    ),
-                    const SizedBox(width: 6),
-                    Expanded(
                       child: Text(
-                        companyName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
+                        skills.elementAtOrNull(i),
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87
+                          color: Colors.black87,
                         ),
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    for(int i = 0; i < skills.length; i++)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6,vertical: 2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.grey.withOpacity(0.3),
-                        ),
-                        child: Text(
-                          skills.elementAtOrNull(i),
-                          style: const TextStyle(
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(EneftyIcons.location_outline, size: 18),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(address,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                      ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  const Icon(EneftyIcons.location_outline, size: 18),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(address,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
                     ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(EneftyIcons.profile_2user_outline, size: 18),
-                    const SizedBox(width: 4),
-                    Text(companySize),
-                    const SizedBox(width: 26),
-                    const Icon(EneftyIcons.briefcase_outline, size: 18),
-                    const SizedBox(width: 4),
-                    Text("$openingJobs job"),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(EneftyIcons.tag_outline, size: 18),
-                    const SizedBox(width: 4),
-                    Expanded(child: Text(industries.join(", "), maxLines: 2, softWrap: true,overflow: TextOverflow.ellipsis,)),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  const Icon(EneftyIcons.profile_2user_outline, size: 18),
+                  const SizedBox(width: 4),
+                  Text(companySize),
+                  const SizedBox(width: 26),
+                  const Icon(EneftyIcons.briefcase_outline, size: 18),
+                  const SizedBox(width: 4),
+                  Text("$openingJobs job"),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(EneftyIcons.tag_outline, size: 18),
+                  const SizedBox(width: 4),
+                  Expanded(child: Text(industries.join(", "), maxLines: 2, softWrap: true,overflow: TextOverflow.ellipsis,)),
+                ],
+              ),
+            ],
           ),
         ),
       ),
