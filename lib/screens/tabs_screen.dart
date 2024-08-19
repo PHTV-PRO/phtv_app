@@ -9,6 +9,7 @@ import 'package:phtv_app/screens/jobs/jobs_screen.dart';
 import 'package:phtv_app/screens/my_jobs/my_jobs_screen.dart';
 import 'package:phtv_app/screens/profile/profile_screen.dart';
 import 'package:phtv_app/screens/search/search_screen.dart';
+import 'package:phtv_app/screens/tools/my_follow_company_screen.dart';
 import 'package:phtv_app/screens/tools/tools_screen.dart';
 
 import '../apis/apis_list.dart';
@@ -51,7 +52,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   loginState() async {
     String? userToken = await storage.read(key: 'token');
-    print(userToken);
     if(userToken != null && userToken != '') {
       Map<String, String> jsonBody = {
         'token': userToken
@@ -133,12 +133,19 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-                showDialog(context: context, builder: (BuildContext dialogContext){
-                  return const Text('notifcation');
-                });
+              var userToken = await storage.read(key: "token");
+              if (userToken == null) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext dialogContext) {
+                      return const LoginRequestModal();
+                    });
+              }else{
+                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const MyFollowCompanyScreen()));
+              }
             },
             icon: Icon(
-              FluentIcons.alert_20_regular,
+              FluentIcons.mail_alert_24_regular,
               color: Colors.white,
               shadows: [
                 Shadow(

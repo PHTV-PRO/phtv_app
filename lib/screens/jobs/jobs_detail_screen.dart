@@ -48,6 +48,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   Set industries = {};
 
   int selectCvId = 0;
+  bool isSave = false;
   bool isApplied = false;
 
   @override
@@ -95,6 +96,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
           industries.add(i['industry']['name']);
         }
         isApplied = jobDetail['job_is_apply'] ?? false;
+        isSave = jobDetail['job_is_save'] ?? false;
         isLoading = false;
       });
     }
@@ -184,23 +186,28 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                                   builder: (BuildContext dialogContext) {
                                     return const LoginRequestModal();
                                   });
+                            }else{
+                              Map<String, String> jsonBody2 = {
+                                'job_id': jobId.toString(),
+                              };
+                              await CandidateJobApi.saveJob.sendRequest(body: jsonBody2, token: userToken);
+                              getJobDetail(jobId);
                             }
+
                           },
                           style: ButtonStyle(
-                              backgroundColor:
-                                  WidgetStateProperty.all(Colors.white),
+                              backgroundColor: isSave ? WidgetStateProperty.all(Colors.red[100]) : WidgetStateProperty.all(Colors.white),
                               shape: WidgetStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                               ),
-                              side: WidgetStateProperty.all(
-                                  const BorderSide(color: Colors.red))),
-                          child: const Row(
+                              side: WidgetStateProperty.all(const BorderSide(color: Colors.red))),
+                          child: Row(
                             children: [
-                              Text('SAVE'),
-                              SizedBox(width: 12),
-                              Icon(
+                              Text(isSave ? 'SAVED' : 'SAVE'),
+                              const SizedBox(width: 12),
+                              const Icon(
                                 FluentIcons.bookmark_16_regular,
                                 size: 18,
                               )
