@@ -1,22 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:phtv_app/features/adv_card.dart';
 
-class AdsCarousel extends ConsumerWidget {
+import '../apis/apis_list.dart';
+
+class AdsCarousel extends StatefulWidget {
   const AdsCarousel({super.key});
 
   @override
-  Widget build(BuildContext context, ref) {
+  State<AdsCarousel> createState() => _AdsCarouselState();
+}
+
+class _AdsCarouselState extends State<AdsCarousel> {
+  var listAdv = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getAdv();
+  }
+
+  getAdv() async {
+    var data = await AdvApi.getAllAdv.sendRequest();
+    listAdv = data.map((e) => e).toList();
+    if(data != null){
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: SizedBox(
-          height: 150,
+          height: 160,
           child: ListView.builder(
               physics: const ClampingScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: 2,
-              itemBuilder: (BuildContext context, int index) => const AdvCard(article: 1)
+              itemCount: listAdv.length,
+              itemBuilder: (BuildContext context, int index) => AdvCard(adv: listAdv[index])
           )
       ),
     );

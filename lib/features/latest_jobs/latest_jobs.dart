@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/job_card.dart';
+import 'package:phtv_app/screens/viewmore_screen.dart';
 
 class LatestJobs extends StatefulWidget {
   const LatestJobs({super.key});
@@ -48,21 +49,23 @@ class _LatestJobsState extends State<LatestJobs> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'Latest jobs',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
                           ),
-                          Spacer(),
-                          Text(
-                            'View more',
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.blueAccent),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: (){
+                              Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ViewmoreScreen(dataType: 'Lastest Jobs',)));
+                            },
+                            child: const Text('View more',style: TextStyle(
+                                fontSize: 14, color: Colors.blueAccent)),
                           ),
                         ],
                       ),
@@ -71,7 +74,7 @@ class _LatestJobsState extends State<LatestJobs> {
                           physics: const ClampingScrollPhysics(),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
-                          itemCount: jobList.length,
+                          itemCount: jobList.sublist(0,8).length,
                           itemBuilder: (BuildContext context, int index) =>
                               JobCard(jobId: jobList[index]['id'], notifyParent: (){},)
                       ),

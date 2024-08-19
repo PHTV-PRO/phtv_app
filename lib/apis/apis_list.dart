@@ -107,3 +107,13 @@ class IndustryApi extends ApiConfig {
 
   static final getIndustryList = IndustryApi(path: '', method: RequestMethod.get);
 }
+
+class AdvApi extends ApiConfig {
+  AdvApi(
+      {super.module = 'general',
+        required super.path,
+        required super.method,
+        super.isAuth = false});
+
+  static final getAllAdv = AdvApi(path: '/advertisement', method: RequestMethod.get);
+}
