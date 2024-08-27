@@ -99,16 +99,6 @@ class _SearchResultScreenState extends State<SearchResultScreen> with SingleTick
                 color: Colors.white,
                 onPressed: (){Navigator.of(context)..pop()..pop();}
             ),
-            actions: [Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Icon(EneftyIcons.setting_3_outline, color: Colors.white,shadows: [
-                Shadow(
-                  offset: const Offset(0.0, 1.0),
-                  blurRadius: 10.0,
-                  color: Colors.grey.withOpacity(0.5),
-                ),
-              ],),
-            )],
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(40),
               child: Align(

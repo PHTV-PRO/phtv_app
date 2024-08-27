@@ -45,7 +45,7 @@ class JobApi extends ApiConfig {
         required super.method,
         super.isAuth = false});
 
-  static final getLatestJobs = JobApi(path: '', method: RequestMethod.get);
+  static final getLatestJobs = JobApi(path: '/new', method: RequestMethod.get);
   static final getJobDetail = JobApi(path: '', method: RequestMethod.get);
   static final getJobDetailAuth = JobApi(path: '', isAuth: true, method: RequestMethod.get);
 }

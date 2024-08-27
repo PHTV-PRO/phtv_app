@@ -8,7 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:phtv_app/apis/apis_list.dart';
+import 'package:phtv_app/screens/about_screen.dart';
 import 'package:phtv_app/screens/auth/login_screen.dart';
+import 'package:phtv_app/screens/privacy_policy_screen.dart';
+import 'package:phtv_app/screens/term_condition_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 const storage = FlutterSecureStorage();
 
@@ -315,7 +319,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           ),
                           icon: const Icon(EneftyIcons.setting_2_outline),
                           label: const Text('Privacy Policy'),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const PrivacyPolicyScreen()));
+                          },
                         ),
                       ),
                       SizedBox(
@@ -330,21 +336,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           icon:
                               const Icon(EneftyIcons.message_question_outline),
                           label: const Text('Terms and Conditions'),
-                          onPressed: () {},
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            surfaceTintColor: Colors.white,
-                            backgroundColor: Colors.white,
-                            alignment: Alignment.centerLeft,
-                            foregroundColor: Colors.black54,
-                          ),
-                          icon: const Icon(EneftyIcons.tick_circle_outline),
-                          label: const Text('Review app'),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const TermConditionScreen()));
+                          },
                         ),
                       ),
                       SizedBox(
@@ -358,7 +352,9 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           ),
                           icon: const Icon(EneftyIcons.info_circle_outline),
                           label: const Text('About us'),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AboutScreen()));
+                          },
                         ),
                       ),
                     ],
@@ -399,7 +395,15 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           icon: Image.asset('assets/images/zalo.png',
                               height: 22, color: Colors.black54),
                           label: const Text('Zalo'),
-                          onPressed: () async {},
+                          onPressed: () async {
+                            try {
+                              await launchUrl(
+                                Uri.parse('http://zalo.me/09012345678'),
+                              );
+                            } catch (e) {
+                              throw 'Could not launch url';
+                            }
+                          },
                         ),
                       ),
                       SizedBox(
@@ -417,7 +421,15 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                             color: Colors.black54,
                           ),
                           label: const Text('PHTV Fanpage'),
-                          onPressed: () async {},
+                          onPressed: () async {
+                            try {
+                              await launchUrl(
+                                Uri.parse('https://www.facebook.com/phtvpro'),
+                              );
+                            } catch (e) {
+                              throw 'Could not launch url';
+                            }
+                          },
                         ),
                       ),
                       SizedBox(
@@ -431,7 +443,13 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           ),
                           icon: const Icon(EneftyIcons.call_outline),
                           label: const Text('Hotline'),
-                          onPressed: () async {},
+                          onPressed: () async {
+                            final Uri launchUri = Uri(
+                              scheme: 'tel',
+                              path: '09012345678',
+                            );
+                            await launchUrl(launchUri);
+                          },
                         ),
                       ),
                       SizedBox(
@@ -445,7 +463,23 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                           ),
                           icon: const Icon(Icons.mail_outline),
                           label: const Text('Email'),
-                          onPressed: () async {},
+                          onPressed: () async {
+                            String? encodeQueryParameters(
+                                Map<String, String> params) {
+                              return params.entries
+                                  .map((MapEntry<String, String> e) =>
+                              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+                                  .join('&');
+                            }
+                            final Uri launchUri = Uri(
+                              scheme: 'mailto',
+                              path: 'phtvpro@gmail.com',
+                              query: encodeQueryParameters(<String, String>{
+                                'subject': 'Hello PHTV Pro, I have question',
+                              }),
+                            );
+                            await launchUrl(launchUri);
+                          },
                         ),
                       ),
                     ],

@@ -46,7 +46,6 @@ class _ViewedJobsState extends State<ViewedJobs> {
   }
 
   refresh() {
-    print('ahiih');
     getJobs(10,1);
   }
 

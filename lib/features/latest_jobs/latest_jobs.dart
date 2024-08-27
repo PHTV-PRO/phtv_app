@@ -17,11 +17,11 @@ class _LatestJobsState extends State<LatestJobs> {
   @override
   void initState() {
     super.initState();
-    getJobs();
+    getJobs(10,1);
   }
 
-  getJobs() async {
-    var data = await JobApi.getLatestJobs.sendRequest();
+  getJobs(int size, int page) async {
+    var data = await JobApi.getLatestJobs.sendRequest(urlParam: '?size=$size&page=$page');
     jobList = data.map((e) => e).toList();
     if(data != null){
       setState(() {

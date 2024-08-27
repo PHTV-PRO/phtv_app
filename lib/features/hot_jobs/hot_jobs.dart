@@ -18,7 +18,7 @@ class _HotJobsState extends State<HotJobs> {
   @override
   void initState() {
     super.initState();
-    getJobs(0,0);
+    getJobs(10,1);
   }
 
   getJobs(int size, int page) async {

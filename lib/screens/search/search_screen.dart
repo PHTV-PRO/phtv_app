@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/ads_carousel.dart';
 import 'package:phtv_app/features/hot_jobs/hot_jobs.dart';
 import 'package:phtv_app/features/latest_jobs/latest_jobs.dart';
 import 'package:phtv_app/features/saved_jobs/saved_jobs.dart';
-import 'package:phtv_app/features/top_keywords/top_keywords.dart';
 import 'package:phtv_app/features/viewed_jobs/viewed_jobs.dart';
 import 'package:phtv_app/screens/search/search_result_screen.dart';
+
+var storage = const FlutterSecureStorage();
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -20,6 +22,14 @@ class _SearchScreenState extends State<SearchScreen> {
   var _keyword = '';
   var _result = {};
 
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loginState();
+  }
+
   search(String value) async {
     final isValid = _formSearch.currentState!.validate();
     if (!isValid) {
@@ -27,6 +37,25 @@ class _SearchScreenState extends State<SearchScreen> {
     }
     _formSearch.currentState!.save();
     _result = await SearchApi.search.sendRequest(urlParam: '/$value');
+  }
+
+  loginState() async {
+    String? userToken = await storage.read(key: 'token');
+    if(userToken != null && userToken != '') {
+      Map<String, String> jsonBody = {
+        'token': userToken
+      };
+      var data = await AuthApi.checkToken.sendRequest(body: jsonBody);
+      if (data != null) {
+        setState(() {
+          isLoggedIn = true;
+        });
+      }else{
+        await storage.deleteAll();
+      }
+    }else{
+      await storage.deleteAll();
+    }
   }
 
   @override
@@ -68,27 +97,24 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
         ),
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
 
-            //Top keyword
-            TopKeywords(),
-
-            //Hot for you
-            HotJobs(),
-
-            //Latest jobs
-            LatestJobs(),
-
-            //Advertisment
-            AdsCarousel(),
-
             //Viewed jobs
-            ViewedJobs(),
+            isLoggedIn == true ? const ViewedJobs() : const SizedBox.shrink(),
 
             //Saved jobs
-            SavedJobs(),
+            isLoggedIn == true ? const SavedJobs() : const SizedBox.shrink(),
+
+            //Hot for you
+            isLoggedIn == true ? const HotJobs() : const SizedBox.shrink(),
+
+            //Latest jobs
+            const LatestJobs(),
+
+            //Advertisment
+            const AdsCarousel(),
           ],
         ),
       ),

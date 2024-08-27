@@ -115,15 +115,16 @@ class _LoginFormState extends State<LoginForm> {
               _enteredPassword = value!;
             },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                child: const Text('Forgot password'),
-                onPressed: () {},
-              ),
-            ],
-          ),
+          const SizedBox(height: 36),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.end,
+          //   children: [
+          //     TextButton(
+          //       child: const Text('Forgot password'),
+          //       onPressed: () {},
+          //     ),
+          //   ],
+          // ),
           ElevatedButton(
             onPressed: _submitLogin,
             style: ElevatedButton.styleFrom(
@@ -139,24 +140,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
-          const SizedBox(height: 18),
-          const Text(
-            'or',
-            style: TextStyle(fontSize: 13, color: Colors.grey),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                  icon: Image.asset('assets/images/facebook.png'),
-                  onPressed: () {}),
-              const SizedBox(width: 12),
-              IconButton(
-                  icon: Image.asset('assets/images/google.png'),
-                  onPressed: () {}),
-            ],
-          ),
+          const SizedBox(height: 12),
         ],
       ),
     );
