@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/request_login_box.dart';
 import 'package:phtv_app/features/job_card.dart';
+
+import '../../screens/viewmore_screen.dart';
+
+var storage = const FlutterSecureStorage();
 
 class ViewedJobs extends StatefulWidget {
   const ViewedJobs({super.key});
@@ -69,13 +74,16 @@ class _ViewedJobsState extends State<ViewedJobs> {
                         fontSize: 18,
                     ),),
                     const Spacer(),
-                    Text(
-                      isLoggedIn == true ? 'View more' : '',
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.blueAccent
+                    isLoggedIn == true ? SizedBox(
+                      height: 35,
+                      child: TextButton(
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ViewmoreScreen(dataType: 'Your viewed jobs',)));
+                        },
+                        child: const Text('View more',style: TextStyle(
+                            fontSize: 14, color: Colors.blueAccent)),
                       ),
-                    ),
+                    ) : const SizedBox.shrink(),
                   ],
                 ),
                 const SizedBox(height: 10),

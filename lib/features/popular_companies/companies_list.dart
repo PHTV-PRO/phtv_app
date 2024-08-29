@@ -3,6 +3,7 @@ import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/features/company_card.dart';
 
 import '../../screens/companies/company_detail_screen.dart';
+import '../../screens/viewmore_screen.dart';
 
 class CompaniesList extends StatefulWidget {
   const CompaniesList({super.key});
@@ -22,11 +23,11 @@ class _CompaniesListState extends State<CompaniesList> {
   @override
   void initState() {
     super.initState();
-    getCompanies(0,0);
+    getCompanies(10,1);
   }
 
   onGoBack(dynamic value) {
-    getCompanies(0,0);
+    getCompanies(10,1);
     setState(() {});
   }
 
@@ -78,22 +79,27 @@ class _CompaniesListState extends State<CompaniesList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Row(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             'Popular Companies',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
                           ),
-                          Spacer(),
-                          Text(
-                            'View more',
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.blueAccent),
-                          ),
+                          const Spacer(),
+                          SizedBox(
+                            height: 35,
+                            child: TextButton(
+                              onPressed: (){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ViewmoreScreen(dataType: 'Popular Companies',)));
+                              },
+                              child: const Text('View more',style: TextStyle(
+                                  fontSize: 14, color: Colors.blueAccent)),
+                            ),
+                          )
                         ],
                       ),
                       const SizedBox(height: 10),
@@ -122,7 +128,7 @@ class _CompaniesListState extends State<CompaniesList> {
                                     );
                                   },
                                 ).toList(),
-                                onChanged: (val) {
+                                onChanged: (val) async {
                                   setState(() {
                                       _location = val! == '0' ? '' : val;
                                     },
@@ -153,7 +159,7 @@ class _CompaniesListState extends State<CompaniesList> {
                                     );
                                   },
                                 ).toList(),
-                                onChanged: (val) {
+                                onChanged: (val) async {
                                   setState(() {
                                       _industry = val! == '0' ? '' : val;
                                     },

@@ -11,6 +11,7 @@ import 'package:phtv_app/screens/companies/company_detail_screen.dart';
 import 'package:phtv_app/screens/my_cv/my_cv_screen.dart';
 import 'package:phtv_app/utils/date_utils.dart';
 
+import '../../features/hot_jobs/hot_jobs.dart';
 import '../pdf_view_screen.dart';
 
 var storage = const FlutterSecureStorage();
@@ -47,6 +48,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
   Set skills = {};
   Set industries = {};
 
+  bool isLoggedIn = false;
   int selectCvId = 0;
   bool isSave = false;
   bool isApplied = false;
@@ -56,7 +58,27 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(_handleTabSelection);
     super.initState();
+    loginState();
     getJobDetail(widget.jobId);
+  }
+
+  loginState() async {
+    String? userToken = await storage.read(key: 'token');
+    if(userToken != null && userToken != '') {
+      Map<String, String> jsonBody = {
+        'token': userToken
+      };
+      var data = await AuthApi.checkToken.sendRequest(body: jsonBody);
+      if (data != null) {
+        setState(() {
+          isLoggedIn = true;
+        });
+      }else{
+        await storage.deleteAll();
+      }
+    }else{
+      await storage.deleteAll();
+    }
   }
 
   _handleTabSelection() {
@@ -147,11 +169,6 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                   color: Colors.white
               ),
               centerTitle: true,
-              actions: [
-                IconButton(
-                    icon: const Icon(EneftyIcons.send_2_outline, color: Colors.white,),
-                    onPressed: () {}),
-              ],
             ),
             backgroundColor: Colors.white,
             bottomNavigationBar: Container(
@@ -216,7 +233,19 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
                         ),
                         const SizedBox(width: 14),
                         Expanded(
-                          child: ElevatedButton(
+                          child: isApplied ? ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(Colors.white.withOpacity(0.1)),
+                              foregroundColor: WidgetStateProperty.all(Colors.black54),
+                              shape: WidgetStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                              ),
+                            ),
+                            child: const Text('You already applied'),
+                          ): ElevatedButton(
                             onPressed: () async {
                               var userToken = await storage.read(key: "token");
                               if (userToken == null) {
@@ -383,17 +412,15 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
 
                             },
                             style: ButtonStyle(
-                              backgroundColor:
-                                  WidgetStateProperty.all(Colors.red),
-                              foregroundColor:
-                                  WidgetStateProperty.all(Colors.white),
+                              backgroundColor: WidgetStateProperty.all(Colors.red),
+                              foregroundColor: WidgetStateProperty.all(Colors.white),
                               shape: WidgetStateProperty.all(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                               ),
                             ),
-                            child: Text(isApplied == true ? 'You already applied' : 'EASY APPLY'),
+                            child: const Text('EASY APPLY'),
                           ),
                         )
                       ],
@@ -633,7 +660,7 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('GET NOTIFICATION', style: TextStyle(color: Colors.red[300]),),
+                  Text('FOLLOW THIS COMPANY', style: TextStyle(color: Colors.red[300]),),
                   const SizedBox(width: 6),
                   Icon(FluentIcons.mail_alert_24_regular, color: Colors.red[300],)
                 ],
@@ -693,8 +720,12 @@ class _JobsDetailScreenState extends State<JobsDetailScreen>
             if(jobBen != '') const HeaderText('Benefits For You'),
             if(jobBen != '') BulletList(jobBen.split('\n')),
 
-            const HeaderText('Recommend For You'),
-            // const RecommendJobs()
+            const SizedBox(height: 22),
+            Container(
+              color: const Color.fromARGB(255, 241, 242, 243),
+              height: 8,
+            ),
+            isLoggedIn == true ? const HotJobs() : const SizedBox.shrink(),
           ],
         ));
   }

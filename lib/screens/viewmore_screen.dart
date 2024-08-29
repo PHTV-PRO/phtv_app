@@ -1,16 +1,11 @@
-import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:enefty_icons/enefty_icons.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:phtv_app/apis/apis_list.dart';
-import 'package:phtv_app/screens/my_cv/cv_form_screen.dart';
-import 'package:phtv_app/screens/pdf_view_screen.dart';
 
+import '../features/company_card.dart';
 import '../features/job_card.dart';
+import 'companies/company_detail_screen.dart';
 
 var storage = const FlutterSecureStorage();
 
@@ -22,7 +17,7 @@ class ViewmoreScreen extends StatefulWidget {
 }
 
 class _ViewmoreScreenState extends State<ViewmoreScreen> {
-  static const _pageSize = 5;
+  static const _pageSize = 1;
   var _activeCallbackIdentity;
   final PagingController<int, dynamic> _pagingController = PagingController(firstPageKey: 0);
   var listData = [];
@@ -31,78 +26,47 @@ class _ViewmoreScreenState extends State<ViewmoreScreen> {
   @override
   void initState() {
     super.initState();
-    _pagingController.addPageRequestListener((page) {
-
-      getData(page);
-      // _fetchPage(pageKey, widget.notiType);
-    });
-
+    getData(0,0);
   }
 
-  // getData(int size, int page) async {
-  //   dynamic data;
-  //   switch (widget.dataType) {
-  //
-  //     case 'Lastest Jobs':
-  //       data = await JobApi.getLatestJobs.sendRequest(urlParam: '?size=$size&page=$page');
-  //       listData = data.map((e) => e).toList();
-  //       break;
-  //   }
-  //   if(data != null){
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
-
-  getData(int page) async {
-    final callbackIdentity = Object();
-    _activeCallbackIdentity = callbackIdentity;
+  getData(int size, int page) async {
     dynamic data;
-    try {
-      data = await JobApi.getLatestJobs.sendRequest(urlParam: '?size=5&page=$page');
-      listData = data.map((e) => e).toList();
+    String? userToken = await storage.read(key: 'token');
+    switch (widget.dataType) {
 
-      final isLastPage = listData.length < _pageSize;
-      print(isLastPage);
-      if (isLastPage) {
-        _pagingController.appendLastPage(listData);
-      } else {
-        final nextPageKey = page + 1;
-      //   print(nextPageKey);
-      // print(listData.length);
-      // if (listData.length - nextPageKey < _pageSize) {
-      //   _pagingController.appendLastPage(listData);
-      // } else {
-        _pagingController.appendPage(listData, nextPageKey);
-      }
-      // listData = data.map((e) => e).toList();
-      // print(listData);
-      // if (callbackIdentity == _activeCallbackIdentity) {
-      //   page++;
-      //   _pagingController.appendPage(listData, page);
-      // }
-      // if(data != null){
-      //   setState(() {
-      //     isLoading = false;
-      //   });
-      // }
-    } catch (error) {
-      _pagingController.error = error;
+      case 'Jobs fit you':
+        data = await CandidateJobApi.getRecommendJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
+        listData = data.map((e) => e).toList();
+        break;
+      case 'Latest Jobs':
+        data = await JobApi.getLatestJobs.sendRequest(urlParam: '?size=$size&page=$page');
+        listData = data.map((e) => e).toList();
+        break;
+      case 'Your viewed jobs':
+        data = await CandidateJobApi.getViewedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
+        listData = data.map((e) => e).toList();
+        break;
+      case 'Your saved jobs':
+        data = await CandidateJobApi.getSavedJobs.sendRequest(token: userToken, urlParam: '?size=$size&page=$page');
+        listData = data.map((e) => e).toList();
+        break;
+      case 'Popular Companies':
+        Map<String, String> jsonBody = {
+          'province_city_id': '',
+          'industry_id': ''
+        };
+        data = await CompanyApi.filterCompany.sendRequest(body: jsonBody, urlParam: '?size=$size&page=$page');
+        listData = data.map((e) => e).toList();
+        break;
     }
-    // switch (widget.dataType) {
-    //
-    //   case 'Lastest Jobs':
-    //     data = await JobApi.getLatestJobs.sendRequest(urlParam: '?size=$size&page=$page');
-    //     listData = data.map((e) => e).toList();
-    //     break;
-    // }
-    // if(data != null){
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // }
+    if(data != null){
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,25 +79,27 @@ class _ViewmoreScreenState extends State<ViewmoreScreen> {
           backgroundColor: Colors.red,
           surfaceTintColor: Colors.white,
         ),
-        body: Container(
+        body: isLoading ? const Center(child: CircularProgressIndicator()) : Container(
           margin: const EdgeInsets.all(10.0),
-            child: PagedListView<int, dynamic>(
-                padding: EdgeInsets.zero,
-                pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<dynamic>(
-                itemBuilder: (context, item, index) {
-                  return JobCard(jobId: listData[index]['id'], notifyParent: (){},);
-                }
-            )
-            )
-                // : ListView.builder(
-                //       physics: const ClampingScrollPhysics(),
-                //   shrinkWrap: true,
-                //   scrollDirection: Axis.vertical,
-                //   itemCount: listData.length,
-                //   itemBuilder: (BuildContext context, int index) =>
-                //   JobCard(jobId: listData[index]['id'], notifyParent: (){},)
-                //   ),
+            child: listData.isEmpty
+                ? const Center(child: Text('Data is not available yet'))
+                : ListView.builder(
+                      physics: const ClampingScrollPhysics(),
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  itemCount: listData.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      widget.dataType != 'Popular Companies' ? JobCard(jobId: listData[index]['id'], notifyParent: (){},) : InkWell(
+                        onTap: () async{
+                          if (listData[index]['id'] <= 0) return;
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => CompaniesDetailScreen(companyId: listData[index]['id'])));
+                        },
+                        child: CompanyCard(
+                          company: listData[index],
+                        ),
+                      ),
+                  ),
         ));
   }
 

@@ -1,7 +1,4 @@
-import 'dart:convert' show json, utf8;
 import 'dart:io';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:enefty_icons/enefty_icons.dart';
 import 'package:flutter/material.dart';

@@ -16,9 +16,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
         backgroundColor: Colors.red,
         surfaceTintColor: Colors.white,
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.all(10.0),
+          margin: const EdgeInsets.all(16.0),
           child: const Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:phtv_app/apis/apis_list.dart';
 import 'package:phtv_app/common_widgets/request_login_box.dart';
 import 'package:phtv_app/features/job_card.dart';
+import '../../screens/viewmore_screen.dart';
+
+var storage = const FlutterSecureStorage();
 
 class HotJobs extends StatefulWidget {
   const HotJobs({super.key});
@@ -33,8 +37,8 @@ class _HotJobsState extends State<HotJobs> {
         if(data != null){
           jobList = data.map((e) => e).toList();
           setState(() {
-            isLoggedIn = true;
             isLoading = false;
+            isLoggedIn = true;
           });
         }
       }else{
@@ -71,13 +75,16 @@ class _HotJobsState extends State<HotJobs> {
                         fontSize: 18,
                       ),),
                     const Spacer(),
-                    Text(
-                      isLoggedIn == true ? 'View more' : '',
-                      style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.blueAccent
+                    isLoggedIn == true ? SizedBox(
+                      height: 35,
+                      child: TextButton(
+                        onPressed: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ViewmoreScreen(dataType: 'Jobs fit you',)));
+                        },
+                        child: const Text('View more',style: TextStyle(
+                            fontSize: 14, color: Colors.blueAccent)),
                       ),
-                    ),
+                    ) : const SizedBox.shrink(),
                   ],
                 ),
                 const SizedBox(height: 10),

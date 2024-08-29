@@ -114,10 +114,6 @@ class _CompaniesDetailScreenState extends State<CompaniesDetailScreen> with Sing
             'Company Details',
           ),
           centerTitle: true,
-          actions: [
-            IconButton(
-                icon: const Icon(EneftyIcons.send_2_outline), onPressed: () {}),
-          ],
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0),
       backgroundColor: Colors.white,

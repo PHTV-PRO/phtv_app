@@ -1,8 +1,6 @@
 import 'package:enefty_icons/enefty_icons.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:phtv_app/screens/companies/company_detail_screen.dart';
 
 var storage = const FlutterSecureStorage();
 

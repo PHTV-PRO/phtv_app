@@ -60,12 +60,15 @@ class _LatestJobsState extends State<LatestJobs> {
                             ),
                           ),
                           const Spacer(),
-                          TextButton(
-                            onPressed: (){
-                              Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ViewmoreScreen(dataType: 'Lastest Jobs',)));
-                            },
-                            child: const Text('View more',style: TextStyle(
-                                fontSize: 14, color: Colors.blueAccent)),
+                          SizedBox(
+                            height: 35,
+                            child: TextButton(
+                              onPressed: (){
+                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const ViewmoreScreen(dataType: 'Latest Jobs',)));
+                              },
+                              child: const Text('View more',style: TextStyle(
+                                  fontSize: 14, color: Colors.blueAccent)),
+                            ),
                           ),
                         ],
                       ),
