@@ -3,6 +3,7 @@ import 'dart:convert' show json, utf8;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:phtv_app/apis/apis_list.dart';
+import 'package:phtv_app/screens/auth/login_screen.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -45,10 +46,10 @@ class _RegisterFormState extends State<RegisterForm> {
 
   var _enteredNameRegister = '';
   var _enteredEmailRegister = '';
-  var _enteredPhoneRegister = '';
   var _enteredPasswordRegister = '';
 
-  void _submitRegister() async {
+  _submitRegister() async {
+    print('ahihi');
     final isValid = _formKeyRegister.currentState!.validate();
 
     if (!isValid || termCheck == false) {
@@ -62,27 +63,31 @@ class _RegisterFormState extends State<RegisterForm> {
       'password': _enteredPasswordRegister,
       'full_name': _enteredNameRegister,
     };
-
-    try {
-      var response = await AuthApi.register.sendRequest(body: jsonBody);
-
-        showDialog(
-            context: context,
-            builder: (BuildContext dialogContext) {
-              return AlertDialog(
-                elevation: 0,
-                title: const Text('Thông báo'),
-                content: const Text("Success"),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            });
-    } catch (e) {
-      throw e.toString();
+    var result = await AuthApi.register.sendRequest(body: jsonBody);
+    if(result != null){
+      showDialog(
+                  context: context,
+                  builder: (BuildContext dialogContext) {
+                    return AlertDialog(
+                      elevation: 0,
+                      backgroundColor: Colors.white,
+                      title: const Text('Success'),
+                      content: const Text("Register successfully\nPlease login to continue"),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () async {
+                            Navigator.of(context, rootNavigator: true).pop();
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => const LoginScreen(tabIndex: 1,)));
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white
+                          ),
+                          child: const Text('Login'),
+                        ),
+                      ],
+                    );
+                  });
     }
   }
 
@@ -135,23 +140,6 @@ class _RegisterFormState extends State<RegisterForm> {
             },
             onSaved: (value) {
               _enteredEmailRegister = value!;
-            },
-          ),
-          const SizedBox(height: 12),
-          TextFormField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(40.0),
-              ),
-              filled: true,
-              hintStyle: TextStyle(color: Colors.grey[800]),
-              hintText: "Phone number",
-              fillColor: Colors.white,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            ),
-            onSaved: (value) {
-              _enteredPhoneRegister = value!;
             },
           ),
           const SizedBox(height: 12),

@@ -164,6 +164,7 @@ class _SalaryConverterScreenState extends State<SalaryConverterScreen> {
                 TextFormField(
                   decoration: salFormField('Number of dependents', const Icon(Icons.people_alt_outlined)),
                   keyboardType: TextInputType.number,
+                  initialValue: '0',
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please fill in number of dependents';
@@ -361,16 +362,19 @@ calPersonalTaxGrossNet(int num){
   return (rs*1000000).toInt();
 }
 
-calUi(int zone){
+calUi(int salary, int zone){
+  double sal = salary.toDouble();
+  double rs = 0;
   if(zone == 1){
-    return 992000;
+    rs = sal*0.01 < 992000 ? sal*0.01 : 992000;
   }else if(zone == 2){
-    return 882000;
+    rs = sal*0.01 < 882000 ? sal*0.01 : 882000;
   }else if(zone == 3){
-    return 772000;
+    rs = sal*0.01 < 772000 ? sal*0.01 : 772000;
   }else if(zone == 4){
-    return 690000;
+    rs = sal*0.01 < 690000 ? sal*0.01 : 690000;
   }
+  return rs.toInt();
 }
 
 Container salGrossNetResult (String sal, String dpDedct, String insPre, String region) {
@@ -385,11 +389,11 @@ Container salGrossNetResult (String sal, String dpDedct, String insPre, String r
 
   int salSi = roundToIntThousand(insurPremium > 46800000 ? 46800000 * 0.08 : insurPremium * 0.08);
   int salHi = roundToIntThousand(insurPremium > 46800000 ? 46800000 * 0.015 : insurPremium * 0.015);
-  int salUi = calUi(regionZone);
+  int salUi = calUi(salary, regionZone);
   int incomeBefTax = salary - (salSi + salHi + salUi);
   int indiDeduct = 11000000;
   int depentDeduct = dptDeduct * 4400000;
-  int taxableIncome = incomeBefTax - (indiDeduct + depentDeduct);
+  int taxableIncome = incomeBefTax - (indiDeduct + depentDeduct) < 0 ? 0 : incomeBefTax - (indiDeduct + depentDeduct);
   int personalTax = calPersonalTaxGrossNet(taxableIncome);
   int netIncome = incomeBefTax - personalTax;
 
@@ -544,7 +548,7 @@ Container salNetGrossResult (String sal, String dpDedct, String insPre, String r
 
   int salSi = roundToIntThousand(insurPremium > 46800000 ? 46800000 * 0.08 : insurPremium * 0.08);
   int salHi = roundToIntThousand(insurPremium > 46800000 ? 46800000 * 0.015 : insurPremium * 0.015);
-  int salUi = calUi(regionZone);
+  int salUi = calUi(salary, regionZone);
   int indiDeduct = 11000000;
   int depentDeduct = dptDeduct * 4400000;
   int taxableIncome = salary - indiDeduct - depentDeduct;
