@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert' show json, utf8;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:phtv_app/apis/apis_list.dart';
 
 class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
@@ -56,40 +57,22 @@ class _RegisterFormState extends State<RegisterForm> {
 
     _formKeyRegister.currentState!.save();
 
-    const baseUrl = 'https://api-prod.diemdaochieu.com/auth/signup';
     Map<String, String> jsonBody = {
       'email': _enteredEmailRegister,
       'password': _enteredPasswordRegister,
-      'fullName': _enteredNameRegister,
-      'phoneNumber': _enteredPhoneRegister
+      'full_name': _enteredNameRegister,
     };
 
     try {
-      Map<String, String> requestHeaders = {
-        'platform': Platform.operatingSystem.toUpperCase(),
-        'Content-Type': 'application/json',
-      };
+      var response = await AuthApi.register.sendRequest(body: jsonBody);
 
-      Response response = await post(Uri.parse(baseUrl),
-          headers: requestHeaders, body: json.encode(jsonBody));
-      final message = json.decode(utf8.decode(response.bodyBytes))['message'];
-
-      if (response.statusCode == 200) {
-        // showDialog(
-        //     context: context,
-        //     builder: (BuildContext dialogContext) {
-        //       return RegisterSuccessModal(
-        //         email: _enteredEmailRegister,
-        //       );
-        //     });
-      } else {
         showDialog(
             context: context,
             builder: (BuildContext dialogContext) {
               return AlertDialog(
                 elevation: 0,
                 title: const Text('Thông báo'),
-                content: Text(message),
+                content: const Text("Success"),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -98,7 +81,6 @@ class _RegisterFormState extends State<RegisterForm> {
                 ],
               );
             });
-      }
     } catch (e) {
       throw e.toString();
     }
@@ -256,9 +238,7 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white
-            ),
+                backgroundColor: Colors.red, foregroundColor: Colors.white),
             onPressed: termCheck == true ? _submitRegister : null,
             child: const Text(
               'Sign up',
