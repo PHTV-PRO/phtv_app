@@ -214,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                             'Content-Type': 'application/json',
                                           };
                                           var request = http.MultipartRequest('PUT',
-                                              Uri.parse('http://10.0.2.2:8080/api/general/account'));
+                                              Uri.parse('http://172.16.0.128:8080/api/general/account'));
                                           request.headers.addAll(reqHeaders);
                                           request.files.add(http.MultipartFile.fromBytes(
                                             'image',

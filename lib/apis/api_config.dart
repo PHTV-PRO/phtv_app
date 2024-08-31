@@ -11,7 +11,8 @@ enum RequestMethod { get, post, put, delete }
 
 const String baseUrl = String.fromEnvironment(
   'API_BASE_URL',
-  defaultValue: 'http://10.0.2.2:8080/api/',
+  // defaultValue: 'http://10.0.2.2:8080/api/',
+  defaultValue: 'http://172.16.0.128:8080/api/',
 );
 
 typedef RequestBody = Map<String, dynamic>;
